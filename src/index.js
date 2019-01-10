@@ -30,7 +30,7 @@ import setupDocViewer from 'helpers/setupDocViewer';
 import setDefaultToolColor from 'helpers/setDefaultToolColor';
 import setUserPermission from 'helpers/setUserPermission';
 
-window.loadViewer = documentElement => {
+window.loadViewer = (documentElement, options) => {
 
   const middleware = [thunk];
 
@@ -39,7 +39,7 @@ window.loadViewer = documentElement => {
     middleware.push(createLogger({ collapsed: true }));
   }
 
-  const store = createStore(rootReducer, applyMiddleware(...middleware));
+  const store = createStore(rootReducer(options), applyMiddleware(...middleware));
 
   if (process.env.NODE_ENV === 'development' && module.hot) {
     module.hot.accept('reducers/rootReducer', () => {

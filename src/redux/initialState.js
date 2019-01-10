@@ -5,7 +5,7 @@ import defaultTool from 'constants/defaultTool';
 import actions from 'actions';
 import core from 'core';
 
-export default {
+export default options => ({
   viewer: {
     disabledElements: {},
     openElements: {
@@ -223,4 +223,4 @@ export default {
     decryptOptions: { },
     withCredentials: false
   }
-};
+});
