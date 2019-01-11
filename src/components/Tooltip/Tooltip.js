@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { translate } from 'react-i18next';
-import { connect } from 'react-redux';
-import selectors from 'selectors';
+
 import { isMac, isIOS, isAndroid } from 'helpers/device';
 
 import './Tooltip.scss';
@@ -20,8 +19,7 @@ class Tooltip extends React.PureComponent {
     children: PropTypes.element,
     content: PropTypes.string,
     isDisabled: PropTypes.bool,
-    t: PropTypes.func.isRequired,
-    viewerContainer: PropTypes.object
+    t: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -193,7 +191,7 @@ class Tooltip extends React.PureComponent {
             <div className={`tooltip--${location}`} style={this.state.style}>
               <div className={`tooltip__content`}>{this.renderContent()}</div>
             </div>,
-            this.props.viewerContainer
+            document.getElementById('app')
           )
         }
       </React.Fragment>
@@ -201,8 +199,4 @@ class Tooltip extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
-  viewerContainer: selectors.getViewerContainer(state)
-});
-
-export default connect(mapStateToProps)(translate(null, { wait: false })(Tooltip));
+export default translate(null, { wait: false })(Tooltip);

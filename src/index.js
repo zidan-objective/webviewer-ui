@@ -29,7 +29,6 @@ import setDefaultDisabledElements from 'helpers/setDefaultDisabledElements';
 import setupDocViewer from 'helpers/setupDocViewer';
 import setDefaultToolColor from 'helpers/setDefaultToolColor';
 import setUserPermission from 'helpers/setUserPermission';
-import { setContainerNode } from 'actions/internalActions';
 
 window.loadViewer = (documentElement, options) => {
 
@@ -123,6 +122,7 @@ window.loadViewer = (documentElement, options) => {
       setupLoadAnnotationsFromServer(store);
       addEventHandlers();
       core.setToolMode(defaultTool);
+
       ReactDOM.render(
         <Provider store={store}>
           <I18nextProvider i18n={i18n}>
@@ -211,8 +211,6 @@ window.loadViewer = (documentElement, options) => {
             loadedFromServer: false,
             serverFailed: false
           };
-          
-          store.dispatch(setContainerNode(documentElement));
 
           window.ControlUtils = {
             byteRangeCheck: onComplete => {

@@ -6,7 +6,6 @@ import core from 'core';
 
 export default options => ({
   viewer: {
-    viewerContainerNode: null,
     disabledElements: {},
     openElements: {
       header: true
