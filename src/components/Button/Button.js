@@ -37,8 +37,8 @@ class Button extends React.PureComponent {
       'Button',
       this.props.className ? this.props.className : '',
       isActive ? 'active' : 'inactive',
-      label ? 'label' : 'icon',
-      mediaQueryClassName ? mediaQueryClassName : '',
+      label ? 'label' : 'button-icon',
+      mediaQueryClassName ? mediaQueryClassName : '', 
     ].join(' ').trim();
     const isBase64 = img && img.trim().indexOf('data:') === 0;
     // if there is no file extension then assume that this is a glyph

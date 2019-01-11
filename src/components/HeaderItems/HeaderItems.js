@@ -38,7 +38,7 @@ class HeaderItems extends React.PureComponent {
               return <CustomElement key={key} mediaQueryClassName={mediaQueryClassName} {...item} />;
             case 'spacer':
             case 'divider':
-              return <div key={key} className={`${type} ${mediaQueryClassName}`}></div>;
+              return <div key={key} className={`${type} ${mediaQueryClassName}`} ></div>;
           }
         })}
       </div>

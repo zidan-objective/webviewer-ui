@@ -70,6 +70,8 @@ class ToolButton extends React.PureComponent {
       toolStyleExists(toolName) ? 'hasStyles' : ''
     ].join(' ').trim();
 
+
+
     if (isDisabled) {
       return null;
     }
