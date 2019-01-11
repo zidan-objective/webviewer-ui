@@ -191,7 +191,7 @@ class Tooltip extends React.PureComponent {
             <div className={`tooltip--${location}`} style={this.state.style}>
               <div className={`tooltip__content`}>{this.renderContent()}</div>
             </div>,
-            document.getElementById('app')
+            document.getElementById('pdftron-webviewer')
           )
         }
       </React.Fragment>

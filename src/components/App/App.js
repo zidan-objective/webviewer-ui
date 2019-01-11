@@ -77,7 +77,7 @@ class App extends React.PureComponent {
   render() {
     return (
       <React.Fragment>
-        <div className="App" onMouseDown={this.onMouseDown} onClick={this.onClick} onScroll={this.onScroll}>
+        <div id="pdftron-webviewer" className="App" onMouseDown={this.onMouseDown} onClick={this.onClick} onScroll={this.onScroll}>
           <Header />
 
           <LeftPanel />
