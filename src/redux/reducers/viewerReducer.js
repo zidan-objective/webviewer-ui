@@ -26,6 +26,8 @@ export default initialState => (state = initialState, action) => {
 
       return { ...state, disabledElements: { ...state.disabledElements, ...disabledElements } };
     }
+    case 'SET_CONTAINER_NODE':
+      return { ...state, viewerContainerNode: payload.node };
     case 'ENABLE_ALL_ELEMENTS':
       return { ...state, disabledElements: { ...initialState.disabledElements } };
     case 'OPEN_ELEMENT':

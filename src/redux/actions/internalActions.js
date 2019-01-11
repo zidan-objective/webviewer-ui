@@ -14,6 +14,9 @@ export const disableElement = (dataElement, priority) => (dispatch, getState) =>
     }
   }
 };
+
+export const setContainerNode = node => ({ type: 'SET_CONTAINER_NODE', payload: { node } });
+
 export const disableElements = (dataElements, priority) => (dispatch, getState) => {
   const filteredDataElements = getFilteredDataElements(getState(), dataElements, priority);
   dispatch({ type: 'DISABLE_ELEMENTS', payload: { dataElements: filteredDataElements, priority } });
@@ -131,3 +134,4 @@ export const setNoResult = noResult => ({ type: 'SET_NO_RESULT', payload: { noRe
 export const resetSearch = () => ({ type: 'RESET_SEARCH', payload: { } });
 export const setIsProgrammaticSearch = isProgrammaticSearch => ({ type: 'SET_IS_PROG_SEARCH', payload: { isProgrammaticSearch } });
 export const setIsProgrammaticSearchFull = isProgrammaticSearchFull => ({ type: 'SET_IS_PROG_SEARCH_FULL', payload: { isProgrammaticSearchFull } });
+
