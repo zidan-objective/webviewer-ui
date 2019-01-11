@@ -190,7 +190,7 @@ export default options => ({
     password: '',
     printQuality: 1,
     passwordAttempts: -1,
-    loadingProgress: 0
+    loadingProgress: 0,
   },
   user: {
     name: options.user || 'Guest',
