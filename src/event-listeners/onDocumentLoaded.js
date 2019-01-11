@@ -1,8 +1,7 @@
 import core from 'core';
-import getHashParams from 'helpers/getHashParams';
 import actions from 'actions';
 
-export default dispatch => () => {
+export default dispatch => options => {
   dispatch(actions.setDocumentLoaded(true));
   dispatch(actions.openElement('pageNavOverlay'));
   dispatch(actions.setLoadingProgress(1));
@@ -16,9 +15,8 @@ export default dispatch => () => {
   } else {
     core.fitToPage();
   }
-
   core.setOptions({
-    enableAnnotations: getHashParams('a', false)
+    enableAnnotations: !options.hideAnnotationPanel || false
   });
 
   core.getOutlines(outlines => {

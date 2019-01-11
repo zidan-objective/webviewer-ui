@@ -1,20 +1,18 @@
-import core from 'core';
-import getHashParams from 'helpers/getHashParams';
 import getAnnotationRelatedElements from 'helpers/getAnnotationRelatedElements';
 import { isIOS, isAndroid } from 'helpers/device';
 import { PRIORITY_THREE, PRIORITY_ONE } from 'constants/actionPriority';
 import actions from 'actions';
 
-export default store => {
+export default (store, options) => {
   const { dispatch, getState } = store;
   const state = getState();
 
-  disableElementsPassedByConstructor(state, dispatch);
+  disableElementsPassedByConstructor(state, dispatch,);
   disableElementsIfReadOnly(state, dispatch);
-  disableElementsIfAnnotationDisabled(state, dispatch);
-  disableElementsIfFilePickerDisabled(dispatch);
-  disableElementsIfHideAnnotationPanel(dispatch);
-  disableElementsIfToolBarDisabled(dispatch);
+  disableElementsIfAnnotationDisabled(state, dispatch, options);
+  disableElementsIfFilePickerDisabled(dispatch, options);
+  disableElementsIfHideAnnotationPanel(dispatch, options);
+  disableElementsIfToolBarDisabled(dispatch, options);
   disableElementsIfDesktop(dispatch);
 };
 
@@ -36,8 +34,8 @@ const disableElementsIfReadOnly = (state, dispatch) => {
   }
 };
 
-const disableElementsIfAnnotationDisabled = (state, dispatch) => {
-  const annotationDisabled = !getHashParams('a', false);
+const disableElementsIfAnnotationDisabled = (state, dispatch, options) => {
+  const annotationDisabled = options.hideAnnotationPanel || false;
   if (annotationDisabled) {
     const elements = [
       'notesPanel',
@@ -49,8 +47,8 @@ const disableElementsIfAnnotationDisabled = (state, dispatch) => {
   }
 };
 
-const disableElementsIfFilePickerDisabled = dispatch => {
-  const filePickerDisabled = !getHashParams('filepicker', false);
+const disableElementsIfFilePickerDisabled = (dispatch, options) => {
+  const filePickerDisabled = options.filepicker || false;
 
   if (filePickerDisabled) {
     const elements = [
@@ -62,8 +60,8 @@ const disableElementsIfFilePickerDisabled = dispatch => {
   }
 };
 
-const disableElementsIfHideAnnotationPanel = dispatch => {
-  const hideAnnotationPanel = getHashParams('hideAnnotationPanel', false);
+const disableElementsIfHideAnnotationPanel = (dispatch, options) => {
+  const hideAnnotationPanel = options.hideAnnotationPanel || false;
 
   if (hideAnnotationPanel) {
     const elements = [
@@ -76,8 +74,8 @@ const disableElementsIfHideAnnotationPanel = dispatch => {
   }
 };
 
-const disableElementsIfToolBarDisabled = dispatch => {
-  const toolBarDisabled = !getHashParams('toolbar', true);
+const disableElementsIfToolBarDisabled = (dispatch, options) => {
+  const toolBarDisabled = typeof options.toolbar === 'boolean' ? options.toolbar : false;
 
   if (toolBarDisabled) {
     dispatch(actions.disableElement('header', PRIORITY_ONE));

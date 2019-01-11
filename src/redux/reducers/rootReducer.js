@@ -9,7 +9,6 @@ import advancedReducer from 'reducers/advancedReducer';
 
 export default options => {
   const initialState = getInitialState(options);
-
   return combineReducers({
     viewer: viewerReducer(initialState.viewer),
     search: searchReducer(initialState.search),

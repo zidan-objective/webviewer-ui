@@ -1,7 +1,7 @@
 import * as eventListeners from 'src/event-listeners';
 import core from 'core';
 
-export default store => {
+export default (store, options) => {
   const { dispatch } = store;
   const onBeforeDocumentLoaded = eventListeners.onBeforeDocumentLoaded(dispatch);
   const onDisplayModeUpdated = eventListeners.onDisplayModeUpdated(dispatch);
@@ -26,7 +26,7 @@ export default store => {
     addEventHandlers: () => {
       core.addEventListener('beforeDocumentLoaded', onBeforeDocumentLoaded);
       core.addEventListener('displayModeUpdated', onDisplayModeUpdated);
-      core.addEventListener('documentLoaded', onDocumentLoaded);
+      core.addEventListener('documentLoaded', () => onDocumentLoaded(options));
       core.addEventListener('documentUnloaded', onDocumentUnloaded);
       core.addEventListener('fitModeUpdated', onFitModeUpdated);
       core.addEventListener('rotationUpdated', onRotationUpdated);

@@ -108,7 +108,7 @@ window.loadViewer = (documentElement, options) => {
     fullAPIReady.then(() => {
       return loadScript(state.advanced.configScript, 'Config script could not be loaded. The default configuration will be used.');
     }).then(() => {
-      const { addEventHandlers, removeEventHandlers } = eventHandler(store);
+      const { addEventHandlers, removeEventHandlers } = eventHandler(store, options);
       const docViewer = new window.CoreControls.DocumentViewer();
       window.docViewer = docViewer;
       setupPDFTron();
@@ -118,7 +118,7 @@ window.loadViewer = (documentElement, options) => {
       setUserPermission(state);
       setAutoSwitch();
       setDefaultToolColor();
-      setDefaultDisabledElements(store);
+      setDefaultDisabledElements(store, options);
       setupLoadAnnotationsFromServer(store);
       addEventHandlers();
       core.setToolMode(defaultTool);
