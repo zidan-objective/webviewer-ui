@@ -19,8 +19,6 @@
 
 @include mobile {
   .MenuOverlay {
-    right: 8px !important;
-    left: unset !important;
     top: calc(#{$top-bar-height-m} + 3px);
 
     .PrintButton {

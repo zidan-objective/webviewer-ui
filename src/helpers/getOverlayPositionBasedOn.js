@@ -11,8 +11,11 @@ export default (element, overlay) => {
 
   const { left: buttonLeft } = button.getBoundingClientRect();
   const { width: overlayWidth } = overlay.current.getBoundingClientRect();
+
+  const containerElement = document.getElementById('pdftron-webviewer');
+  const containerWidth = containerElement ? containerElement.offsetWidth : window.innerWidth;
   
-  if (buttonLeft + overlayWidth > window.innerWidth) {
+  if (buttonLeft + overlayWidth > containerWidth) {
     const rightMargin = 16;
     left = 'auto';
     right = rightMargin;
