@@ -12,12 +12,6 @@
   font-size: 16px;
   cursor: pointer;
 
-  @include mobile {
-    // margin: 0 1px;
-    min-width: $button-width-m;
-    height: $button-height-m;
-  }
-
   img {
     width: 24px;
 
@@ -34,9 +28,6 @@
       background: transparent;
     }
 
-    @include mobile {
-      background: transparent;
-    }
   }
 
   &.active {
@@ -46,6 +37,18 @@
     .Icon {
       color: #757575;
       color: var(--icon-active-color);
+    }
+  }
+}
+
+@include mobile {
+  .Button {
+    // margin: 0 1px;
+    min-width: $button-width-m;
+    height: $button-height-m;
+
+    &:hover {
+      background: transparent;
     }
   }
 }

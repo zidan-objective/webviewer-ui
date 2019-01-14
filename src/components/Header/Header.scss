@@ -17,8 +17,11 @@
     transform: translateY(-100%);
     margin-bottom: -$top-bar-height;
   }
+}
 
-  @include mobile {
+@include mobile {
+  .Header {
     height: $top-bar-height-m;
   }
 }
+

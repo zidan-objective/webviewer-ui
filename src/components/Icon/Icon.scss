@@ -7,12 +7,14 @@
   color: #757575;
   color: var(--icon-color);
 
-  @include mobile {
-    width: 18px;
-    height: 18px;
-  }
-
   path:not([fill=none]) {
     fill: currentColor;
+  }
+}
+
+@include mobile {
+  .Icon {
+    width: 18px;
+    height: 18px;
   }
 }

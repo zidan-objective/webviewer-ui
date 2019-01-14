@@ -47,25 +47,31 @@ $mobile-width: 640px;
 }
 
 @mixin desktop {
-  @media (min-width: #{$tablet-width + 1px}) {
+
+  #pdftron-webviewer.desktop {
     @content;
   }
 }
 
 @mixin tablet {
-  @media (min-width: #{$mobile-width + 1px}) and (max-width: #{$tablet-width}) {
+
+  #pdftron-webviewer.tablet {
     @content;
   }
+
 }
 
 @mixin mobile {
-  @media (max-width: #{$mobile-width}) {
+
+  #pdftron-webviewer.mobile {
     @content;
   }
+
 }
 
 @mixin tablet-and-mobile {
-  @media (max-width: #{$tablet-width}) {
+
+  #pdftron-webviewer.mobile, #pdftron-webviewer.tablet  {
     @content;
   }
 }
@@ -76,20 +82,24 @@ $mobile-width: 640px;
   }
 }
 
-.hide-in-desktop {
+
   @include desktop {
+    .hide-in-desktop {
+      display: none;
+    }
+  }
+
+
+
+@include tablet {
+  .hide-in-tablet {
     display: none;
   }
 }
 
-.hide-in-tablet {
-  @include tablet {
-    display: none;
-  }
-}
 
-.hide-in-mobile {
-  @include mobile {
+@include mobile {
+  .hide-in-mobile {
     display: none;
   }
 }

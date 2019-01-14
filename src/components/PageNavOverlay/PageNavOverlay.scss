@@ -9,24 +9,12 @@
   font-size: 16px;
   cursor: pointer;
 
-  @include mobile {
-    bottom: 8px;
-    left: 8px;
-    padding: 8px;
-    font-size: 14px;
-    z-index: 50;
-  }
-
   &.open {
     transition: opacity .3s ease, transform .3s ease, font-size .3s ease, padding .3s ease;
   }
 
   &.shifted {
     transform: translateX($left-panel-width);
-
-    @include mobile {
-      transform: none;
-    }
   }
 
   input {
@@ -38,8 +26,22 @@
     background: transparent;
     color: var(--text-color);
     cursor: pointer;
+  }
+}
 
-    @include mobile {
+@include mobile {
+  .PageNavOverlay {
+    bottom: 8px;
+    left: 8px;
+    padding: 8px;
+    font-size: 14px;
+    z-index: 50;
+
+    &.shifted {
+      transform: none;
+    }
+
+    input {
       font-size: 14px;
     }
   }

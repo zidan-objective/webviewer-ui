@@ -44,8 +44,14 @@
       &:hover {
         color: $gray87;
       }
+    }
+  }
+}
 
-      @include tablet-and-mobile {
+@include tablet-and-mobile {
+  .NotePopup {
+    .modify {
+      div {
         padding: 7px 5px;
       }
     }

@@ -42,11 +42,26 @@ class App extends React.PureComponent {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      appWidth: props.documentElement.offsetWidth
+    }
+
+    this.$container = React.createRef();
   }
 
   componentWillUnmount() {
     this.props.removeEventHandlers();
   }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.windowResize);
+  }
+
+  windowResize = () => {
+    this.setState({ appWidth: this.props.documentElement.offsetWidth });
+  }
+  
 
   onClick = () => {
     const elements = [
@@ -74,10 +89,40 @@ class App extends React.PureComponent {
     this.onMouseDown();
   }
 
+  className = () => {
+    const { appWidth } = this.state;
+    let className = 'App';
+
+// $tablet-width: 900px;
+// $mobile-width: 640px;
+
+    if(appWidth >= 900) {
+      return className + ' desktop';
+    }
+
+    if(appWidth < 900 && appWidth > 640) {
+      return className + ' tablet';
+    }
+
+    if(appWidth <= 640) {
+      return className + ' mobile';
+    }
+
+  }
+
   render() {
+
+    console.log(this.state.appWidth)
+
     return (
       <React.Fragment>
-        <div id="pdftron-webviewer" className="App" onMouseDown={this.onMouseDown} onClick={this.onClick} onScroll={this.onScroll}>
+        <div
+          id="pdftron-webviewer"
+          className={this.className()}
+          onMouseDown={this.onMouseDown}
+          onClick={this.onClick}
+          onScroll={this.onScroll}
+        >
           <Header />
 
           <LeftPanel />

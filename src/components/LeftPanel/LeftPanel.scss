@@ -12,16 +12,20 @@
     .close-btn {
       margin-right: 17px;
     }
+  }
 
-    @include mobile {
+  .Panel {
+    @extend %sub-panel;
+  }
+}
+
+@include mobile {
+  .LeftPanel {
+    .left-panel-header {
       margin: 0px;
       padding: 13px 17px;
       background-color: $white;
       background-color: var(--primary-color);
     }
-  }
-
-  .Panel {
-    @extend %sub-panel;
   }
 }

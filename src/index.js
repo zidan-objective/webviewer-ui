@@ -126,7 +126,7 @@ window.loadViewer = (documentElement, options) => {
       ReactDOM.render(
         <Provider store={store}>
           <I18nextProvider i18n={i18n}>
-            <App removeEventHandlers={removeEventHandlers} />
+            <App removeEventHandlers={removeEventHandlers} documentElement={documentElement} />
           </I18nextProvider>
         </Provider>,
         documentElement,

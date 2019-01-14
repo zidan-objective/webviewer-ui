@@ -21,9 +21,11 @@
     padding: 15px 0;
     font-size: 0.8em;
   }
+}
 
-  .close-btn {
-    @include mobile {
+@include mobile {
+  .SearchPanel {
+    .close-btn {
       display: flex;
       align-self: flex-end;
     }

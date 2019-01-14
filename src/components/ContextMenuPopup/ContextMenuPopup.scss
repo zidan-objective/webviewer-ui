@@ -2,8 +2,10 @@
 
 .ContextMenuPopup {
   @extend %popup;
+}
 
-  @include mobile {
+@include mobile {
+  .ContextMenuPopup {
     display: none !important;
   }
 }

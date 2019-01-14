@@ -14,8 +14,14 @@
       border-left: 8px solid transparent;
       border-bottom: 8px solid  #757575;
       border-bottom: 8px solid var(--icon-color);
+    }
+  }
+}
 
-      @include mobile {
+@include mobile {
+  .ToolButton {
+    &.hasStyles.active {
+      &:after {
         border-left: 8px solid transparent;
         border-bottom: 8px solid  #757575;
         border-bottom: 8px solid var(--icon-color);

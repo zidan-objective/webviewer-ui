@@ -9,8 +9,13 @@
     border-right: 5px solid transparent;
     border-top: 6px solid  #757575;
     border-top: 6px solid var(--icon-color);
-    
-    @include mobile {
+  
+  }
+}
+
+@include mobile {
+  .ToolGroupButton {
+    &.down-arrow:after {
       font-size: 10px;
     }
   }

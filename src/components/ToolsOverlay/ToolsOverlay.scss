@@ -10,14 +10,6 @@
   flex-wrap: nowrap;
   overflow: hidden;
 
-  @include tablet-and-mobile {
-    left: 0 !important;
-    right: 0 !important;
-    top: 0;
-    width: 100%;
-    border: none;
-  }
-
   & > * {
     &:first-child {
       margin-left: 0;
@@ -27,9 +19,17 @@
       margin-right: 0;
     }
   }
+}
 
-  .spacer {
-    @include tablet-and-mobile {
+@include tablet-and-mobile {
+  .ToolsOverlay {
+    left: 0 !important;
+    right: 0 !important;
+    top: 0;
+    width: 100%;
+    border: none;
+
+    .spacer {
       flex: 1;
       height: 100%;
     }
