@@ -111,9 +111,6 @@ class App extends React.PureComponent {
   }
 
   render() {
-
-    console.log(this.state.appWidth)
-
     return (
       <React.Fragment>
         <div
