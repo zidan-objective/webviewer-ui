@@ -24,19 +24,20 @@ class PrintModal extends React.PureComponent {
     currentPage: PropTypes.number,
     printQuality: PropTypes.number.isRequired,
     pageLabels: PropTypes.array.isRequired,
+    useEmbeddedPrint: PropTypes.func.isRequired,
     closeElement: PropTypes.func.isRequired,
-    dispatch: PropTypes.func.isRequired,
     closeElements: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
     sortStrategy: PropTypes.string.isRequired,
     colorMap: PropTypes.object.isRequired,
   }
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.allPages = React.createRef();
     this.currentPage = React.createRef();
     this.customPages = React.createRef();
+    this.currentView = React.createRef();
     this.customInput = React.createRef();
     this.includeComments = React.createRef();
     this.pendingCanvases = [];
@@ -44,6 +45,9 @@ class PrintModal extends React.PureComponent {
       count: -1,
       pagesToPrint: []
     };
+
+    this.testCoords = [];
+    props.useEmbeddedPrint(false);
   }
 
   componentDidUpdate(prevProps) {
@@ -61,7 +65,7 @@ class PrintModal extends React.PureComponent {
       for (let i = 1; i <= core.getTotalPages(); i++) {
         pagesToPrint.push(i);
       }
-    } else if (this.currentPage.current.checked) {
+    } else if (this.currentPage.current.checked || this.currentView.current.checked) {
       pagesToPrint.push(currentPage);
     } else if (this.customPages.current.checked) {
       const customInput = this.customInput.current.value.replace(/\s+/g, '');
@@ -120,8 +124,8 @@ class PrintModal extends React.PureComponent {
     return new Promise(resolve => {
       const pageIndex = pageNumber - 1;
       const zoom = 1;
-      const printRotation = this.getPrintRotation(pageIndex);
-      const onCanvasLoaded = canvas => {
+      const pageRotation = this.getPrintRotation(pageIndex);
+      const drawComplete = canvas => {
         this.pendingCanvases = this.pendingCanvases.filter(pendingCanvas => pendingCanvas !== id);
         this.positionCanvas(canvas, pageIndex);
         this.drawAnnotationsOnCanvas(canvas, pageNumber).then(() => {
@@ -136,7 +140,30 @@ class PrintModal extends React.PureComponent {
         });
       };
 
-      const id = core.getDocument().loadCanvasAsync(pageIndex, zoom, printRotation, onCanvasLoaded);
+      const options = { pageIndex, zoom, pageRotation, drawComplete };
+      if (this.currentView.current.checked) {
+        const displayMode = core.getDisplayModeObject();
+        const containerElement = document.querySelector('.DocumentContainer');
+        const documentElement = document.querySelector('.document');
+
+        const coordinates = [];
+        coordinates[0] = displayMode.windowToPageNoRotate({
+          x: Math.max(containerElement.scrollLeft, documentElement.offsetLeft),
+          y: Math.max(containerElement.scrollTop + 47, 0)
+        }, pageIndex);
+        coordinates[1] = displayMode.windowToPageNoRotate({
+          x: Math.min(window.innerWidth, documentElement.offsetLeft + documentElement.offsetWidth) + containerElement.scrollLeft,
+          y: window.innerHeight + containerElement.scrollTop
+        }, pageIndex);
+        const x1 = Math.min(coordinates[0].x, coordinates[1].x);
+        const y1 = Math.min(coordinates[0].y, coordinates[1].y);
+        const x2 = Math.max(coordinates[0].x, coordinates[1].x);
+        const y2 = Math.max(coordinates[0].y, coordinates[1].y);
+
+        options.renderRect = { x1, y1, x2, y2 };
+      }
+
+      const id = core.getDocument().loadCanvasAsync(options);
       this.pendingCanvases.push(id);
     });
   }
@@ -371,13 +398,16 @@ class PrintModal extends React.PureComponent {
 
     return (
       <div className={className} data-element="printModal" onClick={this.closePrintModal}>
-          <div className="container" onClick={e => e.stopPropagation()}>
+          <div className="container" onClick={e => e.stopPropagation()} style={{ position: 'relative' }}>
           <div className="settings">
             <div className="col">{`${t('option.print.pages')}:`}</div>
             <form className="col" onChange={this.onChange} onSubmit={this.createPagesAndPrint}>
               <Input ref={this.allPages} id="all-pages" name="pages" type="radio" label={t('option.print.all')} defaultChecked />
               <Input ref={this.currentPage} id="current-page" name="pages" type="radio" label={t('option.print.current')} />
               <Input ref={this.customPages} id="custom-pages" name="pages" type="radio" label={customPagesLabelElement} />
+              <br />
+              <div style={{ position: 'absolute', left: '13px', transform: 'translateY(3px)' }}>Others:</div>
+              <Input ref={this.currentView} id="current-view" name="pages" type="radio" label={'Current view'} />
               <Input ref={this.includeComments} id="include-comments" name="comments" type="checkbox" label={t('option.print.includeComments')} />
             </form>
           </div>
@@ -411,10 +441,10 @@ const mapStateToProps = state => ({
   colorMap: selectors.getColorMap(state)
 });
 
-const mapDispatchToProps = dispatch => ({
-  dispatch,
-  closeElement: dataElement => dispatch(actions.closeElement(dataElement)),
-  closeElements: dataElements => dispatch(actions.closeElements(dataElements))
-});
+const mapDispatchToProps = {
+  closeElement: actions.closeElement,
+  closeElements: actions.closeElements,
+  useEmbeddedPrint: actions.useEmbeddedPrint
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(translate()(PrintModal));
