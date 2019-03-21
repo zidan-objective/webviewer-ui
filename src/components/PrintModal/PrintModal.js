@@ -61,15 +61,21 @@ class PrintModal extends React.PureComponent {
     const { currentPage, pageLabels } = this.props;
     let pagesToPrint = [];
 
-    if (this.allPages.current.checked) {
-      for (let i = 1; i <= core.getTotalPages(); i++) {
-        pagesToPrint.push(i);
+    if (window.parent.printOption === 'document') {
+      if (this.allPages.current.checked) {
+        for (let i = 1; i <= core.getTotalPages(); i++) {
+          pagesToPrint.push(i);
+        }
+      } else if (this.currentPage.current.checked) {
+        pagesToPrint.push(currentPage);
+      } else if (this.customPages.current.checked) {
+        const customInput = this.customInput.current.value.replace(/\s+/g, '');
+        pagesToPrint = getPagesToPrint(customInput, pageLabels);
       }
-    } else if (this.currentPage.current.checked || this.currentView.current.checked) {
-      pagesToPrint.push(currentPage);
-    } else if (this.customPages.current.checked) {
-      const customInput = this.customInput.current.value.replace(/\s+/g, '');
-      pagesToPrint = getPagesToPrint(customInput, pageLabels);
+    } else if (window.parent.printOption === 'view') {
+      if (this.currentView.current.checked) {
+        pagesToPrint.push(currentPage);
+      }
     }
 
     this.setState({ pagesToPrint });
@@ -141,7 +147,7 @@ class PrintModal extends React.PureComponent {
       };
 
       const options = { pageIndex, zoom, pageRotation, drawComplete };
-      if (this.currentView.current.checked) {
+      if (window.parent.printOption === 'view' && this.currentView.current.checked) {
         const displayMode = core.getDisplayModeObject();
         const containerElement = document.querySelector('.DocumentContainer');
         const documentElement = document.querySelector('.document');
@@ -400,16 +406,27 @@ class PrintModal extends React.PureComponent {
       <div className={className} data-element="printModal" onClick={this.closePrintModal}>
           <div className="container" onClick={e => e.stopPropagation()} style={{ position: 'relative' }}>
           <div className="settings">
-            <div className="col">{`${t('option.print.pages')}:`}</div>
-            <form className="col" onChange={this.onChange} onSubmit={this.createPagesAndPrint}>
-              <Input ref={this.allPages} id="all-pages" name="pages" type="radio" label={t('option.print.all')} defaultChecked />
-              <Input ref={this.currentPage} id="current-page" name="pages" type="radio" label={t('option.print.current')} />
-              <Input ref={this.customPages} id="custom-pages" name="pages" type="radio" label={customPagesLabelElement} />
-              <br />
-              <div style={{ position: 'absolute', left: '13px', transform: 'translateY(3px)' }}>Others:</div>
-              <Input ref={this.currentView} id="current-view" name="pages" type="radio" label={'Current view'} />
-              <Input ref={this.includeComments} id="include-comments" name="comments" type="checkbox" label={t('option.print.includeComments')} />
-            </form>
+            {window.parent.printOption === 'document' &&
+              <React.Fragment>
+                <div className="col">{`${t('option.print.pages')}:`}</div>
+                <form className="col" onChange={this.onChange} onSubmit={this.createPagesAndPrint}>
+                  <Input ref={this.allPages} id="all-pages" name="pages" type="radio" label={t('option.print.all')} defaultChecked />
+                  <Input ref={this.currentPage} id="current-page" name="pages" type="radio" label={t('option.print.current')} />
+                  <Input ref={this.customPages} id="custom-pages" name="pages" type="radio" label={customPagesLabelElement} />
+                  <br />
+                  <div style={{ position: 'absolute', left: '13px', transform: 'translateY(3px)' }}>Options:</div>
+                  <Input ref={this.includeComments} id="include-comments" name="comments" type="checkbox" label={t('option.print.includeComments')} />
+                </form>
+              </React.Fragment>
+            }
+            {window.parent.printOption === 'view' &&
+              <React.Fragment>
+                <div className="col">Options:</div>
+                <form className="col" onChange={this.onChangePrintView} onSubmit={this.createPagesAndPrint}>
+                  <Input ref={this.currentView} id="current-view" name="pages" type="radio" label='Current view' defaultChecked />
+                </form>
+              </React.Fragment>
+            }
           </div>
           <div className="total">
             {isPrinting
