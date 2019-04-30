@@ -6,7 +6,7 @@ export const isElementDisabled = (state, dataElement) => state.viewer.disabledEl
 export const isToolGroupButtonDisabled = (state, dataElement, toolGroup) => {
   const toolNames = getToolNamesByGroup(state, toolGroup);
   const isEveryButtonInGroupDisabled = toolNames.every(toolName => isToolButtonDisabled(state, toolName));
-  
+
   return isElementDisabled(state, dataElement) || isEveryButtonInGroupDisabled;
 };
 export const isToolButtonDisabled = (state, toolName) => {
@@ -18,7 +18,7 @@ export const isElementOpen = (state, dataElement) => {
   if (state.viewer.disabledElements[dataElement]) {
     return state.viewer.openElements[dataElement] && !state.viewer.disabledElements[dataElement].disabled;
   }
-  
+
   return state.viewer.openElements[dataElement];
 };
 
@@ -30,6 +30,7 @@ export const isElementActive = (state, tool) => {
 };
 
 export const getActiveHeaderItems = state => state.viewer.headers[state.viewer.activeHeaderGroup];
+export const getAnnotationPopupItems = state => state.viewer.annotationPopup;
 export const getDisabledElementPriority = (state, dataElement) => state.viewer.disabledElements[dataElement] && state.viewer.disabledElements[dataElement].priority;
 export const getToolButtonObjects = state => state.viewer.toolButtonObjects;
 export const getToolButtonDataElements = (state, toolNames) => toolNames.map(toolName => state.viewer.toolButtonObjects[toolName].dataElement);
@@ -75,7 +76,7 @@ export const getColorMap = state => state.viewer.colorMap;
 export const getCursorOverlayData = state => state.viewer.cursorOverlay;
 export const getOpenElements = state => state.viewer.openElements;
 export const getCurrentPalette = (state, colorMapKey) => state.viewer.colorMap[colorMapKey] && state.viewer.colorMap[colorMapKey].currentPalette;
-export const getIconColor = (state, colorMapKey) => state.viewer.colorMap[colorMapKey] && state.viewer.colorMap[colorMapKey].iconColor; 
+export const getIconColor = (state, colorMapKey) => state.viewer.colorMap[colorMapKey] && state.viewer.colorMap[colorMapKey].iconColor;
 export const getSwipeOrientation = state => state.viewer.swipeOrientation;
 export const getCustomNoteFilter = state => state.viewer.customNoteFilter;
 export const getZoomList = state => state.viewer.zoomList;

@@ -27,7 +27,7 @@ export default {
         { type: 'actionButton', img: 'ic_zoom_out_black_24px', onClick: zoomOut, title: 'action.zoomOut', dataElement: 'zoomOutButton', hidden: [ 'mobile' ] },
         { type: 'actionButton', img: 'ic_zoom_in_black_24px', onClick: zoomIn, title: 'action.zoomIn', dataElement: 'zoomInButton', hidden: [ 'mobile' ] },
         { type: 'customElement',
-          render: () => <ToggleElementOverlay />, 
+          render: () => <ToggleElementOverlay />,
           dataElement: 'zoomOverlayButton',
           hidden: [ 'mobile' ],
           element: 'zoomOverlay'
@@ -120,6 +120,7 @@ export default {
     activeToolStyles: {},
     activeLeftPanel: getHashParams('hideAnnotationPanel', false) || !getHashParams('a', false) || getHashParams('readonly', false) ? 'thumbnailsPanel' : 'notesPanel',
     activeToolGroup: '',
+    annotationPopup: [],
     expandedNotes: {},
     notePopupId: '',
     isNoteEditing: false,

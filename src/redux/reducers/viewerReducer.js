@@ -80,6 +80,8 @@ export default initialState => (state = initialState, action) => {
       return { ...state, isFullScreen: payload.isFullScreen };
     case 'SET_HEADER_ITEMS':
       return { ...state, headers: { ...state.headers, [payload.header]: payload.headerItems} };
+    case 'SET_ANNOTATION_POPUP_ITEMS':
+      return { ...state, annotationPopup: payload.annotationPopupItems };
     case 'REGISTER_TOOL':
       return {
         ...state,
@@ -116,7 +118,7 @@ export default initialState => (state = initialState, action) => {
         }
       };
     }
-    case 'SET_TOOL_BUTTON_OBJECTS': 
+    case 'SET_TOOL_BUTTON_OBJECTS':
       return { ...state, toolButtonObjects: { ...payload.toolButtonObjects } };
     case 'SET_DOCUMENT_LOADED':
       return { ...state, isDocumentLoaded: payload.isDocumentLoaded };
@@ -126,7 +128,7 @@ export default initialState => (state = initialState, action) => {
       return { ...state, customPanels: [ ...state.customPanels, payload.newPanel ] };
     case 'USE_EMBEDDED_PRINT':
       return { ...state, useEmbeddedPrint: payload.useEmbeddedPrint };
-    case 'SET_PAGE_LABELS': 
+    case 'SET_PAGE_LABELS':
       return { ...state, pageLabels: [ ...payload.pageLabels ] };
     case 'SET_COLOR_PALETTE': {
       const { colorMapKey, colorPalette } = payload;
@@ -136,14 +138,14 @@ export default initialState => (state = initialState, action) => {
       const { colorMapKey, color } = payload;
       return { ...state, colorMap: { ...state.colorMap, [colorMapKey]: { ...state.colorMap[colorMapKey], iconColor: color } } };
     }
-    case 'SET_COLOR_MAP': 
+    case 'SET_COLOR_MAP':
       return { ...state, colorMap: payload.colorMap };
     case 'SET_CURSOR_OVERLAY': {
       const { imgSrc, width, height } = payload.data;
 
-      return { 
-        ...state, 
-        cursorOverlay: { imgSrc, width, height } 
+      return {
+        ...state,
+        cursorOverlay: { imgSrc, width, height }
       };
     }
     case 'SET_SWIPE_ORIENTATION':

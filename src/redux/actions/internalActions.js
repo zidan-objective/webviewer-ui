@@ -40,7 +40,7 @@ export const enableElements = (dataElements, priority) => (dispatch, getState) =
 export const setActiveToolNameAndStyle = toolObject => (dispatch, getState) => {
   const state = getState();
   let name;
-  
+
   if (isIOS || isAndroid) {
     name = toolObject.name;
   } else {
@@ -87,6 +87,7 @@ export const collapseAllNotes = () => (dispatch, getState) => {
   }
 };
 export const setHeaderItems = (header, headerItems) => ({ type: 'SET_HEADER_ITEMS', payload: { header, headerItems } });
+export const setAnnotationPopupItems = annotationPopupItems => ({ type: 'SET_ANNOTATION_POPUP_ITEMS', payload: { annotationPopupItems }});
 export const setColorPalette = (colorMapKey, colorPalette) => ({ type: 'SET_COLOR_PALETTE', payload: { colorMapKey, colorPalette } });
 export const setIconColor = (colorMapKey, color) => ({ type: 'SET_ICON_COLOR', payload: { colorMapKey, color } });
 export const setColorMap = colorMap => ({ type: 'SET_COLOR_MAP', payload: { colorMap } });

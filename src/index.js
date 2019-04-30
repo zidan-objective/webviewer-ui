@@ -201,6 +201,7 @@ if (window.CanvasRenderingContext2D) {
           selectors: apis.getSelectors(store),
           setAdminUser: apis.setAdminUser,
           setNoteDateFormat: apis.setNoteDateFormat(store),
+          setAnnotationPopupItems: apis.setAnnotationPopupItems(store),
           setAnnotationUser: apis.setAnnotationUser,
           setTheme: apis.setTheme,
           setCurrentPageNumber: apis.setCurrentPageNumber,

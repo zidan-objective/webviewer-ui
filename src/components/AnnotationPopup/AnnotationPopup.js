@@ -22,6 +22,7 @@ class AnnotationPopup extends React.PureComponent {
     isOpen: PropTypes.bool,
     isLeftPanelOpen: PropTypes.bool,
     isRightPanelOpen: PropTypes.bool,
+    popupItems: PropTypes.arrayOf(PropTypes.object),
     isAnnotationStylePopupDisabled: PropTypes.bool,
     applyRedactions: PropTypes.func.isRequired,
     openElement: PropTypes.func.isRequired,
@@ -168,9 +169,25 @@ class AnnotationPopup extends React.PureComponent {
     this.props.closeElement('annotationPopup');
   }
 
+  getCustomPopupItems = () => {
+    const { annotation } = this.state;
+
+    return this.props.popupItems.map((item, i) => {
+      const { type, dataElement } = item;
+      const key = `${type}-${dataElement || i}`;
+
+      switch (type) {
+        case 'actionButton':
+          return <ActionButton key={key} {...item} />;
+        default:
+          return null;
+      }
+    });
+  }
+
   render() {
     const { annotation, left, top, canModify, isStylePopupOpen } = this.state;
-    const { isNotesPanelDisabled, isDisabled, isOpen, isAnnotationStylePopupDisabled } = this.props;
+    const { isNotesPanelDisabled, isDisabled, isOpen, isAnnotationStylePopupDisabled, popupItems } = this.props;
     const style = getAnnotationStyles(annotation);
     const hasStyle = Object.keys(style).length > 0;
     const className = getClassName(`Popup AnnotationPopup`, this.props);
@@ -183,6 +200,8 @@ class AnnotationPopup extends React.PureComponent {
       <div className={className} ref={this.popup} data-element="annotationPopup" style={{ left, top }} onClick={e => e.stopPropagation()} onMouseDown={e => e.stopPropagation()}>
         {isStylePopupOpen
           ? <AnnotationStylePopup annotation={annotation} style={style} isOpen={isOpen} />
+          : (popupItems.length > 0)
+          ? this.getCustomPopupItems()
           : <React.Fragment>
             {!isNotesPanelDisabled &&
               <ActionButton dataElement="annotationCommentButton" title="action.comment" img="ic_comment_black_24px" onClick={this.commentOnAnnotation} />
@@ -211,6 +230,7 @@ const mapStateToProps = state => ({
   isLeftPanelOpen: selectors.isElementOpen(state, 'leftPanel'),
   isRightPanelOpen: selectors.isElementOpen(state, 'searchPanel'),
   serverURL: selectors.getServerUrl(state),
+  popupItems: selectors.getAnnotationPopupItems(state)
 });
 
 const mapDispatchToProps = {

@@ -48,6 +48,7 @@ import goToPrevPage from './goToPrevPage';
 import isMobileDevice from './isMobileDevice';
 import rotateClockwise from './rotateClockwise';
 import rotateCounterClockwise from './rotateCounterClockwise';
+import setAnnotationPopupItems from './setAnnotationPopupItems';
 import setCurrentPageNumber from './setCurrentPageNumber';
 import setLayoutMode from './setLayoutMode';
 import setSideWindowVisibility from './setSideWindowVisibility';
@@ -129,6 +130,7 @@ export default {
   isMobileDevice,
   rotateClockwise,
   rotateCounterClockwise,
+  setAnnotationPopupItems,
   setCurrentPageNumber,
   setLayoutMode,
   setSideWindowVisibility,
@@ -152,7 +154,7 @@ export default {
   addSortStrategy,
   updateOutlines,
   updateTool,
-  print, 
+  print,
   getZoomLevel,
   setZoomLevel,
   setMaxZoomLevel,
