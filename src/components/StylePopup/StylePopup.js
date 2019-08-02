@@ -6,7 +6,7 @@ import ColorPaletteHeader from 'components/ColorPaletteHeader';
 import ColorPalette from 'components/ColorPalette';
 import Slider from 'components/Slider';
 import MeasurementOption from 'components/MeasurementOption';
-
+import RedactionOption from 'components/RedactionOption';
 import { circleRadius } from 'constants/slider';
 import selectors from 'selectors';
 
@@ -17,7 +17,7 @@ class StylePopup extends React.PureComponent {
     style: PropTypes.object.isRequired,
     onStyleChange: PropTypes.func.isRequired,
     isFreeText: PropTypes.bool.isRequired,
-    hideSlider: PropTypes.bool,
+    activeToolName: PropTypes.string,
     currentPalette: PropTypes.oneOf([ 'TextColor', 'StrokeColor', 'FillColor' ])
   }
 
@@ -71,7 +71,8 @@ class StylePopup extends React.PureComponent {
       }
     ];
 
-    return [ Opacity, StrokeThickness, FontSize ].map((value, index) => {
+    const slidersToShow = this.shouldShowRedactionOption() ? [ null, null, FontSize ] : [ Opacity, StrokeThickness, FontSize ];
+    return slidersToShow.map((value, index) => {
       if (value === null || value === undefined) { // we still want to render a slider if the value is 0
         return null;
       }
@@ -83,10 +84,16 @@ class StylePopup extends React.PureComponent {
     });
   }
 
+  shouldShowRedactionOption() {
+    const { currentPalette, activeToolName } = this.props;
+    return (activeToolName === 'AnnotationCreateRedaction') && (currentPalette === 'TextColor');
+  }
+
   render() {
-    const { currentPalette, style, activeToolName } = this.props;
+    const { currentPalette, style, activeToolName, onStyleChange } = this.props;
     const { openMeasurementDropdown } = this.state;
     const { Scale, Precision } = style;
+    const showRedactionOptions = this.shouldShowRedactionOption();
 
     return (
       <div className="Popup StylePopup" data-element="stylePopup" onClick={e => e.stopPropagation()} onScroll={e => e.stopPropagation()}>
@@ -100,9 +107,12 @@ class StylePopup extends React.PureComponent {
         }
         <div className="sliders-container" onMouseDown={e => e.preventDefault()} onClick={() => this.onOpenDropdownChange(-1)}>
           <div className="sliders">
-            {!this.props.hideSlider && this.renderSliders()}
+            {this.renderSliders()}
           </div>
         </div>
+        { showRedactionOptions &&
+          <RedactionOption  onStyleChange={onStyleChange} style={style} />
+        }
         {Scale && Precision &&
           <MeasurementOption
             scale={Scale}

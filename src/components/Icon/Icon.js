@@ -49,9 +49,12 @@ class Icon extends React.PureComponent {
     const { className = '', color, glyph } = this.props;
     const filter = (color && (color === 'rgba(255, 255, 255, 1)' || color === 'rgb(255, 255, 255)')) ? 'drop-shadow(0 0 .5px #333)' : undefined;
     const svgElement = this.isInlineSvg() ? glyph : require(`../../../assets/${this.props.glyph}.svg`);
+    const iconColor = (color === 'rgba(0, 0, 0, 0)') ? '#808080' : color;
+    // need to include fillColor for some icons (i.e. redaction)
+    const style = { color: iconColor, fill: iconColor, filter };
 
     return (
-      <div ref={this.icon} className={`Icon ${className}`} style={{ color: (color === 'rgba(0, 0, 0, 0)') ? '#808080' : color, filter }} dangerouslySetInnerHTML={{__html: svgElement}}></div>
+      <div ref={this.icon} className={`Icon ${className}`} style={style} dangerouslySetInnerHTML={{ __html: svgElement }}></div>
     );
   }
 }

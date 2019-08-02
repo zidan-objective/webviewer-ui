@@ -3,7 +3,13 @@ import getToolStyles from 'helpers/getToolStyles';
 import actions from 'actions';
 
 export default (dispatch, annotationConstructor) =>  {
-  const annotations = createTextAnnotation(annotationConstructor);
+  let annotations = null;
+
+  if (annotationConstructor === window.Annotations.RedactionAnnotation) {
+    annotations = createRedactionAnnotation(annotationConstructor);
+  } else {
+    annotations = createTextAnnotation(annotationConstructor);
+  }
 
   core.clearSelection();    
   core.addAnnotations(annotations);
@@ -21,14 +27,26 @@ const createTextAnnotation = annotationConstructor => {
     const pageNumber = parseInt(pageIndex) + 1;
     const annotation = createAnnotation(annotationConstructor, pageNumber, quads);
 
-    if (window.Tools.TextAnnotationCreateTool.AUTO_SET_TEXT && !(annotation instanceof window.Annotations.RedactionAnnotation)) {
+    if (window.Tools.TextAnnotationCreateTool.AUTO_SET_TEXT) {
       annotation.setContents(core.getSelectedText(pageNumber));
     }
-
-    if (annotation instanceof window.Annotations.RedactionAnnotation) {
-      setRedactionStyle(annotation);
-    }
     
+    annotations.push(annotation);
+  });
+
+  return annotations;
+};
+
+const createRedactionAnnotation = annotationConstructor => {
+  const annotations = [];
+  const quads = core.getSelectedTextQuads();
+  
+  Object.keys(quads).forEach(pageIndex => {
+    const pageNumber = parseInt(pageIndex) + 1;
+    const annotation = createAnnotation(annotationConstructor, pageNumber, quads);
+
+    setRedactionStyle(annotation);
+    annotation.IsText = true;
     annotations.push(annotation);
   });
 
@@ -66,6 +84,21 @@ const setRedactionStyle = annotation => {
     if (style.FillColor) {
       const fillColor = style.FillColor;
       annotation.FillColor = new window.Annotations.Color(fillColor['R'], fillColor['G'], fillColor['B'], fillColor['A']);
+    }
+    if (style.TextColor) {
+      const textColor = style.TextColor;
+      annotation.TextColor = new window.Annotations.Color(textColor['R'], textColor['G'], textColor['B'], textColor['A']);
+    }
+    
+    if (style.FontSize) {
+      annotation.FontSize = style['FontSize'];
+    }
+
+    if (style.TextAlign) {
+      annotation.TextAlign = style['TextAlign'];
+    }
+    if (style['OverlayText']) {
+      annotation['OverlayText'] = style['OverlayText'];
     }
   }
 };

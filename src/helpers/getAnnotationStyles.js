@@ -8,7 +8,7 @@ import core from 'core';
  */
 
 export default annotation => {
-  const styleProperty = [ 'FillColor', 'StrokeColor', 'TextColor', 'Opacity', 'StrokeThickness', 'FontSize' ];
+  const styleProperty = [ 'FillColor', 'StrokeColor', 'TextColor', 'Opacity', 'StrokeThickness', 'FontSize', 'TextAlign', 'OverlayText' ];
   const style = {};
 
   styleProperty.forEach(property => {

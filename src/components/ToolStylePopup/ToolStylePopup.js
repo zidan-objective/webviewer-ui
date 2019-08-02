@@ -106,14 +106,13 @@ class ToolStylePopup extends React.PureComponent {
 
   render() {
     const { left, top } = this.state;
-    const { isDisabled, activeToolName, activeToolStyle, dataElement } = this.props;
+    const { isDisabled, activeToolName, activeToolStyle } = this.props;
     const isFreeText = activeToolName === 'AnnotationCreateFreeText';
     const className = getClassName(`Popup ToolStylePopup`, this.props);
 
     if (isDisabled) {
       return null;
     }
-    const hideSlider = activeToolName === 'AnnotationCreateRedaction';
     return (
       <div className={className} data-element="toolStylePopup" style={{ top, left }} ref={this.popup} onMouseDown={e => e.stopPropagation()} onClick={this.onClick}>
         <StylePopup
@@ -121,7 +120,6 @@ class ToolStylePopup extends React.PureComponent {
           activeToolName={activeToolName}
           style={activeToolStyle}
           isFreeText={isFreeText}
-          hideSlider={hideSlider}
           onStyleChange={this.handleStyleChange}
         />
       </div>

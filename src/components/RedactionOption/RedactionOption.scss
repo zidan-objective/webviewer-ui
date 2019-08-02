@@ -1,0 +1,64 @@
+@import '../../constants/styles';
+@import '../../constants/overlay';
+@import '../../constants/popup';
+
+div.RedactionOption{
+  padding: 0px 16px 8px;
+  margin-top: -10px;
+}
+
+.RedactionOption {
+  background-color: $white;
+
+  .option {
+    display: grid;
+    margin: 0 0 16px;
+  }
+
+  .optionLabel {
+    grid-row: 1;
+    justify-self: start;
+    align-self: center;
+  }
+
+  .optionControl {
+    grid-row: 1;
+    justify-self: end;
+  }
+
+  $borderRadius: 3px;
+
+  input.optionControl{
+    width: 100%;
+    border-radius: $borderRadius;
+    border: thin solid rgba(0, 0, 0, .12);
+  }
+
+  .overlayTextControls{
+    margin-bottom: 3%;
+  }
+
+  div.Button{
+    width: 32px;
+    height: 32px;
+
+    .Icon{
+      width: $popup-icon-width;
+      height: $popup-icon-height;
+    }
+
+    min-width: initial;
+    border: thin solid rgba(0, 0, 0, .12);
+
+    $borderRadius: 3px;
+    &:first-child{
+      border-top-left-radius: $borderRadius;
+      border-bottom-left-radius: $borderRadius;
+    }
+
+    &:last-child{
+      border-top-right-radius: $borderRadius;
+      border-bottom-right-radius: $borderRadius;
+    }
+  }
+}

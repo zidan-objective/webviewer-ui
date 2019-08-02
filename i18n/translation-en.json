@@ -100,6 +100,13 @@
     "insertTextHere": "Insert text here"
   },
   "option": {
+    "alignment":{
+      "horizontal": {
+        "left": "Left",
+        "center": "Center",
+        "right": "Right"
+      }
+    },
     "annotationColor": {
       "StrokeColor": "Border color",
       "FillColor": "Fill color",
