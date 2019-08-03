@@ -22,10 +22,16 @@ export const isElementOpen = (state, dataElement) => {
 };
 
 export const isElementActive = (state, tool) => {
-  const { viewer: { activeToolName, header: { tools = [] }  } } = state;
+  const { viewer: { activeToolName, header: headers } } = state;
   const { element, dataElement } = tool;
+  const elementIsOpen = isElementOpen(state, element);
+  const isHeaderChildrenActive = header => {
+    return header && header.children && header.children.some( headerChild => (headerChild.dataElement === dataElement && headerChild.toolName === activeToolName) || isHeaderChildrenActive(headerChild));
+  };
 
-  return isElementOpen(state, element) || tools.some(tool => tool.dataElement === dataElement && tool.toolName === activeToolName);
+  const toolSelected =  headers.some(header => (header.dataElement === dataElement && tool.toolName === activeToolName) || isHeaderChildrenActive(header));
+    
+  return elementIsOpen || toolSelected;
 };
 
 export const getActiveHeaderItems = state => state.viewer.header;
