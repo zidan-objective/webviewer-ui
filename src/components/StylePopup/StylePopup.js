@@ -12,18 +12,18 @@ import selectors from 'selectors';
 
 import './StylePopup.scss';
 
-class StylePopup extends React.PureComponent { 
+class StylePopup extends React.PureComponent {
   static propTypes = {
     style: PropTypes.object.isRequired,
     onStyleChange: PropTypes.func.isRequired,
     isFreeText: PropTypes.bool.isRequired,
     activeToolName: PropTypes.string,
-    currentPalette: PropTypes.oneOf([ 'TextColor', 'StrokeColor', 'FillColor' ])
+    hideSlider: PropTypes.bool,
+    currentPalette: PropTypes.oneOf(['TextColor', 'StrokeColor', 'FillColor']),
   }
 
-  constructor(props) {
-    super(props);
-    this.state = { openMeasurementDropdown: -1 };
+  state = {
+    openMeasurementDropdown: -1,
   }
 
   onOpenDropdownChange = dropdown => {
@@ -33,47 +33,61 @@ class StylePopup extends React.PureComponent {
   renderColorPalette = () => {
     const { style, onStyleChange, currentPalette } = this.props;
 
-    return <ColorPalette color={style[currentPalette]} property={currentPalette} onStyleChange={onStyleChange} />;
-  }
+    return (
+      <ColorPalette
+        color={style[currentPalette]}
+        property={currentPalette}
+        onStyleChange={onStyleChange}
+      />
+    );
+  };
 
   renderSliders = () => {
-    const { 
-      style: { Opacity, StrokeThickness, FontSize }, 
+    const {
+      style: { Opacity, StrokeThickness, FontSize },
       onStyleChange,
-      isFreeText
+      isFreeText,
     } = this.props;
     const lineStart = circleRadius;
     const sliderProps = [
       {
-        property: 'Opacity',    
-        displayProperty: 'opacity',              
+        property: 'Opacity',
+        displayProperty: 'opacity',
         value: Opacity,
         displayValue: `${Math.round(Opacity * 100)}%`,
         getCirclePosition: lineLength => Opacity * lineLength + lineStart,
         convertRelativeCirclePositionToValue: circlePosition => circlePosition,
       },
       {
-        property: 'StrokeThickness',              
-        displayProperty: 'thickness',              
+        property: 'StrokeThickness',
+        displayProperty: 'thickness',
         value: StrokeThickness,
         displayValue: `${Math.round(StrokeThickness)}pt`,
         // FreeText Annotations can have the border thickness go down to 0. For others the minimum is 1.
-        getCirclePosition: lineLength => isFreeText ? StrokeThickness / 20 * lineLength + lineStart : (StrokeThickness - 1) / 19 * lineLength + lineStart,
-        convertRelativeCirclePositionToValue: circlePosition => isFreeText ? circlePosition * 20 : circlePosition * 19 + 1,
+        getCirclePosition: lineLength => (isFreeText
+            ? (StrokeThickness / 20) * lineLength + lineStart
+            : ((StrokeThickness - 1) / 19) * lineLength + lineStart),
+        convertRelativeCirclePositionToValue: circlePosition => (isFreeText ? circlePosition * 20 : circlePosition * 19 + 1),
       },
       {
-        property: 'FontSize',  
+        property: 'FontSize',
         displayProperty: 'text',
         value: FontSize,
         displayValue: `${Math.round(parseInt(FontSize, 10))}pt`,
-        getCirclePosition: lineLength => (parseInt(FontSize, 10) - 5) / 40 * lineLength + lineStart,
-        convertRelativeCirclePositionToValue: circlePosition => circlePosition * 40 + 5 + 'pt',
-      }
+        getCirclePosition: lineLength => ((parseInt(FontSize, 10) - 5) / 40) * lineLength + lineStart,
+        convertRelativeCirclePositionToValue: circlePosition => `${circlePosition * 40 + 5  }pt`,
+      },
     ];
 
+<<<<<<< HEAD
     const slidersToShow = this.shouldShowRedactionOption() ? [ null, null, FontSize ] : [ Opacity, StrokeThickness, FontSize ];
     return slidersToShow.map((value, index) => {
       if (value === null || value === undefined) { // we still want to render a slider if the value is 0
+=======
+    return [Opacity, StrokeThickness, FontSize].map((value, index) => {
+      if (value === null || value === undefined) {
+        // we still want to render a slider if the value is 0
+>>>>>>> dev
         return null;
       }
 
@@ -82,7 +96,7 @@ class StylePopup extends React.PureComponent {
 
       return <Slider {...props} key={key} onStyleChange={onStyleChange} />;
     });
-  }
+  };
 
   shouldShowRedactionOption() {
     const { currentPalette, activeToolName } = this.props;
@@ -90,44 +104,59 @@ class StylePopup extends React.PureComponent {
   }
 
   render() {
+<<<<<<< HEAD
     const { currentPalette, style, activeToolName, onStyleChange } = this.props;
+=======
+    const {
+ currentPalette, style, activeToolName, onStyleChange 
+} = this.props;
+>>>>>>> dev
     const { openMeasurementDropdown } = this.state;
     const { Scale, Precision } = style;
     const showRedactionOptions = this.shouldShowRedactionOption();
 
     return (
       <div className="Popup StylePopup" data-element="stylePopup" onClick={e => e.stopPropagation()} onScroll={e => e.stopPropagation()}>
-        {currentPalette && style[currentPalette] &&
+        {currentPalette && style[currentPalette] && (
           <div className="colors-container">
             <div className="inner-wrapper">
               <ColorPaletteHeader colorPalette={currentPalette} activeToolName={activeToolName} style={style} />
               {this.renderColorPalette()}
             </div>
           </div>
-        }
-        <div className="sliders-container" onMouseDown={e => e.preventDefault()} onClick={() => this.onOpenDropdownChange(-1)}>
+        )}
+        <div
+          className="sliders-container"
+          onMouseDown={e => e.preventDefault()}
+          onClick={() => this.onOpenDropdownChange(-1)}
+        >
           <div className="sliders">
             {this.renderSliders()}
           </div>
         </div>
+<<<<<<< HEAD
         { showRedactionOptions &&
           <RedactionOption  onStyleChange={onStyleChange} style={style} />
         }
         {Scale && Precision &&
+=======
+        {Scale && Precision && (
+>>>>>>> dev
           <MeasurementOption
             scale={Scale}
-            precision={Precision} 
-            onOpenDropdownChange={this.onOpenDropdownChange} 
-            openMeasurementDropdown={openMeasurementDropdown} 
+            precision={Precision}
+            onOpenDropdownChange={this.onOpenDropdownChange}
+            openMeasurementDropdown={openMeasurementDropdown}
+            onStyleChange={onStyleChange}
           />
-        }
+        )}
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, { activeToolName }) => ({
-  currentPalette: selectors.getCurrentPalette(state, activeToolName)
+  currentPalette: selectors.getCurrentPalette(state, activeToolName),
 });
 
 export default connect(mapStateToProps)(StylePopup);

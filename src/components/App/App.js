@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { hot } from 'react-hot-loader';
 
 import Accessibility from 'components/Accessibility';
@@ -42,8 +42,8 @@ class App extends React.PureComponent {
   static propTypes = {
     isSearchPanelOpen: PropTypes.bool,
     removeEventHandlers: PropTypes.func.isRequired,
-    closeElements: PropTypes.func.isRequired
-  }
+    closeElements: PropTypes.func.isRequired,
+  };
 
   componentWillUnmount() {
     this.props.removeEventHandlers();
@@ -55,11 +55,11 @@ class App extends React.PureComponent {
       'menuOverlay',
       'zoomOverlay',
       'signatureOverlay',
-      this.props.isSearchPanelOpen ? '' : 'searchOverlay'
+      this.props.isSearchPanelOpen ? '' : 'searchOverlay',
     ].filter(element => element);
 
     this.props.closeElements(elements);
-  }
+  };
 
   onMouseDown = () => {
     const elements = [
@@ -68,20 +68,25 @@ class App extends React.PureComponent {
       'toolStylePopup',
       'textPopup',
       isDesktop() ? 'redactionOverlay' : '',
-      isDesktop() ? 'groupOverlay' : ''
+      isDesktop() ? 'groupOverlay' : '',
     ].filter(element => element);
 
     this.props.closeElements(elements);
-  }
+  };
 
   onScroll = () => {
     this.onMouseDown();
-  }
+  };
 
   render() {
     return (
-      <React.Fragment>
-        <div className="App" onMouseDown={this.onMouseDown} onClick={this.onClick} onScroll={this.onScroll}>
+      <>
+        <div
+          className="App"
+          onMouseDown={this.onMouseDown}
+          onClick={this.onClick}
+          onScroll={this.onScroll}
+        >
           <Accessibility />
 
           <Header />
@@ -117,7 +122,7 @@ class App extends React.PureComponent {
         <PrintHandler />
         <FilePickerHandler />
         <CopyTextHandler />
-      </React.Fragment>
+      </>
     );
   }
 }
@@ -127,7 +132,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  closeElements: actions.closeElements
+  closeElements: actions.closeElements,
 };
 
-export default hot(module)(connect(mapStateToProps, mapDispatchToProps)(translate()(App)));
+export default hot(module)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(withTranslation()(App)),
+);
