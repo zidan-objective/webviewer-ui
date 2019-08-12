@@ -122,18 +122,18 @@ class StylePopup extends React.PureComponent {
             {this.renderSliders()}
           </div>
         </div>
-        { showRedactionOptions &&
-          <RedactionOption  onStyleChange={onStyleChange} style={style} />
+        { showRedactionOptions
+          && <RedactionOption onStyleChange={onStyleChange} style={style} />
         }
         {Scale && Precision &&
-          <MeasurementOption
-            scale={Scale}
-            precision={Precision}
-            onOpenDropdownChange={this.onOpenDropdownChange}
-            openMeasurementDropdown={openMeasurementDropdown}
-            onStyleChange={onStyleChange}
-          />
-        )}
+        <MeasurementOption
+          scale={Scale}
+          precision={Precision}
+          onOpenDropdownChange={this.onOpenDropdownChange}
+          openMeasurementDropdown={openMeasurementDropdown}
+          onStyleChange={onStyleChange}
+        />
+        }
       </div>
     );
   }

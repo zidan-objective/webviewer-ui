@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { textAlignment } from 'constants/textAlignment';
 import TextAlignTabs from '../TextAlignTabs';
 
@@ -50,4 +50,4 @@ class RedactionOption extends React.PureComponent {
   }
 }
 
-export default translate()(RedactionOption);
+export default withTranslation()(RedactionOption);

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 import Button from 'components/Button';
 import { textAlignment } from 'constants/textAlignment';
@@ -16,7 +16,7 @@ class TextAlignTabs extends React.PureComponent {
   static propTypes = {
     currentAlignment: PropTypes.string,
     setActiveStyle: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
   }
 
   isActive = alignment => {
@@ -29,26 +29,24 @@ class TextAlignTabs extends React.PureComponent {
       setActiveStyle,
     } = this.props;
 
-    let alignmentButtons = horizAlignBtn; 
+    const alignmentButtons = horizAlignBtn;
 
     return (
       <span className="TextAlignTab">
         {
-          alignmentButtons.map(btn => {
-            return (
-              <Button
-                isActive={this.isActive(btn.val)}
-                img={btn.img}
-                onClick={() => setActiveStyle(btn.val)}
-                title={btn.toolTip}
-                key={btn.val}
-              />
-            );
-          })
+          alignmentButtons.map(btn =>
+            <Button
+              isActive={this.isActive(btn.val)}
+              img={btn.img}
+              onClick={() => setActiveStyle(btn.val)}
+              title={btn.toolTip}
+              key={btn.val}
+            />
+          )
         }
       </span>
     );
   }
 }
 
-export default (translate()(TextAlignTabs));
+export default (withTranslation()(TextAlignTabs));
