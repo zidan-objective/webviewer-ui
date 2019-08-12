@@ -79,15 +79,9 @@ class StylePopup extends React.PureComponent {
       },
     ];
 
-<<<<<<< HEAD
     const slidersToShow = this.shouldShowRedactionOption() ? [ null, null, FontSize ] : [ Opacity, StrokeThickness, FontSize ];
     return slidersToShow.map((value, index) => {
       if (value === null || value === undefined) { // we still want to render a slider if the value is 0
-=======
-    return [Opacity, StrokeThickness, FontSize].map((value, index) => {
-      if (value === null || value === undefined) {
-        // we still want to render a slider if the value is 0
->>>>>>> dev
         return null;
       }
 
@@ -104,13 +98,7 @@ class StylePopup extends React.PureComponent {
   }
 
   render() {
-<<<<<<< HEAD
     const { currentPalette, style, activeToolName, onStyleChange } = this.props;
-=======
-    const {
- currentPalette, style, activeToolName, onStyleChange 
-} = this.props;
->>>>>>> dev
     const { openMeasurementDropdown } = this.state;
     const { Scale, Precision } = style;
     const showRedactionOptions = this.shouldShowRedactionOption();
@@ -134,14 +122,10 @@ class StylePopup extends React.PureComponent {
             {this.renderSliders()}
           </div>
         </div>
-<<<<<<< HEAD
         { showRedactionOptions &&
           <RedactionOption  onStyleChange={onStyleChange} style={style} />
         }
         {Scale && Precision &&
-=======
-        {Scale && Precision && (
->>>>>>> dev
           <MeasurementOption
             scale={Scale}
             precision={Precision}
