@@ -14,6 +14,7 @@ class ThumbnailsPanel extends React.PureComponent {
   static propTypes = {
     isDisabled: PropTypes.bool,
     totalPages: PropTypes.number,
+    currentPage: PropTypes.number,
     display: PropTypes.string.isRequired,
   }
 
@@ -23,7 +24,13 @@ class ThumbnailsPanel extends React.PureComponent {
     this.thumbs = [];
     this.state = {
       numberOfColumns: this.getNumberOfColumns(),
-      canLoad: true
+      canLoad: true,
+      draggingOverPageIndex: null,
+      isDraggingOverTopHalf: false
+    };
+    this.thumbnails = React.createRef();
+    this.dragOverHandler = e => {
+      e.preventDefault();
     };
   }
 
@@ -33,6 +40,10 @@ class ThumbnailsPanel extends React.PureComponent {
     core.addEventListener('annotationChanged', this.onAnnotationChanged);
     core.addEventListener('annotationHidden', this.onAnnotationChanged);
     window.addEventListener('resize', this.onWindowResize);
+
+    if (this.thumbnails && this.thumbnails.current) {
+      this.thumbnails.current.addEventListener('drop', this.onDrop);
+    }
   }
   
   componentWillUnmount() {
@@ -41,6 +52,10 @@ class ThumbnailsPanel extends React.PureComponent {
     core.removeEventListener('annotationChanged', this.onAnnotationChanged);
     core.removeEventListener('annotationHidden', this.onAnnotationChanged);
     window.removeEventListener('resize', this.onWindowResize);
+
+    if (this.thumbnails && this.thumbnails.current) {
+      this.thumbnails.current.removeEventListener('drop', this.onDrop);
+    }
   }
 
   onBeginRendering = () => {
@@ -235,8 +250,64 @@ class ThumbnailsPanel extends React.PureComponent {
     this.thumbs[pageIndex] = null;
   }
 
+  onDragEnd = () => {
+    const { currentPage } = this.props;
+    const { draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
+    if (draggingOverPageIndex !== null) {
+      let targetPageNumber = isDraggingOverTopHalf ? draggingOverPageIndex + 1 : draggingOverPageIndex + 2;
+      let goToPageNumberAfter = (currentPage < targetPageNumber) ? targetPageNumber - 1 : targetPageNumber; 
+      core.movePages([currentPage], targetPageNumber).then(() => {
+        setTimeout(() => {
+          core.setCurrentPage(goToPageNumberAfter);
+        }, 100);
+      });
+    }
+
+    this.setState({ draggingOverPageIndex: null });
+  }
+
+  onDragOver = (e, index) => {
+    // prevent opening pdf dropped in
+    e.preventDefault();
+    const thumbnail = e.target.getBoundingClientRect();
+
+    if (e.pageY > (thumbnail.y + thumbnail.height /2) ) {
+      this.setState({ draggingOverPageIndex: index, isDraggingOverTopHalf: false });
+    } else {
+      this.setState({ draggingOverPageIndex: index, isDraggingOverTopHalf: true });
+    }
+  }
+
+  onDragStart = (e, index) => {
+    const { currentPage } = this.props;
+
+    // need to set 'text' to empty for drag to work in FireFox and mobile
+    e.dataTransfer.setData('text',''); 
+
+    if (currentPage !== (index + 1)) {
+      core.setCurrentPage(index + 1);
+    }
+  }
+
+  onDrop = e => {
+    e.preventDefault();
+    const { draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
+    const { files } = e.dataTransfer;
+
+    if (files.length) {
+      const file = files[0];
+      let insertTo = isDraggingOverTopHalf ? draggingOverPageIndex + 1: draggingOverPageIndex + 2;
+
+      window.readerControl.mergeDocument(file, insertTo).then(() => {
+        core.setCurrentPage(insertTo);
+      });
+      
+      this.setState({ draggingOverPageIndex: null });
+    }
+  }
+
   renderThumbnails = rowIndex => {
-    const { numberOfColumns, canLoad } = this.state;
+    const { numberOfColumns, canLoad, draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
     const { thumbs } = this;
 
     return (
@@ -248,7 +319,16 @@ class ThumbnailsPanel extends React.PureComponent {
 
             return (
               index < this.props.totalPages 
-                ? <Thumbnail key={index} index={index} canLoad={canLoad} onLoad={this.onLoad} onCancel={this.onCancel} onRemove={this.onRemove} updateAnnotations={updateHandler} />
+                ? <div key={index} onDragEnd={this.onDragEnd}>
+                  {isDraggingOverTopHalf && draggingOverPageIndex === index && <hr className="thumbnailPlaceholder" />}
+
+                  <Thumbnail key={index} index={index} canLoad={canLoad} onLoad={this.onLoad} onCancel={this.onCancel} onRemove={this.onRemove}
+                    onDragStartCallback={this.onDragStart}
+                    onDragOverCallback={this.onDragOver}
+                    updateAnnotations={updateHandler} />
+
+                  {!isDraggingOverTopHalf && draggingOverPageIndex === index && <hr className="thumbnailPlaceholder" />}
+                </div>
                 : null
             );
           })
@@ -265,7 +345,7 @@ class ThumbnailsPanel extends React.PureComponent {
     }
 
     return (
-      <div className="Panel ThumbnailsPanel" style={{ display }} data-element="thumbnailsPanel">
+      <div className="Panel ThumbnailsPanel" style={{ display }} data-element="thumbnailsPanel" onDragOver={this.dragOverHandler}  ref={this.thumbnails}>
         <div className="thumbs">
           <ReactList
             key="panel"
@@ -283,6 +363,7 @@ class ThumbnailsPanel extends React.PureComponent {
 const mapStateToProps = state => ({
   isDisabled: selectors.isElementDisabled(state, 'thumbnailsPanel'),
   totalPages: selectors.getTotalPages(state),
+  currentPage: selectors.getCurrentPage(state),
 });
 
 export default connect(mapStateToProps)(ThumbnailsPanel);

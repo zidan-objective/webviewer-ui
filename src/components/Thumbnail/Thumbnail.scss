@@ -1,4 +1,5 @@
 @import '../../constants/styles';
+@import '../../constants/panel';
 
 .Thumbnail {
   display: flex;
@@ -6,7 +7,9 @@
   justify-content: center;
   align-items: center;
   width: 180px;
-  height: 180px;
+  min-height: 180px;
+  padding-top: 20px;
+
   font-size: 12px;
   text-align: center;
 
@@ -45,9 +48,21 @@
   }
 
   &.active {
+    background-color: lightgray;
+    border-radius: 3px;
+
     .page-image {
       border: 1px solid $gray12;
       border: 1px solid var(--border-color);
-    } 
+    }
+
+    .page-label {
+      color: $selected-page-color;
+      font-weight: bolder;
+    }
+
+    canvas {
+      border: solid $selected-page-color 1px;
+    }
   }
 }

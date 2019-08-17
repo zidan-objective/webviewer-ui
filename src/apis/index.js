@@ -55,6 +55,7 @@ import isMobileDevice from './isMobileDevice';
 import isReadOnly from './isReadOnly';
 import isToolDisabled from './isToolDisabled';
 import loadDocument from './loadDocument';
+import mergeDocument from './mergeDocument';
 import openElement from './openElement';
 import openElements from './openElements';
 import print  from './print';
@@ -164,6 +165,7 @@ export default {
   isReadOnly,
   isToolDisabled,
   loadDocument,
+  mergeDocument,
   openElement,
   openElements,
   print, 

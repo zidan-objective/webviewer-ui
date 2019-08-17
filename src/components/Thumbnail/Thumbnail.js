@@ -6,6 +6,7 @@ import core from 'core';
 import { isMobile } from 'helpers/device';
 import actions from 'actions';
 import selectors from 'selectors';
+import ThumbnailsControls from 'components/ThumbnailsControls';
 
 import './Thumbnail.scss';
 
@@ -19,6 +20,8 @@ class Thumbnail extends React.PureComponent {
     onCancel: PropTypes.func.isRequired,
     onRemove: PropTypes.func.isRequired,
     updateAnnotations: PropTypes.func,
+    onDragStartCallback: PropTypes.func.isRequired,
+    onDragOverCallback: PropTypes.func.isRequired,
     closeElement: PropTypes.func.isRequired,
   }
 
@@ -26,6 +29,8 @@ class Thumbnail extends React.PureComponent {
     super(props);
     this.thumbContainer = React.createRef();
     this.onLayoutChangedHandler = this.onLayoutChanged.bind(this);
+    this.onDragStartHandler = this.onDragStart.bind(this);
+    this.onDragOverHandler = this.onDragOver.bind(this);
   }
 
   componentDidMount() {
@@ -53,11 +58,11 @@ class Thumbnail extends React.PureComponent {
   }
 
   onLayoutChanged(e, changes) {
-    const { contentChanged } = changes;
+    const { contentChanged, moved, added } = changes;
     const { index } = this.props;
 
     const currentPage = index + 1;
-    const didLayoutChange = contentChanged.some(changedPage => currentPage + '' === changedPage);
+    const didLayoutChange = Object.keys(moved).length || added.length || contentChanged.some(changedPage => currentPage + '' === changedPage);
 
     if (didLayoutChange) {
       const { thumbContainer } = this;
@@ -75,7 +80,7 @@ class Thumbnail extends React.PureComponent {
   }
 
   handleClick = () => {
-    const { index, closeElement} = this.props;
+    const { index, closeElement } = this.props;
 
     core.setCurrentPage(index + 1);
 
@@ -84,15 +89,27 @@ class Thumbnail extends React.PureComponent {
     }
   }
 
+  onDragStart = e => {
+    const { index } = this.props;
+    this.props.onDragStartCallback(e, index);
+  }
+
+  onDragOver = e => {
+    const { index } = this.props;
+    this.props.onDragOverCallback(e, index);
+  }
+
   render() {
     const { index, currentPage, pageLabels } = this.props;
     const isActive = currentPage === index + 1;
     const pageLabel = pageLabels[index];
 
+    // onDragStart only the 'container' (where the canvas is in) so it's the thing showing while dragging, 'onDragOver' on the whole element so it cover the whole element
     return (
-      <div className={`Thumbnail ${isActive ? 'active' : ''}`}>
-        <div className="container" ref={this.thumbContainer} onClick={this.handleClick}></div>
+      <div className={`Thumbnail ${isActive ? 'active' : ''}`} onDragOver={this.onDragOverHandler} >
+        <div className="container" ref={this.thumbContainer} onClick={this.handleClick}  onDragStart={this.onDragStartHandler} draggable></div>
         <div className="page-label">{pageLabel}</div>
+        {isActive && <ThumbnailsControls index={index}/>}
       </div>
     );
   }

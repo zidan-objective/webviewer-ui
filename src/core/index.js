@@ -5,6 +5,7 @@ import setDisplayMode from './setDisplayMode';
 import getDisplayMode from './getDisplayMode';
 import rotateClockwise from './rotateClockwise';
 import rotateCounterClockwise from './rotateCounterClockwise';
+import rotatePages from './rotatePages';
 import getFitMode from './getFitMode';
 import fitToPage from './fitToPage';
 import fitToWidth from './fitToWidth';
@@ -89,6 +90,8 @@ import showAnnotations from './showAnnotations';
 import hideAnnotations from './hideAnnotations';
 import goToOutline from './goToOutline';
 import getViewerElement from './getViewerElement';
+import removePages from './removePages';
+import movePages from './movePages';
 import { addEventListener, removeEventListener } from './eventListener';
 
 export default {
@@ -99,6 +102,7 @@ export default {
   getDisplayMode,
   rotateClockwise,
   rotateCounterClockwise,
+  rotatePages,
   getFitMode,
   fitToPage,
   fitToWidth,
@@ -184,5 +188,7 @@ export default {
   showAnnotations,
   hideAnnotations,
   goToOutline,
+  removePages,
+  movePages,
   getViewerElement
 };
