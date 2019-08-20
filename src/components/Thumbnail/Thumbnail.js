@@ -13,7 +13,7 @@ import './Thumbnail.scss';
 class Thumbnail extends React.PureComponent {
   static propTypes = {
     index: PropTypes.number.isRequired,
-    currentPage: PropTypes.number,
+    currentPage: PropTypes.number.isRequired,
     pageLabels: PropTypes.array.isRequired,
     canLoad: PropTypes.bool.isRequired,
     onLoad: PropTypes.func.isRequired,
@@ -103,20 +103,20 @@ class Thumbnail extends React.PureComponent {
     const { index, currentPage, pageLabels } = this.props;
     const isActive = currentPage === index + 1;
     const pageLabel = pageLabels[index];
+    const showControls = isActive;
 
     // onDragStart only the 'container' (where the canvas is in) so it's the thing showing while dragging, 'onDragOver' on the whole element so it cover the whole element
     return (
       <div className={`Thumbnail ${isActive ? 'active' : ''}`} onDragOver={this.onDragOverHandler} >
         <div className="container" ref={this.thumbContainer} onClick={this.handleClick}  onDragStart={this.onDragStartHandler} draggable></div>
         <div className="page-label">{pageLabel}</div>
-        {isActive && <ThumbnailsControls index={index}/>}
+        {showControls && <ThumbnailsControls index={index}/>}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  currentPage: selectors.getCurrentPage(state),
   pageLabels: selectors.getPageLabels(state)
 });
 

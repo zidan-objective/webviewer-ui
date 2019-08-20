@@ -309,6 +309,7 @@ class ThumbnailsPanel extends React.PureComponent {
   renderThumbnails = rowIndex => {
     const { numberOfColumns, canLoad, draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
     const { thumbs } = this;
+    const { currentPage } = this.props;
 
     return (
       <div className="row" key={rowIndex}>
@@ -322,10 +323,15 @@ class ThumbnailsPanel extends React.PureComponent {
                 ? <div key={index} onDragEnd={this.onDragEnd}>
                   {isDraggingOverTopHalf && draggingOverPageIndex === index && <hr className="thumbnailPlaceholder" />}
 
-                  <Thumbnail key={index} index={index} canLoad={canLoad} onLoad={this.onLoad} onCancel={this.onCancel} onRemove={this.onRemove}
+                  <Thumbnail key={index} index={index} currentPage={currentPage}
+                    canLoad={canLoad}
+                    onLoad={this.onLoad} 
+                    onCancel={this.onCancel} 
+                    onRemove={this.onRemove}
                     onDragStartCallback={this.onDragStart}
                     onDragOverCallback={this.onDragOver}
-                    updateAnnotations={updateHandler} />
+                    updateAnnotations={updateHandler} 
+                  />
 
                   {!isDraggingOverTopHalf && draggingOverPageIndex === index && <hr className="thumbnailPlaceholder" />}
                 </div>

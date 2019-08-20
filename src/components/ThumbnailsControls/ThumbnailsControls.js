@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 
 import Button from 'components/Button';
-import Tooltip from 'components/Tooltip';
-
 import core from 'core';
 
 import './ThumbnailsControls.scss';
@@ -39,24 +37,21 @@ class ThumbnailsControls extends React.PureComponent {
   render() {
     return (
       <div className="thumbnailsControls" data-element="thumbnailsControls">
-        <Tooltip content="action.rotateCounterClockwise">
-          <Button
-            img="ic_rotate_left_black_24px"
-            onClick={this.rotateCounterClockwiseHander}
-          />
-        </Tooltip>
-        <Tooltip content="action.delete">
-          <Button
-            img="ic_delete_black_24px"
-            onClick={this.deletePageHander}
-          />
-        </Tooltip>
-        <Tooltip content="action.rotateClockwise">
-          <Button
-            img="ic_rotate_right_black_24px"
-            onClick={this.rotateClockwiseHander}
-          />
-        </Tooltip>
+        <Button
+          img="ic_rotate_left_black_24px"
+          onClick={this.rotateCounterClockwiseHander}
+          title="action.rotateCounterClockwise"
+        />
+        <Button
+          img="ic_delete_black_24px"
+          onClick={this.deletePageHander}
+          title="action.delete"
+        />
+        <Button
+          img="ic_rotate_right_black_24px"
+          onClick={this.rotateClockwiseHander}
+          title="action.rotateClockwise"
+        />
       </div>
     );
   }
