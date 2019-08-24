@@ -6,7 +6,7 @@ import core from 'core';
 import { isMobile } from 'helpers/device';
 import actions from 'actions';
 import selectors from 'selectors';
-import ThumbnailsControls from 'components/ThumbnailsControls';
+import ThumbnailControls from 'components/ThumbnailControls';
 
 import './Thumbnail.scss';
 
@@ -22,6 +22,8 @@ class Thumbnail extends React.PureComponent {
     updateAnnotations: PropTypes.func,
     onDragStartCallback: PropTypes.func.isRequired,
     onDragOverCallback: PropTypes.func.isRequired,
+    onClickCallback: PropTypes.func.isRequired,
+    isSelected: PropTypes.bool,
     closeElement: PropTypes.func.isRequired,
   }
 
@@ -79,13 +81,16 @@ class Thumbnail extends React.PureComponent {
     }
   }
 
-  handleClick = () => {
-    const { index, closeElement } = this.props;
+  handleClick = e => {
+    const { index, closeElement, onClickCallback } = this.props;
+    if (e.ctrlKey || e.metaKey) {
+      onClickCallback(e, index);
+    } else {
+      core.setCurrentPage(index + 1);
 
-    core.setCurrentPage(index + 1);
-
-    if (isMobile()) {
-      closeElement('leftPanel');
+      if (isMobile()) {
+        closeElement('leftPanel');
+      }
     }
   }
 
@@ -100,17 +105,17 @@ class Thumbnail extends React.PureComponent {
   }
 
   render() {
-    const { index, currentPage, pageLabels } = this.props;
+    const { index, currentPage, pageLabels, isSelected } = this.props;
     const isActive = currentPage === index + 1;
     const pageLabel = pageLabels[index];
     const showControls = isActive;
 
     // onDragStart only the 'container' (where the canvas is in) so it's the thing showing while dragging, 'onDragOver' on the whole element so it cover the whole element
     return (
-      <div className={`Thumbnail ${isActive ? 'active' : ''}`} onDragOver={this.onDragOverHandler} >
+      <div className={`Thumbnail ${isActive ? 'active' : ''} ${isSelected ? 'selected': ''}`} onDragOver={this.onDragOverHandler} >
         <div className="container" ref={this.thumbContainer} onClick={this.handleClick}  onDragStart={this.onDragStartHandler} draggable></div>
         <div className="page-label">{pageLabel}</div>
-        {showControls && <ThumbnailsControls index={index}/>}
+        {showControls && <ThumbnailControls index={index}/>}
       </div>
     );
   }

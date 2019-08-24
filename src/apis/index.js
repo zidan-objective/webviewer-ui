@@ -37,6 +37,7 @@ import enableTextSelection from './enableTextSelection';
 import enableTool from './enableTool';
 import enableTools from './enableTools';
 import enableTouchScrollLock from './enableTouchScrollLock';
+import extractPages from './extractPages'
 import focusNote from './focusNote';
 import getAnnotationUser from './getAnnotationUser';
 import getBBAnnotManager from './getBBAnnotManager';
@@ -158,6 +159,7 @@ export default store => {
     enableTool: enableTool(store),
     enableTools: enableTools(store),
     enableTouchScrollLock,
+    extractPages: extractPages(store),
     focusNote: focusNote(store),
     getAnnotationUser,
     getBBAnnotManager: getBBAnnotManager(store),

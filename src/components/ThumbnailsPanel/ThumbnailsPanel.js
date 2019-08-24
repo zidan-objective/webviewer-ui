@@ -4,6 +4,8 @@ import ReactList from 'react-list';
 import { connect } from 'react-redux';
 
 import Thumbnail from 'components/Thumbnail';
+import DocumentControls from 'components/DocumentControls';
+import ThumbnailOverlay from 'components/ThumbnailOverlay';
 
 import core from 'core';
 import selectors from 'selectors';
@@ -26,15 +28,19 @@ class ThumbnailsPanel extends React.PureComponent {
       numberOfColumns: this.getNumberOfColumns(),
       canLoad: true,
       draggingOverPageIndex: null,
-      isDraggingOverTopHalf: false
+      isDraggingOverTopHalf: false,
+      selectedPageIndexes: [],
     };
     this.thumbnails = React.createRef();
     this.dragOverHandler = e => {
       e.preventDefault();
     };
+
+    this.afterMovePageNumber;
   }
 
   componentDidMount() {
+    core.addEventListener('pageComplete', this.onPageComplete);
     core.addEventListener('beginRendering', this.onBeginRendering);
     core.addEventListener('finishedRendering', this.onFinishedRendering);
     core.addEventListener('annotationChanged', this.onAnnotationChanged);
@@ -47,6 +53,7 @@ class ThumbnailsPanel extends React.PureComponent {
   }
   
   componentWillUnmount() {
+    core.removeEventListener('pageComplete', this.onPageComplete);
     core.removeEventListener('beginRendering', this.onBeginRendering);
     core.removeEventListener('finishedRendering', this.onFinishedRendering);
     core.removeEventListener('annotationChanged', this.onAnnotationChanged);
@@ -255,15 +262,28 @@ class ThumbnailsPanel extends React.PureComponent {
     const { draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
     if (draggingOverPageIndex !== null) {
       let targetPageNumber = isDraggingOverTopHalf ? draggingOverPageIndex + 1 : draggingOverPageIndex + 2;
-      let goToPageNumberAfter = (currentPage < targetPageNumber) ? targetPageNumber - 1 : targetPageNumber; 
+
+      if  (currentPage < targetPageNumber) {
+        // moving page down so target page number will decrease
+        this.afterMovePageNumber  = targetPageNumber - 1;
+      } else {
+        // moving page up
+        this.afterMovePageNumber  = targetPageNumber;
+      }
+      
       core.movePages([currentPage], targetPageNumber).then(() => {
-        setTimeout(() => {
-          core.setCurrentPage(goToPageNumberAfter);
-        }, 100);
       });
     }
 
     this.setState({ draggingOverPageIndex: null });
+  }
+
+  onPageComplete = () => {
+    if (this.afterMovePageNumber) {
+      core.setCurrentPage(this.afterMovePageNumber);
+    } 
+
+    this.afterMovePageNumber = null;
   }
 
   onDragOver = (e, index) => {
@@ -289,6 +309,27 @@ class ThumbnailsPanel extends React.PureComponent {
     }
   }
 
+  onThumbnailClick = (e, index) => {
+    let { selectedPageIndexes } = this.state;
+
+    if (selectedPageIndexes.indexOf(index) > -1) {
+      selectedPageIndexes = selectedPageIndexes.filter(pageIndex => index !== pageIndex);
+    } else {
+      selectedPageIndexes.push(index);
+    }
+
+    this.setState({ selectedPageIndexes });
+    core.setCurrentPage(index + 1);
+  }
+
+  onDeletePages = () => {
+    const { selectedPageIndexes } = this.state;
+
+    core.removePages(selectedPageIndexes.map(index => index + 1 )).then(() => {
+      this.setState({ selectedPageIndexes: [] });
+    });
+  }
+
   onDrop = e => {
     e.preventDefault();
     const { draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
@@ -307,9 +348,20 @@ class ThumbnailsPanel extends React.PureComponent {
   }
 
   renderThumbnails = rowIndex => {
-    const { numberOfColumns, canLoad, draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
+    const { 
+      numberOfColumns, 
+      canLoad, 
+      draggingOverPageIndex, 
+      isDraggingOverTopHalf,
+      selectedPageIndexes,
+    } = this.state;
     const { thumbs } = this;
     const { currentPage } = this.props;
+
+    const selectedPagesHash = selectedPageIndexes.reduce((curr, val) => {
+      curr[val] = true;
+      return curr;
+    }, {});
 
     return (
       <div className="row" key={rowIndex}>
@@ -323,13 +375,14 @@ class ThumbnailsPanel extends React.PureComponent {
                 ? <div key={index} onDragEnd={this.onDragEnd}>
                   {isDraggingOverTopHalf && draggingOverPageIndex === index && <hr className="thumbnailPlaceholder" />}
 
-                  <Thumbnail key={index} index={index} currentPage={currentPage}
+                  <Thumbnail key={index} index={index} currentPage={currentPage} isSelected={selectedPagesHash[index]}
                     canLoad={canLoad}
                     onLoad={this.onLoad} 
                     onCancel={this.onCancel} 
                     onRemove={this.onRemove}
                     onDragStartCallback={this.onDragStart}
                     onDragOverCallback={this.onDragOver}
+                    onClickCallback={this.onThumbnailClick}
                     updateAnnotations={updateHandler} 
                   />
 
@@ -345,6 +398,7 @@ class ThumbnailsPanel extends React.PureComponent {
 
   render() {
     const { isDisabled, totalPages, display } = this.props;
+    const { selectedPageIndexes } = this.state;
 
     if (isDisabled) {
       return null;
@@ -359,8 +413,16 @@ class ThumbnailsPanel extends React.PureComponent {
             length={totalPages / this.state.numberOfColumns}
             type="uniform"
             useStaticSize
+
+            onSelect={() => {}}
           />
         </div>
+        <DocumentControls 
+          selectedPageIndexes={selectedPageIndexes} 
+          selectedPageCount={selectedPageIndexes.length}
+          deletePagesCallBack={this.onDeletePages}
+        />
+        <ThumbnailOverlay />
       </div>
     );
   }

@@ -1,6 +1,6 @@
 @import '../../constants/panel';
 
-.thumbnailsControls {
+.thumbnailControls {
     text-align: center;
     .Button{
         display: inline-block;
@@ -14,10 +14,8 @@
         &:hover {
             background-color: var(--icon-color);
             border-radius: 2px;
-
-            color: lightgray;
             .Icon {
-                color: #d3d3d3;
+                color: var(--border-color);
             }
         }
     }

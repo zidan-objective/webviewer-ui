@@ -5,51 +5,44 @@ import { withTranslation } from 'react-i18next';
 import Button from 'components/Button';
 import core from 'core';
 
-import './ThumbnailsControls.scss';
+import './ThumbnailControls.scss';
 
-class ThumbnailsControls extends React.PureComponent {
+class ThumbnailControls extends React.PureComponent {
   static propTypes = {
     index: PropTypes.number.isRequired,
   }
 
-  constructor() {
-    super();
-    this.rotateCounterClockwiseHander = this.rotateCounterClockwise.bind(this);
-    this.rotateClockwiseHander  = this.rotateClockwise.bind(this);
-    this.deletePageHander  = this.deletePage.bind(this);
-  }
-
-  rotateClockwise() {
+  rotateClockwise = () => {
     const { index } = this.props;
     core.rotatePages([index + 1], window.CoreControls.PageRotation.e_90);
   }
 
-  rotateCounterClockwise() {
+  rotateCounterClockwise = () => {
     const { index } = this.props;
     core.rotatePages([index + 1], window.CoreControls.PageRotation.e_270);
   }
 
-  deletePage() {
+  deletePage = () => {
     const { index } = this.props;
     core.removePages([index + 1]);
   }
 
   render() {
     return (
-      <div className="thumbnailsControls" data-element="thumbnailsControls">
+      <div className="thumbnailControls" data-element="thumbnailControls">
         <Button
           img="ic_rotate_left_black_24px"
-          onClick={this.rotateCounterClockwiseHander}
+          onClick={this.rotateCounterClockwise}
           title="action.rotateCounterClockwise"
         />
         <Button
           img="ic_delete_black_24px"
-          onClick={this.deletePageHander}
+          onClick={this.deletePage}
           title="action.delete"
         />
         <Button
           img="ic_rotate_right_black_24px"
-          onClick={this.rotateClockwiseHander}
+          onClick={this.rotateClockwise}
           title="action.rotateClockwise"
         />
       </div>
@@ -57,4 +50,4 @@ class ThumbnailsControls extends React.PureComponent {
   }
 }
 
-export default withTranslation()(ThumbnailsControls);
+export default withTranslation()(ThumbnailControls);
