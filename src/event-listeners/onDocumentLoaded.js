@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import core from 'core';
 import getHashParams from 'helpers/getHashParams';
 import actions from 'actions';

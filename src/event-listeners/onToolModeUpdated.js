@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import core from 'core';
 import actions from 'actions';
 import defaultTool from 'constants/defaultTool';

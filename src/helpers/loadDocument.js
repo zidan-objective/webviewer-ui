@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import core from 'core';
 import getBackendPromise from 'helpers/getBackendPromise';
 import { fireError } from 'helpers/fireEvent';

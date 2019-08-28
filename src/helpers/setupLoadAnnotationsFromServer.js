@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import core from 'core';
 import { workerTypes } from 'constants/types';
 

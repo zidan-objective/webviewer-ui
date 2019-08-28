@@ -2,6 +2,7 @@ import { hot } from 'react-hot-loader/root';
 import React, { useEffect } from 'react';
 import { useStore } from 'react-redux';
 import PropTypes from 'prop-types';
+import $ from 'jquery';
 
 import Header from 'components/Header';
 import ViewControlsOverlay from 'components/ViewControlsOverlay';

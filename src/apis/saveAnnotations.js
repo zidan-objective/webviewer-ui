@@ -1,4 +1,5 @@
 import core from 'core';
+import $ from 'jquery';
 
 export default store => () => new Promise((resolve, reject) => {
   const state = store.getState();
@@ -12,19 +13,21 @@ export default store => () => new Promise((resolve, reject) => {
     return;
   }
 
-  $.ajax({
-    type: 'POST',
-    url: serverUrl,
-    headers: serverUrlHeaders,
-    data: {
-      ...docIdQuery,
-      'data': core.exportAnnotations(),
-    },
-    success: () => {
-      resolve();
-    },
-    error: e => {
-      reject(e);
-    },
+  core.exportAnnotations().then(data => {
+    $.ajax({
+      type: 'POST',
+      url: serverUrl,
+      headers: serverUrlHeaders,
+      data: {
+        ...docIdQuery,
+        data,
+      },
+      success: () => {
+        resolve();
+      },
+      error: e => {
+        reject(e);
+      },
+    });
   });
 });

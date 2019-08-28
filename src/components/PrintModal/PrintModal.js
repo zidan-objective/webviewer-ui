@@ -210,20 +210,20 @@ class PrintModal extends React.PureComponent {
     }
 
     // Currently annotationManager expects a jQuery node
-    const widgetContainer = $(this.createWidgetContainer(pageNumber - 1));
+    const widgetContainer = this.createWidgetContainer(pageNumber - 1);
     return core
       .drawAnnotations(pageNumber, canvas, true, widgetContainer)
       .then(() => {
-        document.body.appendChild(widgetContainer[0]);
+        document.body.appendChild(widgetContainer);
         return window
-          .html2canvas(widgetContainer[0], {
+          .html2canvas(widgetContainer, {
             canvas,
             backgroundColor: null,
             scale: 1,
             logging: false,
           })
           .then(() => {
-            document.body.removeChild(widgetContainer[0]);
+            document.body.removeChild(widgetContainer);
           });
       });
   };

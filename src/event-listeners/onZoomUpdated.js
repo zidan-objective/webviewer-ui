@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import actions from 'actions';
 
 export default dispatch => (e, zoom) => {
