@@ -1,8 +1,7 @@
-import $ from 'jquery';
-
+import fireEvent from 'helpers/fireEvent';
 import actions from 'actions';
 
 export default dispatch => (e, rotation) => {
   dispatch(actions.setRotation(rotation));
-  $(document).trigger('rotationChanged', [rotation]);
+  fireEvent('rotationChanged', [rotation]);
 };

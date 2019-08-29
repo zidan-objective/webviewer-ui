@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 import core from 'core';
 import { isIE } from 'helpers/device';
 import actions from 'actions';
-import $ from 'jquery';
+import fireEvent from 'helpers/fireEvent';
 
 export default (dispatch, options) => {
   const { documentPath = 'document', filename, includeAnnotations = true, xfdfData, externalURL } = options;
@@ -40,7 +40,7 @@ export default (dispatch, options) => {
       return bbURLPromise.then(result => {
         downloadIframe.src = result.url;
         dispatch(actions.closeElement('loadingModal'));
-        $(document).trigger('finishedSavingPDF');
+        fireEvent('finishedSavingPDF');
       });
     }
     return doc.getFileData(downloadOptions).then(data => {
@@ -53,7 +53,7 @@ export default (dispatch, options) => {
 
       saveAs(file, downloadName);
       dispatch(actions.closeElement('loadingModal'));
-      $(document).trigger('finishedSavingPDF');
+      fireEvent('finishedSavingPDF');
     }, error => {
       dispatch(actions.closeElement('loadingModal'));
       throw new Error(error.message);

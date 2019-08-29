@@ -2,7 +2,6 @@ import { hot } from 'react-hot-loader/root';
 import React, { useEffect } from 'react';
 import { useStore } from 'react-redux';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 
 import Header from 'components/Header';
 import ViewControlsOverlay from 'components/ViewControlsOverlay';
@@ -34,6 +33,7 @@ import PrintHandler from 'components/PrintHandler';
 import ZoomOverlay from 'components/ZoomOverlay';
 
 import defineReaderControlAPIs from 'src/apis';
+import fireEvent from 'helpers/fireEvent';
 
 import './App.scss';
 
@@ -54,7 +54,7 @@ const App = ({ removeEventHandlers }) => {
       },
     };
 
-    $(document).trigger('viewerLoaded');
+    fireEvent('viewerLoaded');
 
     return removeEventHandlers;
   }, [removeEventHandlers, store]);

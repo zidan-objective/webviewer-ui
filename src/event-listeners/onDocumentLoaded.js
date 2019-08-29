@@ -1,8 +1,7 @@
-import $ from 'jquery';
-
 import core from 'core';
 import getHashParams from 'helpers/getHashParams';
 import actions from 'actions';
+import fireEvent from 'helpers/fireEvent';
 
 let onFirstLoad = true;
 
@@ -42,5 +41,5 @@ export default dispatch => () => {
   window.readerControl.loadedFromServer = false;
   window.readerControl.serverFailed = false;
 
-  $(document).trigger('documentLoaded');
+  fireEvent('documentLoaded');
 };

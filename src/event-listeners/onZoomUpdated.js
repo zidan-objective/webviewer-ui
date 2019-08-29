@@ -1,8 +1,8 @@
-import $ from 'jquery';
+import fireEvent from 'helpers/fireEvent';
 
 import actions from 'actions';
 
 export default dispatch => (e, zoom) => {
   dispatch(actions.setZoom(zoom));
-  $(document).trigger('zoomChanged', [zoom]);
+  fireEvent('zoomChanged', [zoom]);
 };

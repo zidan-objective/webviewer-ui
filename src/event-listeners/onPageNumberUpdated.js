@@ -1,8 +1,7 @@
-import $ from 'jquery';
-
+import fireEvent from 'helpers/fireEvent';
 import actions from 'actions';
 
 export default dispatch => (e, pageNumber) => {
   dispatch(actions.setCurrentPage(pageNumber));
-  $(document).trigger('pageChanged', [pageNumber]);
+  fireEvent('pageChanged', [pageNumber]);
 };

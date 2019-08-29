@@ -1,6 +1,7 @@
 import $ from 'jquery';
 
 import core from 'core';
+import fireEvent from 'helpers/fireEvent';
 import actions from 'actions';
 import defaultTool from 'constants/defaultTool';
 
@@ -16,5 +17,5 @@ export default dispatch => (e, newTool, oldTool) => {
   }
 
   dispatch(actions.setActiveToolNameAndStyle(newTool));
-  $(document).trigger('toolModeChanged', [newTool, oldTool]);
+  fireEvent('toolModeChanged', [newTool, oldTool]);
 };
