@@ -79,7 +79,6 @@ import setAdminUser from './setAdminUser';
 import setAnnotationUser from './setAnnotationUser';
 import setColorPalette from './setColorPalette';
 import setCurrentPageNumber from './setCurrentPageNumber';
-import setCursorOverlay from './setCursorOverlay';
 import setCustomNoteFilter from './setCustomNoteFilter';
 import setCustomPanel from './setCustomPanel';
 import setEngineType from './setEngineType';
@@ -200,7 +199,6 @@ export default store => {
     setAnnotationUser,
     setColorPalette: setColorPalette(store), // undocumented
     setCurrentPageNumber,
-    setCursorOverlay: setCursorOverlay(store),
     setCustomNoteFilter: setCustomNoteFilter(store),
     setCustomPanel: setCustomPanel(store),
     setEngineType: setEngineType(store), // undocumented

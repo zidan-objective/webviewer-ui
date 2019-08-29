@@ -114,8 +114,6 @@ export const isEmbedPrintSupported = state => {
 
 export const getColorMap = state => state.viewer.colorMap;
 
-export const getCursorOverlayData = state => state.viewer.cursorOverlay;
-
 export const getOpenElements = state => state.viewer.openElements;
 
 export const getCurrentPalette = (state, colorMapKey) =>

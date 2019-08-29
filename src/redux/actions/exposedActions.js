@@ -170,10 +170,6 @@ export const setPageLabels = pageLabels => dispatch => {
     payload: { pageLabels: pageLabels.map(String) },
   });
 };
-export const setCursorOverlay = (data = {}) => ({
-  type: 'SET_CURSOR_OVERLAY',
-  payload: { data },
-});
 export const setSwipeOrientation = swipeOrientation => ({
   type: 'SET_SWIPE_ORIENTATION',
   payload: { swipeOrientation },

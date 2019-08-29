@@ -205,14 +205,6 @@ export default initialState => (state = initialState, action) => {
     }
     case 'SET_COLOR_MAP':
       return { ...state, colorMap: payload.colorMap };
-    case 'SET_CURSOR_OVERLAY': {
-      const { imgSrc, width, height } = payload.data;
-
-      return {
-        ...state,
-        cursorOverlay: { imgSrc, width, height },
-      };
-    }
     case 'SET_WARNING_MESSAGE':
       return { ...state, warning: payload };
     case 'SET_ERROR_MESSAGE':
@@ -224,7 +216,7 @@ export default initialState => (state = initialState, action) => {
     case 'SET_MEASUREMENT_UNITS': {
       return { ...state, measurementUnits: payload };
     }
-    case 'SET_LEFT_PANEL_WIDTH': 
+    case 'SET_LEFT_PANEL_WIDTH':
       return { ...state, leftPanelWidth: payload.width };
     case 'SET_MAX_SIGNATURES_COUNT':
       return { ...state, maxSignaturesCount: payload.maxSignaturesCount };

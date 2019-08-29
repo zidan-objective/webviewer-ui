@@ -11,7 +11,6 @@ import RedactionOverlay from 'components/RedactionOverlay';
 import PageNavOverlay from 'components/PageNavOverlay';
 import ToolsOverlay from 'components/ToolsOverlay';
 import SignatureOverlay from 'components/SignatureOverlay';
-import CursorOverlay from 'components/CursorOverlay';
 import MeasurementOverlay from 'components/MeasurementOverlay';
 import DocumentContainer from 'components/DocumentContainer';
 import LeftPanel from 'components/LeftPanel';
@@ -75,7 +74,6 @@ const App = ({ removeEventHandlers }) => {
         <MenuOverlay />
         <ToolsOverlay />
         <SignatureOverlay />
-        <CursorOverlay />
         <PageNavOverlay />
         <ZoomOverlay />
         <MeasurementOverlay />

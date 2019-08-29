@@ -1,6 +1,7 @@
 import React from 'react';
 
 import ToggleElementOverlay from 'components/ToggleElementOverlay';
+import SignatureToolButton from 'components/SignatureToolButton';
 
 import core from 'core';
 import getHashParams from 'helpers/getHashParams';
@@ -40,7 +41,11 @@ export default {
         { type: 'toolGroupButton', toolGroup: 'textTools', dataElement: 'textToolGroupButton', title: 'component.textToolsButton', hidden: ['tablet', 'mobile'] },
         { type: 'toolGroupButton', toolGroup: 'shapeTools', dataElement: 'shapeToolGroupButton', title: 'component.shapeToolsButton', hidden: ['tablet', 'mobile'] },
         { type: 'toolButton', img: 'ic_annotation_eraser_black_24px', toolName: 'AnnotationEraserTool', dataElement: 'eraserToolButton', title: 'annotation.eraser' },
-        { type: 'statefulButton', dataElement: 'signatureToolButton', hidden: ['tablet', 'mobile'] },
+        {
+          type: 'customElement',
+          render: () => <SignatureToolButton />,
+          dataElement: 'signatureToolButton',
+        },
         { type: 'toggleElementButton', toolName: 'AnnotationCreateRedaction', className: 'redactHeader', dataElement: 'redactionButton', element: 'redactionOverlay', img: 'ic_annotation_add_redact_black_24px', title: 'component.redaction', hidden: ['tablet', 'mobile'] },
         { type: 'toolButton', toolName: 'AnnotationCreateFreeText', hidden: ['tablet', 'mobile'] },
         { type: 'toolButton', toolName: 'AnnotationCreateSticky', hidden: ['tablet', 'mobile'] },
@@ -65,7 +70,11 @@ export default {
         { type: 'toolGroupButton', toolGroup: 'freeHandTools', dataElement: 'freeHandToolGroupButton', title: 'component.freehandToolsButton' },
         { type: 'toolGroupButton', toolGroup: 'textTools', dataElement: 'textToolGroupButton', title: 'component.textToolsButton' },
         { type: 'toolGroupButton', toolGroup: 'shapeTools', dataElement: 'shapeToolGroupButton', title: 'component.shapeToolsButton' },
-        { type: 'statefulButton', dataElement: 'signatureToolButton' },
+        {
+          type: 'customElement',
+          render: () => <SignatureToolButton />,
+          dataElement: 'signatureToolButton',
+        },
         { type: 'toolGroupButton', toolGroup: 'measurementTools', dataElement: 'measurementToolGroupButton', title: 'component.measurementToolsButton' },
         { type: 'toggleElementButton', toolName: 'AnnotationCreateRedaction', className: 'redactHeader', dataElement: 'redactionButton', element: 'redactionOverlay', img: 'ic_annotation_add_redact_black_24px', title: 'component.redaction' },
         { type: 'toolButton', toolName: 'AnnotationCreateFreeText' },
@@ -141,7 +150,6 @@ export default {
     pageLabels: [],
     noteDateFormat: 'MMM D, h:mma',
     colorMap: copyMapWithDataProperties('currentPalette', 'iconColor'),
-    cursorOverlay: {},
     warning: {},
     customNoteFilter: null,
     zoomList: [0.1, 0.25, 0.5, 1, 1.25, 1.5, 2, 4, 8, 16, 64],
@@ -150,7 +158,7 @@ export default {
       to: ['in', 'mm', 'cm', 'pt', 'ft', 'm', 'yd', 'km', 'mi'],
     },
     maxSignaturesCount: 2,
-    leftPanelWidth: 300
+    leftPanelWidth: 300,
   },
   search: {
     listeners: [],
