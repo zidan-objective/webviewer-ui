@@ -17,6 +17,7 @@ class ThumbnailsPanel extends React.PureComponent {
     isDisabled: PropTypes.bool,
     totalPages: PropTypes.number,
     currentPage: PropTypes.number,
+    pageLabels: PropTypes.array.isRequired,
     display: PropTypes.string.isRequired,
   }
 
@@ -322,12 +323,18 @@ class ThumbnailsPanel extends React.PureComponent {
     core.setCurrentPage(index + 1);
   }
 
+  updateSelectedPage = (selectedPageIndexes) => {
+    this.setState({ selectedPageIndexes });
+  }
+
   onDeletePages = () => {
     const { selectedPageIndexes } = this.state;
 
-    core.removePages(selectedPageIndexes.map(index => index + 1 )).then(() => {
+    core.removePages(selectedPageIndexes)
+      /*.map(index => index + 1 )).then(() => {
       this.setState({ selectedPageIndexes: [] });
     });
+*/
   }
 
   onDrop = e => {
@@ -397,13 +404,13 @@ class ThumbnailsPanel extends React.PureComponent {
   }
 
   render() {
-    const { isDisabled, totalPages, display } = this.props;
+    const { isDisabled, totalPages, display, pageLabels } = this.props;
     const { selectedPageIndexes } = this.state;
 
     if (isDisabled) {
       return null;
     }
-
+// 
     return (
       <div className="Panel ThumbnailsPanel" style={{ display }} data-element="thumbnailsPanel" onDragOver={this.dragOverHandler}  ref={this.thumbnails}>
         <div className="thumbs">
@@ -417,12 +424,17 @@ class ThumbnailsPanel extends React.PureComponent {
             onSelect={() => {}}
           />
         </div>
+        {
+          selectedPageIndexes.length > 0
+          && <ThumbnailOverlay />
+        }
         <DocumentControls 
+          pageLabels={pageLabels}
           selectedPageIndexes={selectedPageIndexes} 
           selectedPageCount={selectedPageIndexes.length}
           deletePagesCallBack={this.onDeletePages}
+          updateSelectedPage={this.updateSelectedPage}
         />
-        <ThumbnailOverlay />
       </div>
     );
   }
@@ -432,6 +444,7 @@ const mapStateToProps = state => ({
   isDisabled: selectors.isElementDisabled(state, 'thumbnailsPanel'),
   totalPages: selectors.getTotalPages(state),
   currentPage: selectors.getCurrentPage(state),
+  pageLabels: selectors.getPageLabels(state),
 });
 
 export default connect(mapStateToProps)(ThumbnailsPanel);

@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from 'components/Button';
 import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
-import onClickOutside from 'react-onclickoutside';
 
+import ActionButton from 'components/ActionButton';
 
 import getClassName from 'helpers/getClassName';
 
@@ -11,7 +12,7 @@ import './ThumbnailOverlay.scss';
 
 class ThumbnailOverlay extends React.PureComponent {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
+   // dispatch: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
   }
 
@@ -24,13 +25,30 @@ class ThumbnailOverlay extends React.PureComponent {
   }
 
   render() {
-    const { left, right } = this.state;
+    // const { left, right } = this.state;
     const { t } = this.props;
     const className = getClassName('Overlay ThumbnailOverlay', this.props);
+//  style={{ left, right }}
 
+/*
+  <Button
+    img="ic_add_black_24px"
+  />
+  <Button
+    img="ic_add_black_24px"
+  />
+*/
+
+// className
     return (
-      <div className={className} data-element="ThumbnailOverlay" style={{ left, right }} ref={this.overlay}>
-        test
+      <div className={'Overlay ThumbnailOverlay'} data-element="ThumbnailOverlay" ref={this.overlay}>
+ 
+
+
+<ActionButton dataElement="filePickerButton" label={t('action.openFile')} />
+<ActionButton dataElement="filePickerButton" label={t('action.openFile')}  />
+ 
+
       </div>
     );
   }
@@ -38,4 +56,4 @@ class ThumbnailOverlay extends React.PureComponent {
 
 
 
-export default connect()(withTranslation()(onClickOutside(ThumbnailOverlay)));
+export default withTranslation()(ThumbnailOverlay);

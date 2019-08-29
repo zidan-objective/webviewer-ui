@@ -1,74 +1,103 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Button from 'components/Button';
 import './DocumentControls.scss';
+import getPagesToPrint from 'helpers/getPagesToPrint';
 
-class DocumentControls extends React.PureComponent {
-  static propTypes = {
-    selectedPageIndexes: PropTypes.array.isRequired,
-    selectedPageCount: PropTypes.number.isRequired,
-    deletePagesCallBack: PropTypes.func.isRequired,
+function getPageString(selectedPageArray, pageLabels) {
+  let pagesToPrint = '';
+  const sortedPages = selectedPageArray.sort((a, b) =>  a - b );
+  let prevIndex = null;
+
+  for (let i=0; sortedPages.length > i; i++) {
+    if (sortedPages[i + 1] === sortedPages[i] + 1) {
+      prevIndex = prevIndex !== null ? prevIndex : sortedPages[i];
+    } else if (prevIndex !== null) {
+      pagesToPrint = `${pagesToPrint}${pageLabels[prevIndex]}-${pageLabels[sortedPages[i]]}, `;
+      prevIndex = null;
+    } else {
+      pagesToPrint = `${pagesToPrint}${pageLabels[sortedPages[i]]}, `;
+    }
   }
 
-  constructor(props) {
-    super(props);
+  return pagesToPrint.slice(0, -2);
+}
 
-    this.deletePagesHandler = this.deletePages.bind(this);
-  }
+const DocumentControls = props => {
+  const {
+    deletePagesCallBack,
+    selectedPageCount,
+    selectedPageIndexes,
+    pageLabels,
+    updateSelectedPage,
+  } = props;
 
-  rotateCounterClockwiseHander () {
+  const initalPagesString = getPageString(selectedPageIndexes, pageLabels);
 
-  }
+  // TODO figure out why the inital values is incorrect
+  const [pageString, setPageString] = useState(initalPagesString);
 
-  deletePages = () => {
-    this.props.deletePagesCallBack();
-  }
 
-  extractPages = () => {
-    const { selectedPageIndexes } = this.props;
+
+  useEffect(() => {
+    setPageString(getPageString(selectedPageIndexes, pageLabels));
+  }, [selectedPageCount]);
+
+
+  const deletePages = () => {
+    deletePagesCallBack();
+  };
+
+  const extractPages = () => {
     window.readerControl.extractPages(selectedPageIndexes.map(index => index + 1 ));
-  }
+  };
 
-  showOtherOptions = () => {
+  const showOtherOptions = () => { };
 
+  const onBlur = e => {
+    let pagesString = e.target.value.replace(/ /g, '');
     
-  }
+    let pages = !pagesString ? [] : getPagesToPrint(e.target.value.replace(/ /g, ''), pageLabels);
+    let pageIndexes = pages.map(page => page - 1);
+    updateSelectedPage(pageIndexes);
+    setPageString(e);
+  };
 
-  render() {
-    const { selectedPageCount } = this.props;
+  const pageStringUpdate = e => {
+    setPageString(e.target.value);
+  };
 
-    return (
-      <div className={`documentControls ${!selectedPageCount ? 'hidden' : ''}`}>
+  return (
+    <div className={`documentControls ${!selectedPageCount ? 'hidden' : ''}`}>
+      <div>
+        <input 
+          onBlur={onBlur}
+          onChange={pageStringUpdate}
+          value={pageString}
+          className="pagesInput" type="text" />
+      </div>
+      <div className="documentControlsButton">
         <Button
           img="ic_add_black_24px"
-          onClick={this.rotateCounterClockwiseHander}
         />
         <Button
           img="ic_delete_black_24px"
-          onClick={this.deletePages}
+          onClick={deletePages}
           title="action.delete"
         />
         <Button
           img="ic_extract_black_24px"
           title="action.extract"
-          onClick={this.extractPages}
+          onClick={extractPages}
         />
 
         <Button
           img="ic_more_black_24px"
-          onClick={this.showOtherOptions}
+          onClick={showOtherOptions}
         />
-      </div>)
-  }
+      </div>
+    </div>
+  );
 }
 
-const mapStateToProps = state => ({
-
-});
-
-const mapDispatchToProps = dispatch => ({
-  dispatch,
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentControls);
+export default connect( )(DocumentControls);

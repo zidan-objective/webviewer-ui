@@ -4,14 +4,16 @@ $icon-size: 24px;
 $icon-verical-padding: 5px;
 $icon-side-padding: 20px;
 
+$textHeight: 30px;
+
 .documentControls {
     background-color: var(--border-color);
     position: absolute;
     bottom: 0px;
-    height: $icon-size + 2 * $icon-verical-padding;
+    height: $textHeight + $icon-size + 2 * $icon-verical-padding;
     width: 100%;
     text-align: center;
-    display: flex;
+   
 
     &.hidden{
         height: 0px;
@@ -20,17 +22,25 @@ $icon-side-padding: 20px;
 
     transition: height 0.5s;
 
-    .Button{
-        display: inline-flex;
-        height: 100%;
-        min-width: $icon-size;
-        flex-grow: 1;
+    .pagesInput{
+        width: 100%
+    }
 
-        &:hover{
-            background-color: var(--icon-color);
-            .Icon {
-                color: var(--border-color);
+    .documentControlsButton{
+        display: flex;
+
+        .Button{
+            display: inline-flex;
+            height: 100%;
+            min-width: $icon-size;
+            flex-grow: 1;
+    
+            &:hover{
+                background-color: var(--icon-color);
+                .Icon {
+                    color: var(--border-color);
+                }
             }
-        }
-    }    
+        }  
+    }  
 }
