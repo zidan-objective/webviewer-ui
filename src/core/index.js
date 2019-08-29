@@ -89,9 +89,11 @@ import showAnnotations from './showAnnotations';
 import hideAnnotations from './hideAnnotations';
 import goToOutline from './goToOutline';
 import getViewerElement from './getViewerElement';
+import getAnnotationCopy from './getAnnotationCopy';
 import { addEventListener, removeEventListener } from './eventListener';
 
 export default {
+  getAnnotationCopy,
   setToolMode,
   getToolMode,
   getTool,
