@@ -47,7 +47,7 @@ class Thumbnail extends React.PureComponent {
 
     if (!prevProps.canLoad && this.props.canLoad) {
       onLoad(index, this.thumbContainer.current);
-    } 
+    }
     if (prevProps.canLoad && !this.props.canLoad) {
       onCancel(index);
     }
@@ -64,7 +64,7 @@ class Thumbnail extends React.PureComponent {
     const { index } = this.props;
 
     const currentPage = index + 1;
-    const didLayoutChange = Object.keys(moved).length || added.length || contentChanged.some(changedPage => currentPage + '' === changedPage);
+    const didLayoutChange = Object.keys(moved).length || added.length || contentChanged.some(changedPage => `${currentPage}` === changedPage);
 
     if (didLayoutChange) {
       const { thumbContainer } = this;
@@ -122,11 +122,12 @@ class Thumbnail extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
-  pageLabels: selectors.getPageLabels(state)
+  currentPage: selectors.getCurrentPage(state),
+  pageLabels: selectors.getPageLabels(state),
 });
 
 const mapDispatchToProps = {
-  closeElement: actions.closeElement
+  closeElement: actions.closeElement,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Thumbnail);

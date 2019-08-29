@@ -190,5 +190,5 @@ export default {
   goToOutline,
   removePages,
   movePages,
-  getViewerElement
+  getViewerElement,
 };
