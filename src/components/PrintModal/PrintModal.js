@@ -40,14 +40,19 @@ class PrintModal extends React.PureComponent {
     this.pendingCanvases = [];
     this.state = {
       count: -1,
-      pagesToPrint: []
+      pagesToPrint: [],
     };
   }
 
   componentDidUpdate(prevProps) {
     if (!prevProps.isOpen && this.props.isOpen) {
       this.onChange();
-      this.props.closeElements([ 'signatureModal', 'loadingModal', 'progressModal', 'errorModal' ]);
+      this.props.closeElements([
+        'signatureModal',
+        'loadingModal',
+        'progressModal',
+        'errorModal',
+      ]);
     }
   }
 
@@ -67,12 +72,12 @@ class PrintModal extends React.PureComponent {
     }
 
     this.setState({ pagesToPrint });
-  }
+  };
 
   onFocus = () => {
     this.customPages.current.checked = true;
     this.onChange();
-  }
+  };
 
   createPagesAndPrint = e => {
     e.preventDefault();
@@ -85,17 +90,19 @@ class PrintModal extends React.PureComponent {
     this.setPrintQuality();
 
     const creatingPages = this.creatingPages();
-    Promise.all(creatingPages).then(pages => {
-      this.printPages(pages);
-      this.resetPrintQuality();
-    }).catch(e => {
-      console.error(e);
-    });
-  }
+    Promise.all(creatingPages)
+      .then(pages => {
+        this.printPages(pages);
+        this.resetPrintQuality();
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
 
   setPrintQuality = () => {
     window.utils.setCanvasMultiplier(this.props.printQuality);
-  }
+  };
 
   creatingPages = () => {
     const creatingPages = [];
@@ -106,38 +113,43 @@ class PrintModal extends React.PureComponent {
 
       const printableAnnotations = this.getPrintableAnnotations(pageNumber);
       if (this.includeComments.current.checked && printableAnnotations.length) {
-        const sortedNotes = getSortStrategies()[this.props.sortStrategy].getSortedNotes(printableAnnotations);
+        const sortedNotes = getSortStrategies()[
+          this.props.sortStrategy
+        ].getSortedNotes(printableAnnotations);
         creatingPages.push(this.creatingNotesPage(sortedNotes, pageNumber));
       }
     });
 
     return creatingPages;
-  }
+  };
 
-  creatingImage = pageNumber => {
-    return new Promise(resolve => {
-      const pageIndex = pageNumber - 1;
-      const zoom = 1;
-      const printRotation = this.getPrintRotation(pageIndex);
-      const onCanvasLoaded = canvas => {
-        this.pendingCanvases = this.pendingCanvases.filter(pendingCanvas => pendingCanvas !== id);
-        this.positionCanvas(canvas, pageIndex);
-        this.drawAnnotationsOnCanvas(canvas, pageNumber).then(() => {
-          const img = document.createElement('img');
-          img.src = canvas.toDataURL();
-          img.onload = () => {
-            this.setState(({ count }) => ({
-              count: (count < 0) ? -1 : count + 1
-            }));
-            resolve(img);
-          };
-        });
-      };
+  creatingImage = pageNumber => new Promise(resolve => {
+    const pageIndex = pageNumber - 1;
+    const zoom = 1;
+    const printRotation = this.getPrintRotation(pageIndex);
+    const onCanvasLoaded = canvas => {
+      this.pendingCanvases = this.pendingCanvases.filter(pendingCanvas => pendingCanvas !== id);
+      this.positionCanvas(canvas, pageIndex);
+      this.drawAnnotationsOnCanvas(canvas, pageNumber).then(() => {
+        const img = document.createElement('img');
+        img.src = canvas.toDataURL();
+        img.onload = () => {
+          this.setState(({ count }) => ({
+            count: (count < 0) ? -1 : count + 1,
+          }));
+          resolve(img);
+        };
+      });
+    };
 
-      const id = core.getDocument().loadCanvasAsync(pageIndex, zoom, printRotation, onCanvasLoaded);
-      this.pendingCanvases.push(id);
+    const id = core.getDocument().loadCanvasAsync({
+      pageIndex,
+      zoom,
+      pageRotation: printRotation,
+      drawComplete: onCanvasLoaded,
     });
-  }
+    this.pendingCanvases.push(id);
+  })
 
   getPrintRotation = pageIndex => {
     const { width, height } = core.getPageInfo(pageIndex);
@@ -152,7 +164,7 @@ class PrintModal extends React.PureComponent {
     }
 
     return printRotation;
-  }
+  };
 
   positionCanvas = (canvas, pageIndex) => {
     const { width, height } = core.getPageInfo(pageIndex);
@@ -171,8 +183,8 @@ class PrintModal extends React.PureComponent {
         break;
     }
 
-    ctx.rotate(documentRotation * 90 * Math.PI / 180);
-  }
+    ctx.rotate((documentRotation * 90 * Math.PI) / 180);
+  };
 
   getDocumentRotation = pageIndex => {
     const pageNumber = pageIndex + 1;
@@ -180,29 +192,33 @@ class PrintModal extends React.PureComponent {
     const viewerRotation = core.getRotation(pageNumber);
 
     return (completeRotation - viewerRotation + 4) % 4;
-  }
+  };
 
   drawAnnotationsOnCanvas = (canvas, pageNumber) => {
-    const annotations = core.getAnnotationsList().filter(annot => annot.PageNumber === pageNumber && annot instanceof window.Annotations.WidgetAnnotation);
+    const annotations = core
+      .getAnnotationsList()
+      .filter(
+        annot =>
+          annot.PageNumber === pageNumber &&
+          annot instanceof window.Annotations.WidgetAnnotation,
+      );
 
     if (annotations.length === 0) {
       return core.drawAnnotations(pageNumber, canvas);
     }
 
-    // Currently annotationManager expects a jQuery node
-    let widgetContainer = this.createWidgetContainer(pageNumber-1);
+    const widgetContainer = this.createWidgetContainer(pageNumber - 1);
     return core.drawAnnotations(pageNumber, canvas, true, widgetContainer).then(() => {
-      document.body.appendChild(widgetContainer[0]);
-      return window.html2canvas(widgetContainer[0], {
+      document.body.appendChild(widgetContainer);
+      return window.html2canvas(widgetContainer, {
         canvas,
         backgroundColor: null,
         scale: 1,
-        logging: false
+        logging: false,
       }).then(() => {
-        document.body.removeChild(widgetContainer[0]);
+        document.body.removeChild(widgetContainer);
       });
     });
-
   }
 
   createWidgetContainer = pageIndex => {
@@ -218,31 +234,25 @@ class PrintModal extends React.PureComponent {
     return widgetContainer;
   }
 
-  getPrintableAnnotations = pageNumber => {
-    return core.getAnnotationsList().filter(annotation => {
-      return annotation.Listable && annotation.PageNumber === pageNumber && !annotation.isReply() && annotation.Printable;
+  getPrintableAnnotations = pageNumber => core.getAnnotationsList().filter(annotation => annotation.Listable && annotation.PageNumber === pageNumber && !annotation.isReply() && annotation.Printable)
+
+  creatingNotesPage = (annotations, pageNumber) => new Promise(resolve => {
+    const container = document.createElement('div');
+    container.className = 'page__container';
+
+    const header = document.createElement('div');
+    header.className = 'page__header';
+    header.innerHTML = `Page ${pageNumber}`;
+
+    container.appendChild(header);
+    annotations.forEach(annotation => {
+      const note = this.getNote(annotation);
+
+      container.appendChild(note);
     });
-  }
 
-  creatingNotesPage = (annotations, pageNumber) => {
-    return new Promise(resolve => {
-      const container = document.createElement('div');
-      container.className = 'page__container';
-
-      const header =  document.createElement('div');
-      header.className = 'page__header';
-      header.innerHTML = `Page ${pageNumber}`;
-
-      container.appendChild(header);
-      annotations.forEach(annotation => {
-        const note = this.getNote(annotation);
-
-        container.appendChild(note);
-      });
-
-      resolve(container);
-    });
-  }
+    resolve(container);
+  })
 
   getNote = annotation => {
     const note = document.createElement('div');
@@ -272,14 +282,14 @@ class PrintModal extends React.PureComponent {
     });
 
     return note;
-  }
+  };
 
   getNoteIcon = annotation => {
     const { toolButtonObjects } = this.props;
     const iconColor = toolButtonObjects[annotation.ToolName].iconColor;
     const icon = toolButtonObjects[annotation.ToolName].img;
     const isBase64 = icon && icon.trim().indexOf('data:') === 0;
-    
+
     let noteIcon;
     if (isBase64) {
       noteIcon = document.createElement('img');
@@ -292,7 +302,7 @@ class PrintModal extends React.PureComponent {
       } else {
         innerHTML = annotation.Subject;
       }
-    
+
       noteIcon = document.createElement('div');
       noteIcon.innerHTML = innerHTML;
     }
@@ -300,7 +310,7 @@ class PrintModal extends React.PureComponent {
     noteIcon.className = 'note__icon';
     noteIcon.style.color = iconColor && annotation[iconColor] && annotation[iconColor].toHexString();
     return noteIcon;
-  }
+  };
 
   getNoteInfo = annotation => {
     const info = document.createElement('div');
@@ -312,7 +322,7 @@ class PrintModal extends React.PureComponent {
       Date: ${dayjs(annotation.DateCreated).format('D/MM/YYYY h:mm:ss A')}
     `;
     return info;
-  }
+  };
 
   getNoteContent = annotation => {
     const contentElement = document.createElement('div');
@@ -323,7 +333,7 @@ class PrintModal extends React.PureComponent {
       contentElement.innerHTML = `${contentText}`;
     }
     return contentElement;
-  }
+  };
 
   printPages = pages => {
     const printHandler = document.getElementById('print-handler');
@@ -337,22 +347,22 @@ class PrintModal extends React.PureComponent {
     printHandler.appendChild(fragment);
     window.print();
     this.closePrintModal();
-  }
+  };
 
   resetPrintQuality = () => {
     window.utils.unsetCanvasMultiplier();
-  }
+  };
 
   closePrintModal = () => {
     this.setState({ count: -1 });
     this.props.closeElement('printModal');
-  }
+  };
 
   cancelPrint = () => {
     const doc = core.getDocument();
     this.pendingCanvases.forEach(id => doc.cancelLoadCanvas(id));
     this.setState({ count: -1 });
-  }
+  };
 
   render() {
     const { isDisabled, t } = this.props;
@@ -363,33 +373,91 @@ class PrintModal extends React.PureComponent {
 
     const { count, pagesToPrint } = this.state;
     const className = getClassName('Modal PrintModal', this.props);
-    const customPagesLabelElement = <input ref={this.customInput} type="text" placeholder={t('message.customPrintPlaceholder')} onFocus={this.onFocus}/>;
+    const customPagesLabelElement = (
+      <input
+        ref={this.customInput}
+        type="text"
+        placeholder={t('message.customPrintPlaceholder')}
+        onFocus={this.onFocus}
+      />
+    );
     const isPrinting = count >= 0;
 
     return (
-      <div className={className} data-element="printModal" onClick={this.closePrintModal}>
+      <div
+        className={className}
+        data-element="printModal"
+        onClick={this.closePrintModal}
+      >
         <div className="container" onClick={e => e.stopPropagation()}>
           <div className="settings">
             <div className="col">{`${t('option.print.pages')}:`}</div>
-            <form className="col" onChange={this.onChange} onSubmit={this.createPagesAndPrint}>
-              <Input ref={this.allPages} id="all-pages" name="pages" type="radio" label={t('option.print.all')} defaultChecked />
-              <Input ref={this.currentPage} id="current-page" name="pages" type="radio" label={t('option.print.current')} />
-              <Input ref={this.customPages} id="custom-pages" name="pages" type="radio" label={customPagesLabelElement} />
-              <Input ref={this.includeComments} id="include-comments" name="comments" type="checkbox" label={t('option.print.includeComments')} />
+            <form
+              className="col"
+              onChange={this.onChange}
+              onSubmit={this.createPagesAndPrint}
+            >
+              <Input
+                ref={this.allPages}
+                id="all-pages"
+                name="pages"
+                type="radio"
+                label={t('option.print.all')}
+                defaultChecked
+              />
+              <Input
+                ref={this.currentPage}
+                id="current-page"
+                name="pages"
+                type="radio"
+                label={t('option.print.current')}
+              />
+              <Input
+                ref={this.customPages}
+                id="custom-pages"
+                name="pages"
+                type="radio"
+                label={customPagesLabelElement}
+              />
+              <Input
+                ref={this.includeComments}
+                id="include-comments"
+                name="comments"
+                type="checkbox"
+                label={t('option.print.includeComments')}
+              />
             </form>
           </div>
           <div className="total">
-            {isPrinting
-              ? <div>{`${t('message.processing')} ${count}/${pagesToPrint.length}`}</div>
-              : <div>{t('message.printTotalPageCount', { count: pagesToPrint.length })}</div>
-            }
+            {isPrinting ? (
+              <div>{`${t('message.processing')} ${count}/${
+                pagesToPrint.length
+              }`}</div>
+            ) : (
+              <div>
+                {t('message.printTotalPageCount', {
+                  count: pagesToPrint.length,
+                })}
+              </div>
+            )}
           </div>
           <div className="buttons">
-            <div className="button" onClick={this.createPagesAndPrint} disabled={count > -1}>{t('action.print')}</div>
-            {isPrinting
-              ? <div className="button" onClick={this.cancelPrint}>{t('action.cancel')}</div>
-              : <div className="button" onClick={this.closePrintModal}>{t('action.close')}</div>
-            }
+            <div
+              className="button"
+              onClick={this.createPagesAndPrint}
+              disabled={count > -1}
+            >
+              {t('action.print')}
+            </div>
+            {isPrinting ? (
+              <div className="button" onClick={this.cancelPrint}>
+                {t('action.cancel')}
+              </div>
+            ) : (
+              <div className="button" onClick={this.closePrintModal}>
+                {t('action.close')}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -405,13 +473,16 @@ const mapStateToProps = state => ({
   printQuality: selectors.getPrintQuality(state),
   pageLabels: selectors.getPageLabels(state),
   sortStrategy: selectors.getSortStrategy(state),
-  toolButtonObjects: selectors.getToolButtonObjects(state)
+  toolButtonObjects: selectors.getToolButtonObjects(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
   closeElement: dataElement => dispatch(actions.closeElement(dataElement)),
-  closeElements: dataElements => dispatch(actions.closeElements(dataElements))
+  closeElements: dataElements => dispatch(actions.closeElements(dataElements)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(PrintModal));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTranslation()(PrintModal));

@@ -20,11 +20,11 @@ class StylePopup extends React.PureComponent {
     activeToolName: PropTypes.string,
     hideSlider: PropTypes.bool,
     currentPalette: PropTypes.oneOf(['TextColor', 'StrokeColor', 'FillColor']),
-  }
+  };
 
   state = {
     openMeasurementDropdown: -1,
-  }
+  };
 
   onOpenDropdownChange = dropdown => {
     this.setState({ openMeasurementDropdown: dropdown });
@@ -47,6 +47,8 @@ class StylePopup extends React.PureComponent {
       style: { Opacity, StrokeThickness, FontSize },
       onStyleChange,
       isFreeText,
+      currentPalette,
+      activeToolName,
     } = this.props;
     const lineStart = circleRadius;
     const sliderProps = [
@@ -64,22 +66,31 @@ class StylePopup extends React.PureComponent {
         value: StrokeThickness,
         displayValue: `${Math.round(StrokeThickness)}pt`,
         // FreeText Annotations can have the border thickness go down to 0. For others the minimum is 1.
-        getCirclePosition: lineLength => (isFreeText
+        getCirclePosition: lineLength =>
+          (isFreeText
             ? (StrokeThickness / 20) * lineLength + lineStart
             : ((StrokeThickness - 1) / 19) * lineLength + lineStart),
-        convertRelativeCirclePositionToValue: circlePosition => (isFreeText ? circlePosition * 20 : circlePosition * 19 + 1),
+        convertRelativeCirclePositionToValue: circlePosition =>
+          (isFreeText ? circlePosition * 20 : circlePosition * 19 + 1),
       },
       {
         property: 'FontSize',
         displayProperty: 'text',
         value: FontSize,
         displayValue: `${Math.round(parseInt(FontSize, 10))}pt`,
-        getCirclePosition: lineLength => ((parseInt(FontSize, 10) - 5) / 40) * lineLength + lineStart,
-        convertRelativeCirclePositionToValue: circlePosition => `${circlePosition * 40 + 5  }pt`,
+        getCirclePosition: lineLength =>
+          ((parseInt(FontSize, 10) - 5) / 40) * lineLength + lineStart,
+        convertRelativeCirclePositionToValue: circlePosition =>
+          `${circlePosition * 40 + 5}pt`,
       },
     ];
 
-    const slidersToShow = this.shouldShowRedactionOption() ? [ null, null, FontSize ] : [ Opacity, StrokeThickness, FontSize ];
+    let slidersToShow = [Opacity, StrokeThickness, FontSize];
+
+    if (activeToolName === 'AnnotationCreateRedaction') {
+      slidersToShow = currentPalette === 'TextColor' ? [null, null, FontSize] : [Opacity, StrokeThickness, null];
+    }
+
     return slidersToShow.map((value, index) => {
       if (value === null || value === undefined) { // we still want to render a slider if the value is 0
         return null;
@@ -104,11 +115,15 @@ class StylePopup extends React.PureComponent {
     const showRedactionOptions = this.shouldShowRedactionOption();
 
     return (
-      <div className="Popup StylePopup" data-element="stylePopup" onClick={e => e.stopPropagation()} onScroll={e => e.stopPropagation()}>
+      <div className="Popup StylePopup" data-element="stylePopup">
         {currentPalette && style[currentPalette] && (
           <div className="colors-container">
             <div className="inner-wrapper">
-              <ColorPaletteHeader colorPalette={currentPalette} activeToolName={activeToolName} style={style} />
+              <ColorPaletteHeader
+                colorPalette={currentPalette}
+                activeToolName={activeToolName}
+                style={style}
+              />
               {this.renderColorPalette()}
             </div>
           </div>
