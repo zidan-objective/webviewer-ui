@@ -8,8 +8,6 @@ $textHeight: 30px;
 
 .documentControls {
     background-color: var(--border-color);
-    position: absolute;
-    bottom: 0px;
     height: $textHeight + $icon-size + 2 * $icon-verical-padding;
     width: 100%;
     text-align: center;

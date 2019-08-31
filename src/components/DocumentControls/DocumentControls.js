@@ -67,8 +67,9 @@ const DocumentControls = props => {
     setPageString(e.target.value);
   };
 
+  // ${!selectedPageCount ? 'hidden' : ''}
   return (
-    <div className={`documentControls ${!selectedPageCount ? 'hidden' : ''}`}>
+    <div className={`documentControls `}>
       <div>
         <input 
           onBlur={onBlur}
@@ -79,6 +80,7 @@ const DocumentControls = props => {
       <div className="documentControlsButton">
         <Button
           img="ic_add_black_24px"
+          onClick={() => {}}
         />
         <Button
           img="ic_delete_black_24px"

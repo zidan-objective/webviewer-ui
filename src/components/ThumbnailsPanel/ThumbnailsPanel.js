@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Thumbnail from 'components/Thumbnail';
 import DocumentControls from 'components/DocumentControls';
 import ThumbnailOverlay from 'components/ThumbnailOverlay';
+import Button from 'components/Button';
 
 import core from 'core';
 import selectors from 'selectors';
@@ -31,6 +32,7 @@ class ThumbnailsPanel extends React.PureComponent {
       draggingOverPageIndex: null,
       isDraggingOverTopHalf: false,
       selectedPageIndexes: [],
+      isDocumentControlHidden: true,
     };
     this.thumbnails = React.createRef();
     this.dragOverHandler = e => {
@@ -348,6 +350,11 @@ class ThumbnailsPanel extends React.PureComponent {
     }
   }
 
+  toggleDocumentControl = () => {
+    const { isDocumentControlHidden } = this.state;
+    this.setState({ isDocumentControlHidden : !isDocumentControlHidden });
+  }
+
   renderThumbnails = rowIndex => {
     const { 
       numberOfColumns, 
@@ -399,12 +406,12 @@ class ThumbnailsPanel extends React.PureComponent {
 
   render() {
     const { isDisabled, totalPages, display, pageLabels } = this.props;
-    const { selectedPageIndexes } = this.state;
+    const { selectedPageIndexes, isDocumentControlHidden } = this.state;
 
     if (isDisabled) {
       return null;
     }
-// 
+
     return (
       <div className="Panel ThumbnailsPanel" style={{ display }} data-element="thumbnailsPanel" onDragOver={this.dragOverHandler}  ref={this.thumbnails}>
         <div className="thumbs">
@@ -422,13 +429,18 @@ class ThumbnailsPanel extends React.PureComponent {
           selectedPageIndexes.length > 0
           && <ThumbnailOverlay />
         }
-        <DocumentControls 
-          pageLabels={pageLabels}
-          selectedPageIndexes={selectedPageIndexes} 
-          selectedPageCount={selectedPageIndexes.length}
-          deletePagesCallBack={this.onDeletePages}
-          updateSelectedPage={this.updateSelectedPage}
-        />
+        <div className="documentControlContainer">
+          <Button className={`documentControlToggle ${isDocumentControlHidden ? '' : 'showing'}`} label="^" onClick={this.toggleDocumentControl} />
+          {( !isDocumentControlHidden || selectedPageIndexes.length > 0)  && 
+            <DocumentControls 
+            pageLabels={pageLabels}
+            selectedPageIndexes={selectedPageIndexes} 
+            selectedPageCount={selectedPageIndexes.length}
+            deletePagesCallBack={this.onDeletePages}
+            updateSelectedPage={this.updateSelectedPage}
+            />
+          }
+        </div>        
       </div>
     );
   }
