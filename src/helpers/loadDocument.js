@@ -178,7 +178,7 @@ const getDocOptions = (state, dispatch, streaming) => {
       dispatch(actions.setDocumentType(workerTypes.XOD));
       resolve(docId);
     } else {
-      const { pdfWorkerTransportPromise, officeWorkerTransportPromise, forceClientSideInit } = state.advanced;
+      const { pdfWorkerTransportPromise, officeWorkerTransportPromise, forceClientSideInit, pageSizes } = state.advanced;
 
       Promise.all([getBackendPromise(pdfType), getBackendPromise(officeType)]).then(([pdfBackendType, officeBackendType]) => {
         let passwordChecked = false; // to prevent infinite loop when wrong password is passed as an argument
@@ -219,7 +219,7 @@ const getDocOptions = (state, dispatch, streaming) => {
 
         dispatch(actions.setDocumentType(type));
 
-        resolve({ docId, pdfBackendType, officeBackendType, extension, getPassword, onError, streaming, type, workerHandlers, workerTransportPromise, forceClientSideInit });
+        resolve({ docId, pdfBackendType, officeBackendType, extension, getPassword, onError, streaming, type, workerHandlers, workerTransportPromise, forceClientSideInit, pageSizes });
       });
     }
   });
@@ -279,7 +279,13 @@ export const getDocName = state => {
   return filename || path || initialDoc;
 };
 
-const createFakeFilename = (initialDoc, ext) => `${initialDoc.replace(/^.*[\\\/]/, '')}.${ext.replace(/^\./, '')}`;
+const createFakeFilename = (initialDoc, ext) => {
+  // get end of the URL without the query or hash parameters
+  const match = initialDoc.match(/(^|[\/\\])([a-zA-Z0-9.]+)(&|$|\?|#)/);
+  const filename = match && match[2];
+
+  return `${filename || initialDoc.replace(/^.*[\\\/]/, '')}.${ext.replace(/^\./, '')}`;
+};
 
 export const isOfficeExtension = extension => supportedOfficeExtensions.indexOf(extension) !== -1;
 
