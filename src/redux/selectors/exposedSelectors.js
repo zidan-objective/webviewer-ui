@@ -157,6 +157,8 @@ export const getWarningConfirmBtnText = state =>
 
 export const getWarningCancelEvent = state => state.viewer.warning?.onCancel;
 
+export const getWarningKeepOpen = state => state.viewer.warning?.keepOpen;
+
 // error message
 export const getErrorMessage = state => state.viewer.errorMessage || '';
 

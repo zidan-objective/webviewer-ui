@@ -36,8 +36,7 @@ const DocumentControls = props => {
 
   // TODO figure out why the inital values is incorrect
   const [pageString, setPageString] = useState(initalPagesString);
-
-
+  const [previousPageString, setPreviousPageString] = useState(initalPagesString);
 
   useEffect(() => {
     setPageString(getPageString(selectedPageIndexes, pageLabels));
@@ -55,12 +54,18 @@ const DocumentControls = props => {
   const showOtherOptions = () => { };
 
   const onBlur = e => {
-    let pagesString = e.target.value.replace(/ /g, '');
-    
-    let pages = !pagesString ? [] : getPagesToPrint(e.target.value.replace(/ /g, ''), pageLabels);
+    let selectedPagesString = e.target.value.replace(/ /g, '');
+
+    let pages = !selectedPagesString ? [] : getPagesToPrint(selectedPagesString, pageLabels);
     let pageIndexes = pages.map(page => page - 1);
-    updateSelectedPage(pageIndexes);
-    setPageString(e);
+
+    if (pages.length || !selectedPagesString) {
+      updateSelectedPage(pageIndexes);
+      setPageString(e);
+      setPreviousPageString(selectedPagesString);
+    } else {
+      setPageString(previousPageString);   
+    }
   };
 
   const pageStringUpdate = e => {

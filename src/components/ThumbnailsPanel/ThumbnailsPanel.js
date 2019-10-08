@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactList from 'react-list';
 import { connect } from 'react-redux';
+import i18next from 'i18next';
 
 import Thumbnail from 'components/Thumbnail';
 import DocumentControls from 'components/DocumentControls';
 import ThumbnailOverlay from 'components/ThumbnailOverlay';
 import Button from 'components/Button';
+import actions from 'actions';
 
 import core from 'core';
 import selectors from 'selectors';
@@ -20,6 +22,7 @@ class ThumbnailsPanel extends React.PureComponent {
     currentPage: PropTypes.number,
     pageLabels: PropTypes.array.isRequired,
     display: PropTypes.string.isRequired,
+    showWarningMessage: PropTypes.func.isRequired,
   }
 
   constructor() {
@@ -307,7 +310,7 @@ class ThumbnailsPanel extends React.PureComponent {
   }
 
   onThumbnailClick = (e, index) => {
-    let { selectedPageIndexes, isDocumentControlHidden } = this.state;
+    let { selectedPageIndexes } = this.state;
 
     if (selectedPageIndexes.indexOf(index) > -1) {
       selectedPageIndexes = selectedPageIndexes.filter(pageIndex => index !== pageIndex);
@@ -317,7 +320,7 @@ class ThumbnailsPanel extends React.PureComponent {
 
     this.setState({ 
       selectedPageIndexes,  
-      isDocumentControlHidden: isDocumentControlHidden && selectedPageIndexes.length !== 0,
+      isDocumentControlHidden: selectedPageIndexes.length === 0,
     });
     
     core.setCurrentPage(index + 1);
@@ -331,12 +334,26 @@ class ThumbnailsPanel extends React.PureComponent {
 
   onDeletePages = () => {
     const { selectedPageIndexes } = this.state;
+    const { showWarningMessage } = this.props;
+    core.removePages(selectedPageIndexes);
 
-    core.removePages(selectedPageIndexes)
-      /*.map(index => index + 1 )).then(() => {
-      this.setState({ selectedPageIndexes: [] });
-    });
-*/
+
+    const message = i18next.t('option.redaction.warningPopupMessage');
+    const title = i18next.t('option.redaction.warningPopupTitle');
+    const confirmBtnText = i18next.t('action.apply');
+  
+    const warning = {
+      message,
+      title,
+      confirmBtnText,
+      onConfirm: () => {
+        this.setState({ selectedPageIndexes: [] });
+        return Promise.resolve();
+      },
+      keepOpen: ['leftPanel']
+    };
+  
+    showWarningMessage(warning);
   }
 
   onDrop = e => {
@@ -358,7 +375,10 @@ class ThumbnailsPanel extends React.PureComponent {
 
   toggleDocumentControl = () => {
     const { isDocumentControlHidden } = this.state;
-    this.setState({ isDocumentControlHidden : !isDocumentControlHidden });
+    this.setState({ 
+      isDocumentControlHidden : !isDocumentControlHidden,
+      selectedPageIndexes: []
+    });
   }
 
   renderThumbnails = rowIndex => {
@@ -466,4 +486,9 @@ const mapStateToProps = state => ({
   pageLabels: selectors.getPageLabels(state),
 });
 
-export default connect(mapStateToProps)(ThumbnailsPanel);
+const mapDispatchToProps = dispatch => ({
+  dispatch,
+  showWarningMessage: warning => dispatch(actions.showWarningMessage(warning)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ThumbnailsPanel);
