@@ -307,7 +307,7 @@ class ThumbnailsPanel extends React.PureComponent {
   }
 
   onThumbnailClick = (e, index) => {
-    let { selectedPageIndexes } = this.state;
+    let { selectedPageIndexes, isDocumentControlHidden } = this.state;
 
     if (selectedPageIndexes.indexOf(index) > -1) {
       selectedPageIndexes = selectedPageIndexes.filter(pageIndex => index !== pageIndex);
@@ -315,12 +315,18 @@ class ThumbnailsPanel extends React.PureComponent {
       selectedPageIndexes.push(index);
     }
 
-    this.setState({ selectedPageIndexes });
+    this.setState({ 
+      selectedPageIndexes,  
+      isDocumentControlHidden: isDocumentControlHidden && selectedPageIndexes.length !== 0,
+    });
+    
     core.setCurrentPage(index + 1);
   }
 
-  updateSelectedPage = (selectedPageIndexes) => {
-    this.setState({ selectedPageIndexes });
+  updateSelectedPage = selectedPageIndexes => {
+    this.setState({ 
+      selectedPageIndexes
+    });
   }
 
   onDeletePages = () => {
@@ -412,6 +418,8 @@ class ThumbnailsPanel extends React.PureComponent {
       return null;
     }
 
+    const icon = isDocumentControlHidden ? "ic_arrow_up_black_24px" : "ic_arrow_down_black_24px";
+
     return (
       <div className="Panel ThumbnailsPanel" style={{ display }} data-element="thumbnailsPanel" onDragOver={this.dragOverHandler}  ref={this.thumbnails}>
         <div className="thumbs">
@@ -427,17 +435,22 @@ class ThumbnailsPanel extends React.PureComponent {
         </div>
         {
           selectedPageIndexes.length > 0
-          && <ThumbnailOverlay />
+          && <ThumbnailOverlay updateSelectedPage={this.updateSelectedPage} />
         }
         <div className="documentControlContainer">
-          <Button className={`documentControlToggle ${isDocumentControlHidden ? '' : 'showing'}`} label="^" onClick={this.toggleDocumentControl} />
+          <Button 
+            className={`documentControlToggle ${isDocumentControlHidden ? '' : 'showing'}`} 
+            img={icon}
+            onClick={this.toggleDocumentControl}
+          />
+
           {( !isDocumentControlHidden || selectedPageIndexes.length > 0)  && 
             <DocumentControls 
-            pageLabels={pageLabels}
-            selectedPageIndexes={selectedPageIndexes} 
-            selectedPageCount={selectedPageIndexes.length}
-            deletePagesCallBack={this.onDeletePages}
-            updateSelectedPage={this.updateSelectedPage}
+              pageLabels={pageLabels}
+              selectedPageIndexes={selectedPageIndexes} 
+              selectedPageCount={selectedPageIndexes.length}
+              deletePagesCallBack={this.onDeletePages}
+              updateSelectedPage={this.updateSelectedPage}
             />
           }
         </div>        
