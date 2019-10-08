@@ -20,6 +20,7 @@ class Thumbnail extends React.PureComponent {
     onCancel: PropTypes.func.isRequired,
     onRemove: PropTypes.func.isRequired,
     updateAnnotations: PropTypes.func,
+    updateSelectedPage: PropTypes.func,
     onDragStartCallback: PropTypes.func.isRequired,
     onDragOverCallback: PropTypes.func.isRequired,
     onClickCallback: PropTypes.func.isRequired,
