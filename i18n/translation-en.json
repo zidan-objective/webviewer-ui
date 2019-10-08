@@ -168,6 +168,11 @@
     "shared": {
       "page": "Page",
       "precision": "Precision"
+    },
+    "thumbnailPanel": {
+      "title": "Delete Page",
+      "message": "Are you sure you want to delete the selected page(s). This can't be undone",
+      "confirmText": "OK"
     }
   },
   "shortcut": {

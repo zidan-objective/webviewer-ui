@@ -51,8 +51,6 @@ const DocumentControls = props => {
     window.readerControl.extractPages(selectedPageIndexes.map(index => index + 1 ));
   };
 
-  const showOtherOptions = () => { };
-
   const onBlur = e => {
     let selectedPagesString = e.target.value.replace(/ /g, '');
 
@@ -96,11 +94,6 @@ const DocumentControls = props => {
           img="ic_extract_black_24px"
           title="action.extract"
           onClick={extractPages}
-        />
-
-        <Button
-          img="ic_more_black_24px"
-          onClick={showOtherOptions}
         />
       </div>
     </div>

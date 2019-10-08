@@ -259,7 +259,7 @@ class ThumbnailsPanel extends React.PureComponent {
 
   onDragEnd = () => {
     const { currentPage } = this.props;
-    const { draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
+    const { draggingOverPageIndex, isDraggingOverTopHalf, selectedPageIndexes } = this.state;
     if (draggingOverPageIndex !== null) {
       let targetPageNumber = isDraggingOverTopHalf ? draggingOverPageIndex + 1 : draggingOverPageIndex + 2;
 
@@ -270,8 +270,18 @@ class ThumbnailsPanel extends React.PureComponent {
         // moving page up
         this.afterMovePageNumber  = targetPageNumber;
       }
-      
+
       core.movePages([currentPage], targetPageNumber).then(() => {
+        const isSelected = selectedPageIndexes.includes(currentPage - 1);
+        if (isSelected) {
+          const updateSelectedPage = selectedPageIndexes.filter(pageIndex => pageIndex !== (currentPage - 1));
+          if (currentPage > targetPageNumber) {
+            updateSelectedPage.push(targetPageNumber - 1);
+          } else {
+            updateSelectedPage.push(targetPageNumber - 2);
+          }
+          this.setState({ selectedPageIndexes: updateSelectedPage });
+        }
       });
     }
 
@@ -335,12 +345,10 @@ class ThumbnailsPanel extends React.PureComponent {
   onDeletePages = () => {
     const { selectedPageIndexes } = this.state;
     const { showWarningMessage } = this.props;
-    core.removePages(selectedPageIndexes);
-
-
-    const message = i18next.t('option.redaction.warningPopupMessage');
-    const title = i18next.t('option.redaction.warningPopupTitle');
-    const confirmBtnText = i18next.t('action.apply');
+  
+    const message = i18next.t('option.thumbnailPanel.message');
+    const title = i18next.t('option.thumbnailPanel.title');
+    const confirmBtnText = i18next.t('option.thumbnailPanel.confirmText');
   
     const warning = {
       message,
@@ -348,7 +356,7 @@ class ThumbnailsPanel extends React.PureComponent {
       confirmBtnText,
       onConfirm: () => {
         this.setState({ selectedPageIndexes: [] });
-        return Promise.resolve();
+        return core.removePages(selectedPageIndexes);
       },
       keepOpen: ['leftPanel']
     };
