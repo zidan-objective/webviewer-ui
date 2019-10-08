@@ -170,9 +170,10 @@
       "precision": "Precision"
     },
     "thumbnailPanel": {
-      "title": "Delete Page",
-      "message": "Are you sure you want to delete the selected page(s). This can't be undone",
-      "confirmText": "OK"
+      "deleteWarningTitle": "Delete Page",
+      "deleteWarningMessage": "Are you sure you want to delete the selected page(s). This can't be undone",
+      "deleteWarningConfirmText": "OK",
+      "delete": "Delete"
     }
   },
   "shortcut": {

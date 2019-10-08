@@ -346,9 +346,9 @@ class ThumbnailsPanel extends React.PureComponent {
     const { selectedPageIndexes } = this.state;
     const { showWarningMessage } = this.props;
   
-    const message = i18next.t('option.thumbnailPanel.message');
-    const title = i18next.t('option.thumbnailPanel.title');
-    const confirmBtnText = i18next.t('option.thumbnailPanel.confirmText');
+    const message = i18next.t('option.thumbnailPanel.deleteWarningMessage');
+    const title = i18next.t('option.thumbnailPanel.deleteWarningTitle');
+    const confirmBtnText = i18next.t('option.thumbnailPanel.deleteWarningConfirmText');
   
     const warning = {
       message,
