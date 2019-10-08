@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import Button from 'components/Button';
 import './DocumentControls.scss';
 import getPagesToPrint from 'helpers/getPagesToPrint';
@@ -82,10 +81,6 @@ const DocumentControls = props => {
       </div>
       <div className="documentControlsButton">
         <Button
-          img="ic_add_black_24px"
-          onClick={() => {}}
-        />
-        <Button
           img="ic_delete_black_24px"
           onClick={deletePages}
           title="action.delete"
@@ -100,4 +95,4 @@ const DocumentControls = props => {
   );
 }
 
-export default connect( )(DocumentControls);
+export default DocumentControls;
