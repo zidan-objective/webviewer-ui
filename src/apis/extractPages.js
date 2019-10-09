@@ -1,11 +1,12 @@
 /**
  * Extract pages from the current document
  * @method WebViewer#extractPages
- * @param {Array<number>} pagesToExtract An array of pages numbers to extract
+ * @param {Array<number>} pageindexToExtract An array of page numbers to extract
  * @example // 5.1 and after
 WebViewer(...)
   .then(function(instance) {
-    instance.extractPages([1,2,3]);
+    instance.extractPages([1,2,3]).then(function(fileData){
+    });
   });
  * @example // 4.0 ~ 5.0
 var viewerElement = document.getElementById('viewer');
@@ -13,15 +14,13 @@ var viewer = new PDFTron.WebViewer(...);
 
 viewerElement.addEventListener('ready', function() {
   var instance = viewer.getInstance();
-  instance.extractPages([1,2,3]);
+  instance.extractPages([1,2,3]).then(function(fileData){
+  });
 });
  */
-import actions from 'actions';
-import { saveAs } from 'file-saver';
 import { isIE } from 'helpers/device';
 
-export default store => pagesToExtract =>  {    
-  store.dispatch(actions.openElement('progressModal'));
+export default () => pagesToExtract =>  {    
   const doc = window.readerControl.docViewer.getDocument();
 
   const pagesToExtractHash = pagesToExtract.reduce((curr, val) => {
@@ -37,7 +36,7 @@ export default store => pagesToExtract =>  {
     try {
       doc.extractPages(pagesToExtract, xfdfString).then(data => {
         const arr = new Uint8Array(data);
-        let downloadName = 'newDocument.pdf';
+        let downloadName = 'extractedDocument.pdf';
 
         let file = null;
         if (isIE) {
@@ -46,16 +45,12 @@ export default store => pagesToExtract =>  {
           file = new File([ arr ], downloadName, { type: 'application/pdf' });
         }
 
-        saveAs(file, downloadName);
-        store.dispatch(actions.closeElement('progressModal')); 
-        resolve();
+        resolve(file);
       }).catch(function(ex) {
         reject(ex);
-        store.dispatch(actions.closeElement('progressModal'));
       });
     } catch (ex) {
       reject(ex);
-      store.dispatch(actions.closeElement('progressModal'));
     }
   });
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import core from 'core';
 import { isMobile } from 'helpers/device';
+import removePage from 'helpers/removePage';
 import actions from 'actions';
 import selectors from 'selectors';
 import ThumbnailControls from 'components/ThumbnailControls';
@@ -20,12 +21,12 @@ class Thumbnail extends React.PureComponent {
     onCancel: PropTypes.func.isRequired,
     onRemove: PropTypes.func.isRequired,
     updateAnnotations: PropTypes.func,
-    updateSelectedPage: PropTypes.func,
-    onDragStartCallback: PropTypes.func.isRequired,
-    onDragOverCallback: PropTypes.func.isRequired,
-    onClickCallback: PropTypes.func.isRequired,
+    onDragStartCallback: PropTypes.func,
+    onDragOverCallback: PropTypes.func,
+    onClickCallback: PropTypes.func,
     isSelected: PropTypes.bool,
     closeElement: PropTypes.func.isRequired,
+    removePage: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -34,6 +35,7 @@ class Thumbnail extends React.PureComponent {
     this.onLayoutChangedHandler = this.onLayoutChanged.bind(this);
     this.onDragStartHandler = this.onDragStart.bind(this);
     this.onDragOverHandler = this.onDragOver.bind(this);
+    this.onDeleteHandler = this.handleDelete.bind(this);
   }
 
   componentDidMount() {
@@ -95,6 +97,12 @@ class Thumbnail extends React.PureComponent {
     }
   }
 
+  handleDelete = () => {
+    const { index, removePage } = this.props;
+    removePage(index + 1);
+  }
+
+
   onDragStart = e => {
     const { index } = this.props;
     this.props.onDragStartCallback(e, index);
@@ -116,7 +124,7 @@ class Thumbnail extends React.PureComponent {
       <div className={`Thumbnail ${isActive ? 'active' : ''} ${isSelected ? 'selected': ''}`} onDragOver={this.onDragOverHandler} >
         <div className="container" ref={this.thumbContainer} onClick={this.handleClick}  onDragStart={this.onDragStartHandler} draggable></div>
         <div className="page-label">{pageLabel}</div>
-        {showControls && <ThumbnailControls index={index}/>}
+        {showControls && <ThumbnailControls index={index} handleDelete={this.onDeleteHandler} />}
       </div>
     );
   }
@@ -127,8 +135,9 @@ const mapStateToProps = state => ({
   pageLabels: selectors.getPageLabels(state),
 });
 
-const mapDispatchToProps = {
-  closeElement: actions.closeElement,
-};
+const mapDispatchToProps = dispatch => ({
+  removePage: pageNumber => dispatch(removePage(pageNumber)),
+  closeElement: dataElement => dispatch(actions.closeElement(dataElement)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Thumbnail);

@@ -10,6 +10,7 @@ import './ThumbnailControls.scss';
 class ThumbnailControls extends React.PureComponent {
   static propTypes = {
     index: PropTypes.number.isRequired,
+    handleDelete: PropTypes.func.isRequired,
   }
 
   rotateClockwise = () => {
@@ -22,11 +23,6 @@ class ThumbnailControls extends React.PureComponent {
     core.rotatePages([index + 1], window.CoreControls.PageRotation.e_270);
   }
 
-  deletePage = () => {
-    const { index } = this.props;
-    core.removePages([index + 1]);
-  }
-
   render() {
     return (
       <div className="thumbnailControls" data-element="thumbnailControls">
@@ -37,7 +33,7 @@ class ThumbnailControls extends React.PureComponent {
         />
         <Button
           img="ic_delete_black_24px"
-          onClick={this.deletePage}
+          onClick={this.props.handleDelete}
           title="action.delete"
         />
         <Button

@@ -139,6 +139,7 @@ export default {
     customPanels: [],
     useEmbeddedPrint: true,
     pageLabels: [],
+    selectedThumbnailPageIndexes: [],
     noteDateFormat: 'MMM D, h:mma',
     colorMap: copyMapWithDataProperties('currentPalette', 'iconColor'),
     cursorOverlay: {},

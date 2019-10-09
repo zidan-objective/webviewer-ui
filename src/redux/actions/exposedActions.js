@@ -170,6 +170,14 @@ export const setPageLabels = pageLabels => dispatch => {
     payload: { pageLabels: pageLabels.map(String) },
   });
 };
+export const setSelectedPageThumbnails = (selectedThumbnailPageIndexes = []) => ({
+  type: 'SET_SELECTED_THUMBNAIL_PAGE_INDEXES',
+  payload: { selectedThumbnailPageIndexes },
+});
+export const deletePageIndex = pageIndexDeleted => ({
+  type: 'REMOVE_PAGE_INDEX',
+  payload: { pageIndexDeleted },
+});
 export const setCursorOverlay = (data = {}) => ({
   type: 'SET_CURSOR_OVERLAY',
   payload: { data },

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Button from 'components/Button';
 import './DocumentControls.scss';
 import getPagesToPrint from 'helpers/getPagesToPrint';
+import { saveAs } from 'file-saver';
 
 function getPageString(selectedPageArray, pageLabels) {
   let pagesToPrint = '';
@@ -47,19 +49,25 @@ const DocumentControls = props => {
   };
 
   const extractPages = () => {
-    window.readerControl.extractPages(selectedPageIndexes.map(index => index + 1 ));
+    window.readerControl.extractPages(selectedPageIndexes.map(index => index + 1 )).then(file => {
+      saveAs(file, 'extractedDocument.pdf');
+    });
   };
 
   const onBlur = e => {
     let selectedPagesString = e.target.value.replace(/ /g, '');
 
+    // TODO move "getPagesToPrint" to another API
     let pages = !selectedPagesString ? [] : getPagesToPrint(selectedPagesString, pageLabels);
     let pageIndexes = pages.map(page => page - 1);
 
     if (pages.length || !selectedPagesString) {
       updateSelectedPage(pageIndexes);
-      setPageString(e);
-      setPreviousPageString(selectedPagesString);
+
+      const updatedString = getPageString(selectedPageIndexes, pageLabels);
+
+      setPageString(updatedString);
+      setPreviousPageString(updatedString);
     } else {
       setPageString(previousPageString);   
     }
@@ -94,5 +102,13 @@ const DocumentControls = props => {
     </div>
   );
 }
+
+DocumentControls.propTypes = {
+  deletePagesCallBack:  PropTypes.func.isRequired,
+  selectedPageCount:  PropTypes.number,
+  selectedPageIndexes: PropTypes.arrayOf(PropTypes.number),
+  pageLabels: PropTypes.arrayOf(PropTypes.string),
+  updateSelectedPage: PropTypes.func,
+};
 
 export default DocumentControls;

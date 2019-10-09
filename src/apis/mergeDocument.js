@@ -20,28 +20,29 @@ viewerElement.addEventListener('ready', function() {
 import actions from 'actions';
 
 export default store => (documentToMerge, position) => {
-  const doc = window.readerControl.docViewer.getDocument();
+  const doc = window.docViewer.getDocument();
+  const CoreControls = window.CoreControls;
 
   let ext = null;
   let partRetriever;
         
   if (typeof documentToMerge === 'string') {
-    partRetriever = new window.CoreControls.PartRetrievers.ExternalPdfPartRetriever(documentToMerge);
+    partRetriever = new CoreControls.PartRetrievers.ExternalPdfPartRetriever(documentToMerge);
     ext = 'pdf';
   } else {
     ext = documentToMerge.name.split('.').slice(-1)[0];
-    partRetriever = new window.CoreControls.PartRetrievers.LocalPdfPartRetriever(documentToMerge);
+    partRetriever = new CoreControls.PartRetrievers.LocalPdfPartRetriever(documentToMerge);
   }
 
   const finishPromise = new Promise(function(resolve, reject) {
     try {
       store.dispatch(actions.openElement('progressModal'));
-      window.CoreControls.getDefaultBackendType().then(function(backendType) {
+      CoreControls.getDefaultBackendType().then(function(backendType) {
         var options = {
-          workerTransportPromise: window.CoreControls.initPDFWorkerTransports(backendType, {}),
+          workerTransportPromise: CoreControls.initPDFWorkerTransports(backendType, {}),
           extension: ext
         };
-        const newDoc = new window.CoreControls.Document('fileToMerge', 'pdf');
+        const newDoc = new CoreControls.Document('fileToMerge', 'pdf');
         newDoc.loadAsync(partRetriever, function(err) {
           if (err) {
             console.error('Could not open file, please try again');
@@ -54,7 +55,7 @@ export default store => (documentToMerge, position) => {
         
           if (position === null || position === undefined) {
             // 'insertPages', default is insert at the start of file if no value given, also we can use 'Number.MAX_VALUE' to make it insert at the end
-            position = window.readerControl.docViewer.getPageCount() + 1;
+            position = window.docViewer.getPageCount() + 1;
           }
 
           doc.insertPages(newDoc, pages, position).then(() => {
@@ -78,8 +79,3 @@ export default store => (documentToMerge, position) => {
 
   return finishPromise;
 };
-
-
-
-
-

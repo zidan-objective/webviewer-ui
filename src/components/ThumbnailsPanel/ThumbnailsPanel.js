@@ -22,7 +22,9 @@ class ThumbnailsPanel extends React.PureComponent {
     currentPage: PropTypes.number,
     pageLabels: PropTypes.array.isRequired,
     display: PropTypes.string.isRequired,
+    selectedPageIndexes: PropTypes.arrayOf(PropTypes.number),
     showWarningMessage: PropTypes.func.isRequired,
+    setSelectedPageThumbnails: PropTypes.func.isRequired,
   }
 
   constructor() {
@@ -258,8 +260,8 @@ class ThumbnailsPanel extends React.PureComponent {
   }
 
   onDragEnd = () => {
-    const { currentPage } = this.props;
-    const { draggingOverPageIndex, isDraggingOverTopHalf, selectedPageIndexes } = this.state;
+    const { currentPage, selectedPageIndexes, setSelectedPageThumbnails } = this.props;
+    const { draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
     if (draggingOverPageIndex !== null) {
       let targetPageNumber = isDraggingOverTopHalf ? draggingOverPageIndex + 1 : draggingOverPageIndex + 2;
 
@@ -280,7 +282,8 @@ class ThumbnailsPanel extends React.PureComponent {
           } else {
             updateSelectedPage.push(targetPageNumber - 2);
           }
-          this.setState({ selectedPageIndexes: updateSelectedPage });
+
+          setSelectedPageThumbnails(updateSelectedPage);
         }
       });
     }
@@ -320,31 +323,34 @@ class ThumbnailsPanel extends React.PureComponent {
   }
 
   onThumbnailClick = (e, index) => {
-    let { selectedPageIndexes } = this.state;
+    const { selectedPageIndexes, setSelectedPageThumbnails } = this.props;
+    let updatedSelectedPages = [...selectedPageIndexes];
 
     if (selectedPageIndexes.indexOf(index) > -1) {
-      selectedPageIndexes = selectedPageIndexes.filter(pageIndex => index !== pageIndex);
+      updatedSelectedPages = selectedPageIndexes.filter(pageIndex => index !== pageIndex);
     } else {
-      selectedPageIndexes.push(index);
+      updatedSelectedPages.push(index);
     }
 
-    this.setState({ 
-      selectedPageIndexes,  
-      isDocumentControlHidden: selectedPageIndexes.length === 0,
+    setSelectedPageThumbnails(updatedSelectedPages);
+
+    this.setState({
+      isDocumentControlHidden: updatedSelectedPages.length === 0,
     });
     
     core.setCurrentPage(index + 1);
   }
 
-  updateSelectedPage = selectedPageIndexes => {
+  updateSelectedPage = selectedPageIndexes => {  
+    this.props.setSelectedPageThumbnails(selectedPageIndexes);
+
     this.setState({ 
       selectedPageIndexes
     });
   }
 
   onDeletePages = () => {
-    const { selectedPageIndexes } = this.state;
-    const { showWarningMessage } = this.props;
+    const { showWarningMessage, selectedPageIndexes, setSelectedPageThumbnails } = this.props;
   
     const message = i18next.t('option.thumbnailPanel.deleteWarningMessage');
     const title = i18next.t('option.thumbnailPanel.deleteWarningTitle');
@@ -355,8 +361,9 @@ class ThumbnailsPanel extends React.PureComponent {
       title,
       confirmBtnText,
       onConfirm: () => {
-        this.setState({ selectedPageIndexes: [] });
-        return core.removePages(selectedPageIndexes);
+        return core.removePages(selectedPageIndexes).then(() => {
+          setSelectedPageThumbnails([]);
+        });
       },
       keepOpen: ['leftPanel']
     };
@@ -383,9 +390,10 @@ class ThumbnailsPanel extends React.PureComponent {
 
   toggleDocumentControl = () => {
     const { isDocumentControlHidden } = this.state;
+
+    this.props.setSelectedPageThumbnails([]);
     this.setState({ 
       isDocumentControlHidden : !isDocumentControlHidden,
-      selectedPageIndexes: []
     });
   }
 
@@ -395,10 +403,9 @@ class ThumbnailsPanel extends React.PureComponent {
       canLoad, 
       draggingOverPageIndex, 
       isDraggingOverTopHalf,
-      selectedPageIndexes,
     } = this.state;
     const { thumbs } = this;
-    const { currentPage } = this.props;
+    const { currentPage, selectedPageIndexes } = this.props;
 
     const selectedPagesHash = selectedPageIndexes.reduce((curr, val) => {
       curr[val] = true;
@@ -439,8 +446,8 @@ class ThumbnailsPanel extends React.PureComponent {
   }
 
   render() {
-    const { isDisabled, totalPages, display, pageLabels } = this.props;
-    const { selectedPageIndexes, isDocumentControlHidden } = this.state;
+    const { isDisabled, totalPages, display, pageLabels, selectedPageIndexes } = this.props;
+    const { isDocumentControlHidden } = this.state;
 
     if (isDisabled) {
       return null;
@@ -492,10 +499,12 @@ const mapStateToProps = state => ({
   totalPages: selectors.getTotalPages(state),
   currentPage: selectors.getCurrentPage(state),
   pageLabels: selectors.getPageLabels(state),
+  selectedPageIndexes: selectors.getSelectedThumbnailPageIndexes(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
+  setSelectedPageThumbnails: pages => dispatch(actions.setSelectedPageThumbnails(pages)),
   showWarningMessage: warning => dispatch(actions.showWarningMessage(warning)),
 });
 
