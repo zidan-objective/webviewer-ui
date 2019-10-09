@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import i18next from 'i18next';
 
 import core from 'core';
 import { isMobile } from 'helpers/device';
@@ -17,6 +18,7 @@ class Thumbnail extends React.PureComponent {
     currentPage: PropTypes.number.isRequired,
     pageLabels: PropTypes.array.isRequired,
     canLoad: PropTypes.bool.isRequired,
+    isSelected: PropTypes.bool,
     onLoad: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
     onRemove: PropTypes.func.isRequired,
@@ -24,9 +26,9 @@ class Thumbnail extends React.PureComponent {
     onDragStartCallback: PropTypes.func,
     onDragOverCallback: PropTypes.func,
     onClickCallback: PropTypes.func,
-    isSelected: PropTypes.bool,
     closeElement: PropTypes.func.isRequired,
     removePage: PropTypes.func.isRequired,
+    showWarningMessage: PropTypes.func.isRequired
   }
 
   constructor(props) {
@@ -98,8 +100,23 @@ class Thumbnail extends React.PureComponent {
   }
 
   handleDelete = () => {
-    const { index, removePage } = this.props;
-    removePage(index + 1);
+    const { index, removePage, showWarningMessage } = this.props;
+
+    const message = i18next.t('option.thumbnailPanel.deleteWarningMessage');
+    const title = i18next.t('option.thumbnailPanel.deleteWarningTitle');
+    const confirmBtnText = i18next.t('option.thumbnailPanel.deleteWarningConfirmText');
+  
+    const warning = {
+      message,
+      title,
+      confirmBtnText,
+      onConfirm: () => {
+        return removePage(index + 1);
+      },
+      keepOpen: ['leftPanel']
+    };
+
+    showWarningMessage(warning);
   }
 
 
@@ -138,6 +155,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   removePage: pageNumber => dispatch(removePage(pageNumber)),
   closeElement: dataElement => dispatch(actions.closeElement(dataElement)),
+  showWarningMessage: warning => dispatch(actions.showWarningMessage(warning)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Thumbnail);

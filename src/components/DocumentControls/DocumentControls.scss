@@ -4,8 +4,10 @@
     background-color: var(--border-color);
     transition: height 0.5s;
 
+    $page-input-border: 2px;
     .pagesInput{
-        width: 100%
+        border-width: $page-input-border;
+        width: calc(100% - #{$page-input-border * 2});
     }
 
     .documentControlsButton{

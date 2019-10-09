@@ -85,6 +85,7 @@ const DocumentControls = props => {
           onBlur={onBlur}
           onChange={pageStringUpdate}
           value={pageString}
+          placeholder={'Enter pages to select i.e. 2, 5-9'}
           className="pagesInput" type="text" />
       </div>
       <div className="documentControlsButton">

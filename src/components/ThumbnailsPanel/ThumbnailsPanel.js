@@ -274,17 +274,27 @@ class ThumbnailsPanel extends React.PureComponent {
       }
 
       core.movePages([currentPage], targetPageNumber).then(() => {
-        const isSelected = selectedPageIndexes.includes(currentPage - 1);
-        if (isSelected) {
-          const updateSelectedPage = selectedPageIndexes.filter(pageIndex => pageIndex !== (currentPage - 1));
-          if (currentPage > targetPageNumber) {
-            updateSelectedPage.push(targetPageNumber - 1);
-          } else {
-            updateSelectedPage.push(targetPageNumber - 2);
-          }
+        const currentPageIndex = currentPage - 1;
+        const targetPageIndex = this.afterMovePageNumber - 1;       
 
-          setSelectedPageThumbnails(updateSelectedPage);
+        const isSelected = selectedPageIndexes.includes(currentPageIndex);
+        let updateSelectedPageIndexes = selectedPageIndexes;
+
+        if (isSelected) {
+          updateSelectedPageIndexes = selectedPageIndexes.filter(pageIndex => pageIndex !== currentPageIndex);
         }
+
+        if (currentPageIndex > targetPageIndex) {
+          updateSelectedPageIndexes = updateSelectedPageIndexes.map(p => p < currentPageIndex && p >= targetPageIndex ? p + 1 : p);
+        } else {
+          updateSelectedPageIndexes = updateSelectedPageIndexes.map(p => p > currentPageIndex && p <= targetPageIndex ? p - 1 : p);
+        }
+
+        if (isSelected) {
+          updateSelectedPageIndexes.push(targetPageIndex);
+        }
+
+        setSelectedPageThumbnails(updateSelectedPageIndexes);
       });
     }
 
