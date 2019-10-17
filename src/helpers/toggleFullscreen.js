@@ -10,7 +10,7 @@ export default () => {
       document.webkitExitFullscreen();
     }
   } else {
-    const docElm = document.documentElement;
+    const docElm = window.parent.document.documentElement;
     if (docElm.requestFullscreen) {
       docElm.requestFullscreen();
     } else if (docElm.msRequestFullscreen) {
