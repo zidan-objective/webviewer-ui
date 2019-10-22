@@ -16,4 +16,9 @@
   polygon#Triangle {
     fill: currentColor;
   }
+
+  path:not([fill=none]),
+  rect{
+    fill: currentColor;
+  }
 }
