@@ -4,7 +4,7 @@ import ToggleElementOverlay from 'components/ToggleElementOverlay';
 import SignatureToolButton from 'components/SignatureToolButton';
 
 import core from 'core';
-import getHashParams from 'helpers/getHashParams';
+import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 import { zoomIn, zoomOut } from 'helpers/zoom';
 import defaultTool from 'constants/defaultTool';
 import { copyMapWithDataProperties } from 'constants/map';
@@ -12,9 +12,9 @@ import actions from 'actions';
 
 const {
   hideAnnotationPanel,
-  a,
-  readonly,
-} = getHashParams();
+  enableAnnotations,
+  enableReadOnlyMode,
+} = getWebViewerConstructorOptions();
 
 export default {
   viewer: {
@@ -162,7 +162,7 @@ export default {
     activeHeaderGroup: 'default',
     activeToolName: 'AnnotationEdit',
     activeToolStyles: {},
-    activeLeftPanel: hideAnnotationPanel || !a ? 'thumbnailsPanel' : 'notesPanel',
+    activeLeftPanel: hideAnnotationPanel || !enableAnnotations ? 'thumbnailsPanel' : 'notesPanel',
     activeToolGroup: '',
     notePopupId: '',
     isNoteEditing: false,
@@ -174,7 +174,7 @@ export default {
     sortStrategy: 'position',
     isFullScreen: false,
     isDocumentLoaded: false,
-    isReadOnly: readonly,
+    isReadOnly: enableReadOnlyMode,
     customPanels: [],
     useEmbeddedPrint: false,
     pageLabels: [],

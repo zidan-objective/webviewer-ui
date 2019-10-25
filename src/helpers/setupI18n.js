@@ -1,9 +1,9 @@
 import i18next from 'i18next';
 import XHR from 'i18next-xhr-backend';
 
-import getHashParams from 'helpers/getHashParams';
+import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 
-export default state => {
+export default () => {
   const options = {
     lng: 'en',
     fallbackLng: 'en',
@@ -25,7 +25,7 @@ export default state => {
       t('message.insertTextHere'),
     );
   };
-  const { disableI18n } = getHashParams();
+  const { disableI18n } = getWebViewerConstructorOptions();
 
   if (disableI18n) {
     i18next.init(options, callback);

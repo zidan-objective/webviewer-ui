@@ -7,7 +7,7 @@ import { isIE } from 'helpers/device';
 import { updateContainerWidth, getClassNameInIE, handleWindowResize } from 'helpers/documentContainerHelper';
 import getNumberOfPagesToNavigate from 'helpers/getNumberOfPagesToNavigate';
 import touchEventManager from 'helpers/TouchEventManager';
-import getHashParams from 'helpers/getHashParams';
+import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 import { getMinZoomLevel, getMaxZoomLevel } from 'constants/zoomFactors';
 import actions from 'actions';
 import selectors from 'selectors';
@@ -82,8 +82,8 @@ class DocumentContainer extends React.PureComponent {
   /* eslint-disable camelcase */
   loadInitialDocument = () => {
     const {
-      d: initialDoc,
-      did: docId = null,
+      initialDoc,
+      documentId = null,
       auto_load = true,
       startOffline,
       filename,
@@ -97,11 +97,11 @@ class DocumentContainer extends React.PureComponent {
       singleServerMode,
       forceClientSideInit,
       disableWebsockets,
-    } = getHashParams();
+    } = getWebViewerConstructorOptions();
 
     if ((initialDoc && auto_load) || startOffline) {
       const options = {
-        docId,
+        docId: documentId,
         onProgress: console.log,
         onError: console.error,
         // workerTransportPromise

@@ -1,12 +1,12 @@
 import { workerTypes } from 'constants/types';
 import actions from 'actions';
-import getHashParams from 'helpers/getHashParams';
+import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 
 export default store => {
   const {
-    useSharedWorker,
+    useSharedWorker, // corresponding to the workerTransportPromise constructor option
     preloadWorker,
-  } = getHashParams();
+  } = getWebViewerConstructorOptions();
 
   try {
     if (useSharedWorker && window.parent.WebViewer) {

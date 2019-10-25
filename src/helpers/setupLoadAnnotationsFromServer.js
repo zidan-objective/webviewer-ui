@@ -1,16 +1,12 @@
 import core from 'core';
 import { workerTypes } from 'constants/types';
-import getHashParams from 'helpers/getHashParams';
+import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 
 /* eslint-disable camelcase */
 export default () => {
-  const {
-    server_url = '',
-    serverUrlHeaders = {},
-    did = null,
-  } = getHashParams();
-  let serverUrl = server_url;
-
+  const options = getWebViewerConstructorOptions();
+  let { serverUrl } = options;
+  const { serverUrlHeaders, documentId } = options;
 
   if (!serverUrl) {
     return;
@@ -33,11 +29,11 @@ export default () => {
       serverUrl += `&_=${Date.now()}`;
     }
 
-    if (did) {
-      serverUrl += `&did=${did}`;
+    if (documentId) {
+      serverUrl += `&did=${documentId}`;
     }
 
-    serverUrl = did ? `${serverUrl}?did=${did}` : serverUrl;
+    serverUrl = documentId ? `${serverUrl}?did=${documentId}` : serverUrl;
 
     fetch(serverUrl, {
       headers: serverUrlHeaders,

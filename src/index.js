@@ -19,19 +19,19 @@ import setupDocViewer from 'helpers/setupDocViewer';
 import setDefaultToolStyles from 'helpers/setDefaultToolStyles';
 import logDebugInfo from 'helpers/logDebugInfo';
 import prepareWorkerTransport from 'helpers/prepareWorkerTransport';
-import getHashParams from 'helpers/getHashParams';
+import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 import createStore from 'src/redux';
 
 if (window.CanvasRenderingContext2D) {
   const {
-    pdfnet,
+    fullAPI,
     subzero = false,
-    user = 'Guest',
-    admin = false,
-  } = getHashParams();
+    annotationUser = 'Guest',
+    annotationAdmin = false,
+  } = getWebViewerConstructorOptions();
   let fullAPIReady = Promise.resolve();
 
-  if (pdfnet) {
+  if (fullAPI) {
     window.CoreControls.enableFullPDF(true);
     fullAPIReady = loadScript('../core/pdf/PDFNet.js');
   }
@@ -55,8 +55,8 @@ if (window.CanvasRenderingContext2D) {
     window.docViewer = docViewer;
 
     core.setToolMode(defaultTool);
-    core.setCurrentUser(user);
-    core.setIsAdminUser(admin);
+    core.setCurrentUser(annotationUser);
+    core.setIsAdminUser(annotationAdmin);
 
     setupDocViewer();
     setupI18n();

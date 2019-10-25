@@ -1,5 +1,5 @@
 import core from 'core';
-import getHashParams from 'helpers/getHashParams';
+import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 import fireEvent from 'helpers/fireEvent';
 import actions from 'actions';
 import { workerTypes } from 'constants/types';
@@ -7,12 +7,11 @@ import { PRIORITY_ONE, PRIORITY_THREE } from 'constants/actionPriority';
 
 let onFirstLoad = true;
 
-
 export default dispatch => () => {
   const {
-    a = false,
-    enableRedaction = false,
-  } = getHashParams();
+    enableAnnotations,
+    enableRedaction,
+  } = getWebViewerConstructorOptions();
 
   dispatch(actions.setDocumentLoaded(true));
   dispatch(actions.openElement('pageNavOverlay'));
@@ -40,7 +39,7 @@ export default dispatch => () => {
   }
 
   core.setOptions({
-    enableAnnotations: a,
+    enableAnnotations,
   });
 
   core.getOutlines(outlines => {

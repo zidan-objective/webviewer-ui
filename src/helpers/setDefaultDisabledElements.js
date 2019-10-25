@@ -1,43 +1,40 @@
 import core from 'core';
 import createDisableFeatures from 'src/apis/disableFeatures';
-import getHashParams from 'helpers/getHashParams';
+import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 import { isMobileDevice } from 'helpers/device';
 import { PRIORITY_THREE, PRIORITY_ONE } from 'constants/actionPriority';
 import Feature from 'constants/feature';
 import actions from 'actions';
 
 export default store => {
-  const { dispatch, getState } = store;
-  const state = getState();
+  const { dispatch } = store;
   const disableFeatures = createDisableFeatures(store);
   const {
-    a,
-    filepicker,
+    enableAnnotations,
+    enableFilePicker,
+    enableReadOnlyMode,
     hideAnnotationPanel,
     enableMeasurement,
     enableRedaction,
+    // TODO: make sure this works
     disabledElements,
-    toolbar = true,
-  } = getHashParams();
+    showToolbarControl = true,
+  } = getWebViewerConstructorOptions();
 
   if (Array.isArray(disabledElements)) {
     const elements = disabledElements.split(',');
     dispatch(actions.disableElements(elements, PRIORITY_THREE));
   }
 
-  // disabling/enabling elements will be handled in onUpdateAnnotationPermission.js
-  // the reason for doing this is to avoid duplicate code for handling the `enableReadOnly` constructor option
-  // and the effect of programmatically calling instance.setReadOnly
-  if (state.viewer.isReadOnly) {
-    core.setReadOnly(state.viewer.isReadOnly);
+  if (enableReadOnlyMode) {
+    core.setReadOnly(enableReadOnlyMode);
   }
 
-  const annotationDisabled = !a;
-  if (annotationDisabled) {
+  if (!enableAnnotations) {
     disableFeatures([Feature.Annotations]);
   }
 
-  if (!filepicker) {
+  if (!enableFilePicker) {
     disableFeatures([Feature.FilePicker]);
   }
 
@@ -53,7 +50,7 @@ export default store => {
     disableFeatures([Feature.Redaction]);
   }
 
-  if (!toolbar) {
+  if (!showToolbarControl) {
     dispatch(actions.disableElement('header', PRIORITY_ONE));
   }
 
