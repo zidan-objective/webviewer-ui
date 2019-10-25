@@ -6,6 +6,7 @@ import fireEvent from 'helpers/fireEvent';
 import actions from 'actions';
 
 export default (dispatch, options) => {
+  // TODO: get name
   const { documentPath = 'document', filename, includeAnnotations = true, xfdfData, externalURL } = options;
   const downloadOptions = { downloadType: 'pdf' };
   let file;

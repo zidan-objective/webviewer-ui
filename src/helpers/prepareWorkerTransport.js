@@ -1,14 +1,11 @@
 import { workerTypes } from 'constants/types';
 import actions from 'actions';
-import getBackendPromise from 'helpers/getBackendPromise';
 import getHashParams from 'helpers/getHashParams';
 
 export default store => {
   const {
-    useSharedWorker = false,
-    preloadWorker = false,
-    pdf = 'auto',
-    office = 'auto',
+    useSharedWorker,
+    preloadWorker,
   } = getHashParams();
 
   try {
@@ -37,7 +34,7 @@ export default store => {
 
   if (preloadWorker) {
     if (preloadWorker === PDF || preloadWorker === ALL) {
-      getBackendPromise(pdf).then(pdfType => {
+      window.CoreControls.getDefaultBackendType().then(pdfType => {
         window.CoreControls.initPDFWorkerTransports(
           pdfType,
           {
@@ -45,13 +42,12 @@ export default store => {
               store.dispatch(actions.setWorkerLoadingProgress(percent));
             },
           },
-          window.sampleL,
         );
       });
     }
 
     if (preloadWorker === OFFICE || preloadWorker === ALL) {
-      getBackendPromise(office).then(officeType => {
+      window.CoreControls.getDefaultBackendType().then(officeType => {
         window.CoreControls.initOfficeWorkerTransports(
           officeType,
           {
@@ -59,7 +55,6 @@ export default store => {
               store.dispatch(actions.setWorkerLoadingProgress(percent));
             },
           },
-          window.sampleL,
         );
       });
     }

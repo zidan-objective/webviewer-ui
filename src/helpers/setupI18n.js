@@ -1,6 +1,8 @@
 import i18next from 'i18next';
 import XHR from 'i18next-xhr-backend';
 
+import getHashParams from 'helpers/getHashParams';
+
 export default state => {
   const options = {
     lng: 'en',
@@ -23,8 +25,9 @@ export default state => {
       t('message.insertTextHere'),
     );
   };
+  const { disableI18n } = getHashParams();
 
-  if (state.advanced.disableI18n) {
+  if (disableI18n) {
     i18next.init(options, callback);
   } else {
     i18next.use(XHR).init(

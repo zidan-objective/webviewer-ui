@@ -9,11 +9,19 @@ import actions from 'actions';
 export default store => {
   const { dispatch, getState } = store;
   const state = getState();
-
   const disableFeatures = createDisableFeatures(store);
+  const {
+    a,
+    filepicker,
+    hideAnnotationPanel,
+    enableMeasurement,
+    enableRedaction,
+    disabledElements,
+    toolbar = true,
+  } = getHashParams();
 
-  if (state.advanced.defaultDisabledElements) {
-    const elements = state.advanced.defaultDisabledElements.split(',');
+  if (Array.isArray(disabledElements)) {
+    const elements = disabledElements.split(',');
     dispatch(actions.disableElements(elements, PRIORITY_THREE));
   }
 
@@ -23,15 +31,6 @@ export default store => {
   if (state.viewer.isReadOnly) {
     core.setReadOnly(state.viewer.isReadOnly);
   }
-
-  const {
-    a = false,
-    filepicker = false,
-    hideAnnotationPanel = false,
-    enableMeasurement = false,
-    enableRedaction = false,
-    toolbar = true,
-  } = getHashParams();
 
   const annotationDisabled = !a;
   if (annotationDisabled) {
@@ -50,7 +49,7 @@ export default store => {
     disableFeatures([Feature.Measurement]);
   }
 
-  if (enableRedaction || core.isCreateRedactionEnabled()) {
+  if (!(enableRedaction || core.isCreateRedactionEnabled())) {
     disableFeatures([Feature.Redaction]);
   }
 

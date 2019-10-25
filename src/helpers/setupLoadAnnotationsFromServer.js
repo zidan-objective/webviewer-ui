@@ -1,19 +1,22 @@
 import core from 'core';
 import { workerTypes } from 'constants/types';
+import getHashParams from 'helpers/getHashParams';
 
-export default store => {
-  const state = store.getState();
-  let { serverUrl } = state.advanced;
-  const { serverUrlHeaders } = state.advanced;
+/* eslint-disable camelcase */
+export default () => {
+  const {
+    server_url = '',
+    serverUrlHeaders = {},
+    did = null,
+  } = getHashParams();
+  let serverUrl = server_url;
+
 
   if (!serverUrl) {
     return;
   }
 
   const getAnnotsFromServer = (originalData, callback) => {
-    const state = store.getState();
-    const { id: documentId } = state.document;
-
     if (window.readerControl.serverFailed) {
       callback(originalData);
       return;
@@ -30,11 +33,11 @@ export default store => {
       serverUrl += `&_=${Date.now()}`;
     }
 
-    if (documentId) {
-      serverUrl += `&did=${documentId}`;
+    if (did) {
+      serverUrl += `&did=${did}`;
     }
 
-    serverUrl = documentId ? `${serverUrl}?did=${documentId}` : serverUrl;
+    serverUrl = did ? `${serverUrl}?did=${did}` : serverUrl;
 
     fetch(serverUrl, {
       headers: serverUrlHeaders,

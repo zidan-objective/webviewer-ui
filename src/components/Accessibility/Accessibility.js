@@ -1,16 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
-import selectors from 'selectors';
+import getHashParams from 'helpers/getHashParams';
 
 import './Accessibility.scss';
 
 class Accessibility extends React.PureComponent {
-  static propTypes = {
-    isAccessibleMode: PropTypes.bool,
-  }
-
   state = {
     isVisible: false,
   }
@@ -24,10 +18,10 @@ class Accessibility extends React.PureComponent {
   }
 
   render() {
-    const { isAccessibleMode } = this.props;
+    const { accessibleMode } = getHashParams();
     const { isVisible } = this.state;
 
-    if (!isAccessibleMode) {
+    if (!accessibleMode) {
       return null;
     }
 
@@ -44,8 +38,4 @@ class Accessibility extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
-  isAccessibleMode: selectors.isAccessibleMode(state),
-});
-
-export default connect(mapStateToProps)(Accessibility);
+export default Accessibility;

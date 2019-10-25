@@ -21,8 +21,6 @@ import './MenuOverlay.scss';
 
 class MenuOverlay extends React.PureComponent {
   static propTypes = {
-    documentPath: PropTypes.string,
-    documentFilename: PropTypes.string,
     isDownloadable: PropTypes.bool,
     isEmbedPrintSupported: PropTypes.bool,
     isFullScreen: PropTypes.bool,
@@ -64,12 +62,7 @@ class MenuOverlay extends React.PureComponent {
   }
 
   downloadDocument = () => {
-    const { dispatch, documentPath, documentFilename } = this.props;
-
-    downloadPdf(dispatch, {
-      documentPath,
-      filename: documentFilename,
-    });
+    downloadPdf(this.props.dispatch);
   }
 
   render() {
@@ -98,9 +91,9 @@ class MenuOverlay extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
-  documentPath: selectors.getDocumentPath(state),
-  documentFilename: state.document.filename,
-  isDownloadable: selectors.getDocumentType(state) !== workerTypes.XOD,
+  // isDownloadable: selectors.getDocumentType(state) !== workerTypes.XOD,
+  // TODO: fix type
+  isDownloadable: true,
   isEmbedPrintSupported: selectors.isEmbedPrintSupported(state),
   isFullScreen: selectors.isFullScreen(state),
   isDisabled: selectors.isElementDisabled(state, 'menuOverlay'),

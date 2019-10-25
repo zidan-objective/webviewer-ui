@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import core from 'core';
 import { isIE } from 'helpers/device';
 import { updateContainerWidth, getClassNameInIE, handleWindowResize } from 'helpers/documentContainerHelper';
-import loadDocument from 'helpers/loadDocument';
 import getNumberOfPagesToNavigate from 'helpers/getNumberOfPagesToNavigate';
 import touchEventManager from 'helpers/TouchEventManager';
+import getHashParams from 'helpers/getHashParams';
 import { getMinZoomLevel, getMaxZoomLevel } from 'constants/zoomFactors';
 import actions from 'actions';
 import selectors from 'selectors';
@@ -16,13 +16,9 @@ import './DocumentContainer.scss';
 
 class DocumentContainer extends React.PureComponent {
   static propTypes = {
-    document: PropTypes.object.isRequired,
-    advanced: PropTypes.object.isRequired,
     isLeftPanelOpen: PropTypes.bool,
     isRightPanelOpen: PropTypes.bool,
     isSearchOverlayOpen: PropTypes.bool,
-    hasPath: PropTypes.bool,
-    doesDocumentAutoLoad: PropTypes.bool,
     zoom: PropTypes.number.isRequired,
     currentPage: PropTypes.number,
     totalPages: PropTypes.number,
@@ -32,7 +28,7 @@ class DocumentContainer extends React.PureComponent {
     closeElements: PropTypes.func.isRequired,
     displayMode: PropTypes.string.isRequired,
     leftPanelWidth: PropTypes.number,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -53,10 +49,7 @@ class DocumentContainer extends React.PureComponent {
     core.setScrollViewElement(this.container.current);
     core.setViewerElement(this.document.current);
 
-    const { hasPath, doesDocumentAutoLoad, document, advanced, dispatch } = this.props;
-    if ((hasPath && doesDocumentAutoLoad) || document.isOffline) {
-      loadDocument({ document, advanced }, dispatch);
-    }
+    this.loadInitialDocument();
 
     if (isIE) {
       window.addEventListener('resize', this.handleWindowResize);
@@ -86,6 +79,58 @@ class DocumentContainer extends React.PureComponent {
     window.removeEventListener('keydown', this.onKeyDown);
   }
 
+  /* eslint-disable camelcase */
+  loadInitialDocument = () => {
+    const {
+      d: initialDoc,
+      did: docId = null,
+      auto_load = true,
+      startOffline,
+      filename,
+      extension,
+      useDownloader,
+      streaming,
+      azureWorkaround,
+      encryption,
+      pdftronServer,
+      cacheKey = null,
+      singleServerMode,
+      forceClientSideInit,
+      disableWebsockets,
+    } = getHashParams();
+
+    if ((initialDoc && auto_load) || startOffline) {
+      const options = {
+        docId,
+        onProgress: console.log,
+        onError: console.error,
+        // workerTransportPromise
+        // password
+        filename,
+        extension,
+        useDownloader,
+        streaming,
+        azureWorkaround,
+      };
+      if (encryption) {
+        options.xodOptions = {
+          decrypt: window.CoreControls.Encryption.decrypt,
+          decryptOptions: encryption,
+        };
+      }
+      if (pdftronServer) {
+        options.pdftronServer = {
+          serverRoot: pdftronServer,
+          cacheKey,
+          singleServerMode,
+          forceClientSideInit,
+          disableWebsockets,
+        };
+      }
+      window.docViewer.loadDocument(initialDoc, options);
+    }
+  };
+
   preventDefault = e => e.preventDefault();
 
   onDrop = e => {
@@ -93,9 +138,9 @@ class DocumentContainer extends React.PureComponent {
 
     const { files } = e.dataTransfer;
     if (files.length) {
-      window.readerControl.loadDocument(files[0]);
+      window.docViewer.loadDocument(files[0]);
     }
-  }
+  };
 
   onKeyDown = e => {
     const { currentPage, totalPages } = this.props;
@@ -108,11 +153,11 @@ class DocumentContainer extends React.PureComponent {
     } else if ((e.key === 'ArrowDown' || e.which === 40) && reachedBottom && currentPage < totalPages) {
       this.pageDown();
     }
-  }
+  };
 
   handleWindowResize = () => {
     handleWindowResize(this.props, this.container.current);
-  }
+  };
 
   onWheel = e => {
     if (e.metaKey || e.ctrlKey) {
@@ -121,7 +166,7 @@ class DocumentContainer extends React.PureComponent {
     } else if (!core.isContinuousDisplayMode()) {
       this.wheelToNavigatePages(e);
     }
-  }
+  };
 
   wheelToNavigatePages = e => {
     const { currentPage, totalPages } = this.props;
@@ -134,7 +179,7 @@ class DocumentContainer extends React.PureComponent {
     } else if (e.deltaY > 0 && reachedBottom && currentPage < totalPages) {
       this.pageDown();
     }
-  }
+  };
 
   pageUp = () => {
     const { currentPage, displayMode } = this.props;
@@ -143,14 +188,14 @@ class DocumentContainer extends React.PureComponent {
 
     core.setCurrentPage(Math.max(newPage, 1));
     this.container.current.scrollTop = scrollHeight - clientHeight;
-  }
+  };
 
   pageDown = () => {
     const { currentPage, displayMode, totalPages } = this.props;
     const newPage = currentPage + getNumberOfPagesToNavigate(displayMode);
 
     core.setCurrentPage(Math.min(newPage, totalPages));
-  }
+  };
 
   wheelToZoom = e => {
     const currentZoomFactor = this.props.zoom;
@@ -166,18 +211,15 @@ class DocumentContainer extends React.PureComponent {
     }
 
     core.zoomToMouse(newZoomFactor);
-  }
+  };
 
   onTransitionEnd = () => {
     core.scrollViewUpdated();
-  }
+  };
 
   handleScroll = () => {
-    this.props.closeElements([
-      'annotationPopup',
-      'textPopup',
-    ]);
-  }
+    this.props.closeElements(['annotationPopup', 'textPopup']);
+  };
 
   getClassName = props => {
     const { isLeftPanelOpen, isRightPanelOpen, isHeaderOpen, isSearchOverlayOpen } = props;
@@ -188,8 +230,10 @@ class DocumentContainer extends React.PureComponent {
       isRightPanelOpen ? 'right-panel' : '',
       isHeaderOpen ? '' : 'no-header',
       isSearchOverlayOpen ? 'search-overlay' : '',
-    ].join(' ').trim();
-  }
+    ]
+      .join(' ')
+      .trim();
+  };
 
   render() {
     let className;
@@ -201,7 +245,13 @@ class DocumentContainer extends React.PureComponent {
     }
 
     return (
-      <div className={className} ref={this.container} data-element="documentContainer" onScroll={this.handleScroll} onTransitionEnd={this.onTransitionEnd}>
+      <div
+        className={className}
+        ref={this.container}
+        data-element="documentContainer"
+        onScroll={this.handleScroll}
+        onTransitionEnd={this.onTransitionEnd}
+      >
         <div className="document" ref={this.document}></div>
       </div>
     );
@@ -209,13 +259,9 @@ class DocumentContainer extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
-  document: selectors.getDocument(state),
-  advanced: selectors.getAdvanced(state),
   isLeftPanelOpen: selectors.isElementOpen(state, 'leftPanel'),
   isRightPanelOpen: selectors.isElementOpen(state, 'searchPanel'),
   isSearchOverlayOpen: selectors.isElementOpen(state, 'searchOverlay'),
-  hasPath: selectors.hasPath(state),
-  doesDocumentAutoLoad: selectors.doesDocumentAutoLoad(state),
   zoom: selectors.getZoom(state),
   currentPage: selectors.getCurrentPage(state),
   isHeaderOpen: selectors.isElementOpen(state, 'header') && !selectors.isElementDisabled(state, 'header'),
@@ -231,4 +277,7 @@ const mapDispatchToProps = dispatch => ({
   closeElements: dataElements => dispatch(actions.closeElements(dataElements)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DocumentContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(DocumentContainer);

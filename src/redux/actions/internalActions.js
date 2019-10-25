@@ -197,34 +197,6 @@ export const setLeftPanelWidth = width => ({
 });
 
 // document
-export const setDocumentId = documentId => ({
-  type: 'SET_DOCUMENT_ID',
-  payload: { documentId },
-});
-export const setDocumentPath = documentPath => ({
-  type: 'SET_DOCUMENT_PATH',
-  payload: { documentPath },
-});
-export const setDocumentFile = documentFile => ({
-  type: 'SET_DOCUMENT_FILE',
-  payload: { documentFile },
-});
-export const setDocumentType = type => ({
-  type: 'SET_DOCUMENT_TYPE',
-  payload: { type },
-});
-export const setPDFDoc = pdfDoc => ({
-  type: 'SET_PDF_DOC',
-  payload: { pdfDoc },
-});
-export const setFilename = filename => ({
-  type: 'SET_FILENAME',
-  payload: { filename },
-});
-export const setExtension = extension => ({
-  type: 'SET_EXTENSION',
-  payload: { extension },
-});
 export const setTotalPages = totalPages => ({
   type: 'SET_TOTAL_PAGES',
   payload: { totalPages },
@@ -262,14 +234,6 @@ export const setPassword = password => ({
   type: 'SET_PASSWORD',
   payload: { password },
 });
-export const setCacheKey = cacheKey => ({
-  type: 'SET_CACHE_KEY',
-  payload: { cacheKey },
-});
-export const setPageSizes = pageSizes => ({
-  type: 'SET_PAGE_SIZES',
-  payload: { pageSizes },
-});
 export const setIsUploading = isUploading => ({
   type: 'SET_IS_UPLOADING',
   payload: { isUploading },
@@ -279,42 +243,6 @@ export const setUploadProgress = progress => ({
   payload: { progress },
 });
 export const resetUploadProgress = () => setUploadProgress(0);
-
-// user
-export const setUserName = userName => ({
-  type: 'SET_USER_NAME',
-  payload: { userName },
-});
-export const setAdminUser = isAdminUser => ({
-  type: 'SET_ADMIN_USER',
-  payload: { isAdminUser },
-});
-
-// advanced
-export const setStreaming = streaming => ({
-  type: 'SET_STREAMING',
-  payload: { streaming },
-});
-export const setDecryptFunction = decryptFunction => ({
-  type: 'SET_DECRYPT_FUNCTION',
-  payload: { decryptFunction },
-});
-export const setDecryptOptions = decryptOptions => ({
-  type: 'SET_DECRYPT_OPTIONS',
-  payload: { decryptOptions },
-});
-export const setEngineType = type => ({
-  type: 'SET_ENGINE_TYPE',
-  payload: { type },
-});
-export const setCustomHeaders = customHeaders => ({
-  type: 'SET_CUSTOM_HEADERS',
-  payload: { customHeaders },
-});
-export const setWithCredentials = withCredentials => ({
-  type: 'SET_WITH_CREDENTIALS',
-  payload: { withCredentials },
-});
 
 // search
 export const searchText = (searchValue, options) => ({

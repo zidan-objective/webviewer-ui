@@ -11,14 +11,12 @@ const ProgressModal = () => {
     isDisabled,
     isOpen,
     loadingProgress,
-    isUploading,
     uploadProgress,
   ] = useSelector(
     state => [
       selectors.isElementDisabled(state, 'progressModal'),
       selectors.isElementOpen(state, 'progressModal'),
       selectors.getLoadingProgress(state),
-      selectors.isUploading(state),
       selectors.getUploadProgress(state),
     ],
     shallowEqual,
@@ -38,7 +36,9 @@ const ProgressModal = () => {
     }
   }, [dispatch, isOpen]);
 
-  const progressToUse = isUploading ? uploadProgress : loadingProgress;
+  // TODO: fix
+  // const progressToUse = isUploading ? uploadProgress : loadingProgress;
+  const progressToUse = loadingProgress;
 
   return isDisabled ? null : (
     <div

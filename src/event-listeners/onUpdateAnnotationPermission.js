@@ -23,7 +23,5 @@ export default store => () => {
   }
 
   dispatch(actions.setReadOnly(core.getIsReadOnly()));
-  dispatch(actions.setAdminUser(core.getIsAdminUser()));
-  dispatch(actions.setUserName(core.getCurrentUser()));
   core.drawAnnotationsFromList(core.getSelectedAnnotations());
 };

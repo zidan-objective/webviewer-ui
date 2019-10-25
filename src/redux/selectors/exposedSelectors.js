@@ -1,5 +1,3 @@
-import { workerTypes } from 'constants/types';
-
 // viewer
 export const isElementDisabled = (state, dataElement) =>
   state.viewer.disabledElements[dataElement]?.disabled;
@@ -98,7 +96,9 @@ export const isEmbedPrintSupported = state => {
   const isChrome =
     window.navigator.userAgent.indexOf('Chrome') > -1 &&
     window.navigator.userAgent.indexOf('Edge') === -1;
-  const isPDF = getDocumentType(state) === workerTypes.PDF;
+  // const isPDF = getDocumentType(state) === workerTypes.PDF;
+  // TODO: fix this
+  const isPDF = false;
   return isPDF && isChrome && state.viewer.useEmbeddedPrint;
 };
 
@@ -145,19 +145,6 @@ export const isAccessibleMode = state => state.viewer.isAccessibleMode;
 export const getErrorMessage = state => state.viewer.errorMessage || '';
 
 // document
-export const getDocument = state => state.document;
-
-export const getDocumentId = state => state.document.id;
-
-export const getDocumentPath = state =>
-  state.document.path || state.document.initialDoc;
-
-export const getDocumentFile = state => state.document.file;
-
-export const hasPath = state =>
-  !!(state.document.initialDoc || state.advanced.externalPath);
-
-export const getDocumentType = state => state.document.type;
 
 export const getCheckPasswordFunction = state => state.document.checkPassword;
 
@@ -177,16 +164,6 @@ export const getLoadingProgress = state =>
   2;
 
 export const getUploadProgress = state => state.document.uploadProgress;
-
-export const isUploading = state => state.document.isUploading;
-
-// user
-export const getUserName = state => state.user.name;
-
-// advanced
-export const getAdvanced = state => state.advanced;
-
-export const getServerUrl = state => state.advanced.serverUrl;
 
 // search
 export const getSearchListeners = state => state.search.listeners;
