@@ -1,11 +1,22 @@
 import React from 'react';
-import { useStore, useSelector, useDispatch, shallowEqual } from 'react-redux';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
-import { supportedClientOnlyExtensions } from 'constants/supportedFiles';
 import actions from 'actions';
 import selectors from 'selectors';
 
 import './FilePickerHandler.scss';
+
+const supportedClientOnlyExtensions = [
+  'pdf',
+  'jpg',
+  'jpeg',
+  'png',
+  'docx',
+  'xlsx',
+  'pptx',
+  'md',
+  'xod',
+];
 
 const FilePickerHandler = () => {
   const isDisabled = useSelector(
