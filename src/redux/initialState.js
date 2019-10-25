@@ -215,8 +215,6 @@ export default {
     printQuality: 1,
     password: '',
     passwordAttempts: -1,
-    documentLoadingProgress: 0,
-    workerLoadingProgress: 0,
-    uploadProgress: 0,
+    loadingProgress: 0,
   },
 };

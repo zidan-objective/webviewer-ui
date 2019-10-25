@@ -1,8 +1,7 @@
 import { workerTypes } from 'constants/types';
-import actions from 'actions';
 import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 
-export default store => {
+export default () => {
   const {
     useSharedWorker, // corresponding to the workerTransportPromise constructor option
     preloadWorker,
@@ -35,27 +34,13 @@ export default store => {
   if (preloadWorker) {
     if (preloadWorker === PDF || preloadWorker === ALL) {
       window.CoreControls.getDefaultBackendType().then(pdfType => {
-        window.CoreControls.initPDFWorkerTransports(
-          pdfType,
-          {
-            workerLoadingProgress: percent => {
-              store.dispatch(actions.setWorkerLoadingProgress(percent));
-            },
-          },
-        );
+        window.CoreControls.initPDFWorkerTransports(pdfType);
       });
     }
 
     if (preloadWorker === OFFICE || preloadWorker === ALL) {
       window.CoreControls.getDefaultBackendType().then(officeType => {
-        window.CoreControls.initOfficeWorkerTransports(
-          officeType,
-          {
-            workerLoadingProgress: percent => {
-              store.dispatch(actions.setWorkerLoadingProgress(percent));
-            },
-          },
-        );
+        window.CoreControls.initOfficeWorkerTransports(officeType);
       });
     }
   }

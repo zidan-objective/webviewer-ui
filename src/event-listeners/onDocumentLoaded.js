@@ -15,15 +15,6 @@ export default dispatch => () => {
 
   dispatch(actions.setDocumentLoaded(true));
   dispatch(actions.openElement('pageNavOverlay'));
-  dispatch(actions.setDocumentLoadingProgress(1));
-  dispatch(actions.setWorkerLoadingProgress(1));
-  // set timeout so that progress modal can show progress bar properly
-  setTimeout(() => {
-    dispatch(actions.closeElement('progressModal'));
-    dispatch(actions.resetLoadingProgress());
-    dispatch(actions.resetUploadProgress());
-    dispatch(actions.setIsUploading(false));
-  }, 300);
 
   if (onFirstLoad) {
     onFirstLoad = false;

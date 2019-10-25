@@ -40,15 +40,12 @@ if (window.CanvasRenderingContext2D) {
   window.CoreControls.setWorkerPath('../core');
   window.CoreControls.setResourcesPath('../core/assets');
 
-  const store = createStore();
-
-  prepareWorkerTransport(store);
-
+  prepareWorkerTransport();
   loadCustomCSS();
-
   logDebugInfo();
 
   fullAPIReady.then(loadConfig).then(() => {
+    const store = createStore();
     const { addEventHandlers, removeEventHandlers } = eventHandler(store);
 
     const docViewer = new window.CoreControls.DocumentViewer();

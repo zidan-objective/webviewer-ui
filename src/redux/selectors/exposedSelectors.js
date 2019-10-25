@@ -158,12 +158,7 @@ export const getOutlines = state => state.document.outlines;
 
 export const getLayers = state => state.document.layers;
 
-export const getLoadingProgress = state =>
-  (state.document.documentLoadingProgress +
-    state.document.workerLoadingProgress) /
-  2;
-
-export const getUploadProgress = state => state.document.uploadProgress;
+export const getLoadingProgress = state => state.document.loadingProgress;
 
 // search
 export const getSearchListeners = state => state.search.listeners;

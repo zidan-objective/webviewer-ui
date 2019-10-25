@@ -1,27 +1,39 @@
 import React, { useEffect } from 'react';
 import classNames from 'classnames';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
+
+import core from 'core';
 import actions from 'actions';
 import selectors from 'selectors';
 
 import './ProgressModal.scss';
 
 const ProgressModal = () => {
-  const [
-    isDisabled,
-    isOpen,
-    loadingProgress,
-    uploadProgress,
-  ] = useSelector(
+  const [isDisabled, isOpen, loadingProgress] = useSelector(
     state => [
       selectors.isElementDisabled(state, 'progressModal'),
       selectors.isElementOpen(state, 'progressModal'),
       selectors.getLoadingProgress(state),
-      selectors.getUploadProgress(state),
     ],
     shallowEqual,
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const onDocumentLoaded = () => {
+      dispatch(actions.setLoadingProgress(1));
+    };
+
+    core.addEventListener('documentLoaded', onDocumentLoaded);
+    return () => core.removeEventListener('documentLoaded', onDocumentLoaded);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (loadingProgress === 1) {
+      dispatch(actions.closeElement('progressModal'));
+      dispatch(actions.resetLoadingProgress());
+    }
+  }, [dispatch, loadingProgress]);
 
   useEffect(() => {
     if (isOpen) {
@@ -35,10 +47,6 @@ const ProgressModal = () => {
       );
     }
   }, [dispatch, isOpen]);
-
-  // TODO: fix
-  // const progressToUse = isUploading ? uploadProgress : loadingProgress;
-  const progressToUse = loadingProgress;
 
   return isDisabled ? null : (
     <div
@@ -55,8 +63,8 @@ const ProgressModal = () => {
           <div
             className="progress-bar"
             style={{
-              transform: `translateX(${-(1 - progressToUse) * 100}%`,
-              transition: progressToUse ? 'transform 0.5s ease' : 'none',
+              transform: `translateX(${-(1 - loadingProgress) * 100}%`,
+              // transition: 'transform 0.5s ease',
             }}
           />
         </div>

@@ -145,7 +145,7 @@ export default store => {
     isElementDisabled: isElementDisabled(store),
     isElementOpen: isElementOpen(store),
     isToolDisabled: isToolDisabled(store),
-    loadDocument,
+    loadDocument: loadDocument(store),
     openElements: openElements(store),
     print: print(store),
     registerTool: registerTool(store),
