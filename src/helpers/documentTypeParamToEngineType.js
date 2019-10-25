@@ -1,6 +1,6 @@
 import { engineTypes } from 'constants/types';
 
-export default (preloadWorker, pdftronServer) => {
+export default pdftronServer => {
   if (pdftronServer) {
     return engineTypes.PDFTRON_SERVER;
   }

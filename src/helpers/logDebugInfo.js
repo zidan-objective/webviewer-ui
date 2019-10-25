@@ -1,7 +1,10 @@
+import getHashParams from 'helpers/getHashParams';
 import packageConfig from '../../package.json';
 
 /* eslint-disable no-console */
-export default ({ pdftronServer, fullAPI }) => {
+export default () => {
+  const { pdftronServer, pdfnet } = getHashParams();
+
   // log UI and Core versions and warn/error if necessary
   const coreVersion = window.CoreControls.DocumentViewer.prototype.version;
   const uiVersion = packageConfig.version;
@@ -15,7 +18,7 @@ export default ({ pdftronServer, fullAPI }) => {
       .map(version => parseInt(version, 10));
 
     console.log(
-      `[WebViewer] UI version: ${uiVersion}, Core version: ${coreVersion} WebViewer Server: ${!!pdftronServer} Full API: ${!!fullAPI}`,
+      `[WebViewer] UI version: ${uiVersion}, Core version: ${coreVersion} WebViewer Server: ${!!pdftronServer} Full API: ${!!pdfnet}`,
     );
 
     if (coreMajorVersion < uiMajorVersion) {

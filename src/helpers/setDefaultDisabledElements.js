@@ -24,35 +24,37 @@ export default store => {
     core.setReadOnly(state.viewer.isReadOnly);
   }
 
-  const annotationDisabled = !getHashParams('a', false);
+  const {
+    a = false,
+    filepicker = false,
+    hideAnnotationPanel = false,
+    enableMeasurement = false,
+    enableRedaction = false,
+    toolbar = true,
+  } = getHashParams();
+
+  const annotationDisabled = !a;
   if (annotationDisabled) {
     disableFeatures([Feature.Annotations]);
   }
 
-  const filePickerDisabled = !getHashParams('filepicker', false);
-  if (filePickerDisabled) {
+  if (!filepicker) {
     disableFeatures([Feature.FilePicker]);
   }
 
-  const hideAnnotationPanel = getHashParams('hideAnnotationPanel', false);
   if (hideAnnotationPanel) {
     disableFeatures([Feature.NotesPanel]);
   }
 
-  const measurementsDisabled = !getHashParams('enableMeasurement', false);
-  if (measurementsDisabled) {
+  if (!enableMeasurement) {
     disableFeatures([Feature.Measurement]);
   }
 
-  const redactionsDisabled = !(
-    getHashParams('enableRedaction', false) || core.isCreateRedactionEnabled()
-  );
-  if (redactionsDisabled) {
+  if (enableRedaction || core.isCreateRedactionEnabled()) {
     disableFeatures([Feature.Redaction]);
   }
 
-  const toolBarDisabled = !getHashParams('toolbar', true);
-  if (toolBarDisabled) {
+  if (!toolbar) {
     dispatch(actions.disableElement('header', PRIORITY_ONE));
   }
 
@@ -66,5 +68,7 @@ export default store => {
   }
 
   // disable layersPanel by default, it will be enabled in onDocumentLoaded.js
-  dispatch(actions.disableElements(['layersPanel', 'layersPanelButton'], PRIORITY_ONE));
+  dispatch(
+    actions.disableElements(['layersPanel', 'layersPanelButton'], PRIORITY_ONE),
+  );
 };

@@ -7,7 +7,13 @@ import { PRIORITY_ONE, PRIORITY_THREE } from 'constants/actionPriority';
 
 let onFirstLoad = true;
 
+
 export default dispatch => () => {
+  const {
+    a = false,
+    enableRedaction = false,
+  } = getHashParams();
+
   dispatch(actions.setDocumentLoaded(true));
   dispatch(actions.openElement('pageNavOverlay'));
   dispatch(actions.setDocumentLoadingProgress(1));
@@ -23,7 +29,7 @@ export default dispatch => () => {
   if (onFirstLoad) {
     onFirstLoad = false;
     // redaction button starts hidden. when the user first loads a document, check HashParams the first time
-    core.enableRedaction(getHashParams('enableRedaction', false) || core.isCreateRedactionEnabled());
+    core.enableRedaction(enableRedaction || core.isCreateRedactionEnabled());
     // if redaction is already enabled for some reason (i.e. calling readerControl.enableRedaction() before loading a doc), keep it enabled
 
     if (core.isCreateRedactionEnabled()) {
@@ -34,7 +40,7 @@ export default dispatch => () => {
   }
 
   core.setOptions({
-    enableAnnotations: getHashParams('a', false),
+    enableAnnotations: a,
   });
 
   core.getOutlines(outlines => {

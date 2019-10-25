@@ -1,29 +1,37 @@
-export default (property, defaultValue) => {
-  const defaultType = typeof defaultValue;
+let hashParams;
 
-  const result = getWindowHash().split('&').reduce(function (result, item) {
-    var parts = item.split('=');
-    result[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
-    return result;
-  }, {});
+export default () => {
+  if (!hashParams) {
+    hashParams = getWindowHash()
+      .split('&')
+      .reduce((hashParams, item) => {
+        let [property, value] = item.split('=');
+        property = decodeURIComponent(property);
+        value = decodeURIComponent(value);
 
-  if (defaultType === 'boolean' && !isUndefined(result[property])) {
-    const value = result[property];
-    if (value === 'true' || value === '1') {
-      return true;
-    }
-    if (value === 'false' || value === '0') {
-      return false;
-    }
+        if (!isUndefined(value)) {
+          if (value === 'true' || value === '1') {
+            value = true;
+          }
+
+          if (value === 'false' || value === '0') {
+            value = false;
+          }
+        }
+
+        hashParams[property] = value;
+        return hashParams;
+      }, {});
   }
-  return result[property] || defaultValue;
+
+  return hashParams;
 };
 
 // use instead of window.location.hash because of https://bugzilla.mozilla.org/show_bug.cgi?id=483304
 const getWindowHash = () => {
   const url = window.location.href;
   const i = url.indexOf('#');
-  return (i >= 0 ? url.substring(i + 1) : '');
+  return i >= 0 ? url.substring(i + 1) : '';
 };
 
 const isUndefined = val => typeof val === 'undefined';

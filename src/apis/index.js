@@ -246,7 +246,7 @@ export default store => {
     setEngineType: setEngineType(store),
     showWarningMessage: showWarningMessage(store),
     updateOutlines: updateOutlines(store),
-    getCustomData: () => getHashParams('custom', null),
+    getCustomData: () => getHashParams().custom || null,
     getBBAnnotManager: getBBAnnotManager(store),
     selectors: getSelectors(store),
   };
