@@ -22,18 +22,17 @@ const ProgressModal = () => {
   useEffect(() => {
     const onDocumentLoaded = () => {
       dispatch(actions.setLoadingProgress(1));
+
+      // use a setTimeout here to make sure the progress show properly
+      setTimeout(() => {
+        dispatch(actions.closeElement('progressModal'));
+        dispatch(actions.resetLoadingProgress());
+      }, 300);
     };
 
     core.addEventListener('documentLoaded', onDocumentLoaded);
     return () => core.removeEventListener('documentLoaded', onDocumentLoaded);
   }, [dispatch]);
-
-  useEffect(() => {
-    if (loadingProgress === 1) {
-      dispatch(actions.closeElement('progressModal'));
-      dispatch(actions.resetLoadingProgress());
-    }
-  }, [dispatch, loadingProgress]);
 
   useEffect(() => {
     if (isOpen) {
@@ -64,7 +63,7 @@ const ProgressModal = () => {
             className="progress-bar"
             style={{
               transform: `translateX(${-(1 - loadingProgress) * 100}%`,
-              // transition: 'transform 0.5s ease',
+              transition: 'transform 0.5s ease',
             }}
           />
         </div>
