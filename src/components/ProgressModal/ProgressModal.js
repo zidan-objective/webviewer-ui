@@ -42,6 +42,7 @@ const ProgressModal = () => {
           'printModal',
           'errorModal',
           'loadingModal',
+          'passwordModal',
         ]),
       );
     }

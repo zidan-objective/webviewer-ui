@@ -11,15 +11,16 @@ import selectors from 'selectors';
 
 import './PasswordModal.scss';
 
+// a callback that will be set when loadDocument is called to load a password protected PDF
+let checkPassword;
+
 class PasswordModal extends React.PureComponent {
   static propTypes = {
     isOpen: PropTypes.bool,
     attempt: PropTypes.number.isRequired,
-    checkPassword: PropTypes.func,
-    setPasswordAttempts: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
     closeElement: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super();
@@ -48,17 +49,17 @@ class PasswordModal extends React.PureComponent {
 
   handleInputChange = e => {
     this.setState({ password: e.target.value });
-  }
+  };
 
   handleSubmit = e => {
     e.preventDefault();
 
-    this.props.checkPassword(this.state.password);
-  }
+    checkPassword(this.state.password);
+  };
 
   handleCancel = () => {
     this.setState({ userCanceled: true });
-  }
+  };
 
   renderContent = () => {
     const userExceedsMaxAttempts = this.props.attempt === this.maxAttempts;
@@ -71,11 +72,15 @@ class PasswordModal extends React.PureComponent {
     }
 
     return this.renderEnterPasswordContent();
-  }
+  };
 
-  renderMaxAttemptsContent = () => <p>{this.props.t('message.encryptedAttemptsExceeded')}</p>
+  renderMaxAttemptsContent = () => (
+    <p>{this.props.t('message.encryptedAttemptsExceeded')}</p>
+  );
 
-  renderUserCancelContent = () => <p>{this.props.t('message.encryptedUserCancelled')}</p>
+  renderUserCancelContent = () => (
+    <p>{this.props.t('message.encryptedUserCancelled')}</p>
+  );
 
   renderEnterPasswordContent = () => {
     const { t } = this.props;
@@ -95,13 +100,13 @@ class PasswordModal extends React.PureComponent {
               onChange={this.handleInputChange}
             />
           </div>
-          {wrongPassword &&
+          {wrongPassword && (
             <div className="incorrect-password">
               {t('message.incorrectPassword', {
                 remainingAttempts: this.maxAttempts - this.props.attempt,
               })}
             </div>
-          }
+          )}
           <div className="buttons">
             <Button
               dataElement="passwordSubmitButton"
@@ -117,16 +122,14 @@ class PasswordModal extends React.PureComponent {
         </form>
       </div>
     );
-  }
+  };
 
   render() {
     const className = getClassName('Modal PasswordModal', this.props);
 
     return (
       <div className={className} data-element="passwordModal">
-        <div className="container">
-          {this.renderContent()}
-        </div>
+        <div className="container">{this.renderContent()}</div>
       </div>
     );
   }
@@ -134,13 +137,18 @@ class PasswordModal extends React.PureComponent {
 
 const mapStateToProps = state => ({
   isOpen: selectors.isElementOpen(state, 'passwordModal'),
-  checkPassword: selectors.getCheckPasswordFunction(state),
   attempt: selectors.getPasswordAttempts(state),
 });
 
 const mapDispatchToProps = {
-  setPasswordAttempts: actions.setPasswordAttempts,
   closeElement: actions.closeElement,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(PasswordModal));
+export const setCheckPasswordFunction = fn => {
+  checkPassword = fn;
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTranslation()(PasswordModal));
