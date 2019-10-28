@@ -16,12 +16,11 @@ export default store => {
     hideAnnotationPanel,
     enableMeasurement,
     enableRedaction,
-    // TODO: make sure this works
     disabledElements,
     showToolbarControl = true,
   } = getWebViewerConstructorOptions();
 
-  if (Array.isArray(disabledElements)) {
+  if (disabledElements) {
     const elements = disabledElements.split(',');
     dispatch(actions.disableElements(elements, PRIORITY_THREE));
   }
