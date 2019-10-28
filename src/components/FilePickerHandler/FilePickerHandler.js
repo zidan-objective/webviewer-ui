@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
+import core from 'core';
 import actions from 'actions';
 import selectors from 'selectors';
 
@@ -30,7 +31,7 @@ const FilePickerHandler = () => {
     if (file) {
       dispatch(actions.openElement('progressModal'));
       dispatch(actions.closeElement('menuOverlay'));
-      window.docViewer.loadDocument(file);
+      core.loadDocument(file);
     }
   };
 

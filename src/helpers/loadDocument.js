@@ -1,5 +1,6 @@
 import { fireError } from 'helpers/fireEvent';
 
+import core from 'core';
 import actions from 'actions';
 
 export default (src, options, dispatch) => {
@@ -19,7 +20,7 @@ export default (src, options, dispatch) => {
     };
   }
 
-  window.docViewer.loadDocument(src, options);
+  core.loadDocument(src, options);
 
   dispatch(actions.openElement('progressModal'));
 };

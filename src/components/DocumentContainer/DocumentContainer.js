@@ -106,7 +106,7 @@ class DocumentContainer extends React.PureComponent {
 
     const { files } = e.dataTransfer;
     if (files.length) {
-      window.docViewer.loadDocument(files[0]);
+      core.loadDocument(files[0]);
     }
   };
 
