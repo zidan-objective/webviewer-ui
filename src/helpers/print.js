@@ -8,6 +8,7 @@ export default (dispatch, isEmbedPrintSupported) => {
     return;
   }
 
+  const documentType = core.getDocument().getType();
   const bbURLPromise = core.getPrintablePDF();
 
   if (bbURLPromise) {
@@ -16,7 +17,7 @@ export default (dispatch, isEmbedPrintSupported) => {
     bbURLPromise.then(result => {
       printPage.location.href = result.url;
     });
-  } else if (isEmbedPrintSupported) {
+  } else if (isEmbedPrintSupported && documentType === 'pdf') {
     dispatch(actions.openElement('loadingModal'));
     printPdf().then(() => {
       dispatch(actions.closeElement('loadingModal'));

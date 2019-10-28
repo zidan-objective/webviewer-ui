@@ -12,7 +12,6 @@ import onStampAnnotationAdded from './onStampAnnotationAdded';
 import onSignatureAnnotationAdded from './onSignatureAnnotationAdded';
 import onAnnotationChanged from './onAnnotationChanged';
 import onStickyAnnotationAdded from './onStickyAnnotationAdded';
-import onFullScreenChange from './onFullScreenChange';
 import onUpdateAnnotationPermission from './onUpdateAnnotationPermission';
 import onLayoutChanged from './onLayoutChanged';
 import onLocationSelected from './onLocationSelected';
@@ -33,7 +32,6 @@ export {
   onSignatureAnnotationAdded,
   onAnnotationChanged,
   onStickyAnnotationAdded,
-  onFullScreenChange,
   onUpdateAnnotationPermission,
   onLayoutChanged,
   onLocationSelected,

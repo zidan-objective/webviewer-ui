@@ -96,8 +96,6 @@ export default initialState => (state = initialState, action) => {
       return { ...state, sortStrategy: payload.sortStrategy };
     case 'SET_NOTE_DATE_FORMAT':
       return { ...state, noteDateFormat: payload.noteDateFormat };
-    case 'SET_FULL_SCREEN':
-      return { ...state, isFullScreen: payload.isFullScreen };
     case 'SET_HEADER_ITEMS':
       return {
         ...state,

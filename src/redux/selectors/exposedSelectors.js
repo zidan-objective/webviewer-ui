@@ -1,3 +1,5 @@
+import { isChrome } from 'helpers/device';
+
 // viewer
 export const isElementDisabled = (state, dataElement) =>
   state.viewer.disabledElements[dataElement]?.disabled;
@@ -72,8 +74,6 @@ export const getRotation = state => state.viewer.rotation;
 
 export const getNoteDateFormat = state => state.viewer.noteDateFormat;
 
-export const isFullScreen = state => state.viewer.isFullScreen;
-
 export const doesDocumentAutoLoad = state => state.viewer.doesAutoLoad;
 
 export const isDocumentLoaded = state => state.viewer.isDocumentLoaded;
@@ -92,15 +92,7 @@ export const getDisabledCustomPanelTabs = state =>
     return disabledTabs;
   }, []);
 
-export const isEmbedPrintSupported = state => {
-  const isChrome =
-    window.navigator.userAgent.indexOf('Chrome') > -1 &&
-    window.navigator.userAgent.indexOf('Edge') === -1;
-  // const isPDF = getDocumentType(state) === workerTypes.PDF;
-  // TODO: fix this
-  const isPDF = false;
-  return isPDF && isChrome && state.viewer.useEmbeddedPrint;
-};
+export const isEmbedPrintSupported = state => isChrome && state.viewer.useEmbeddedPrint;
 
 export const getColorMap = state => state.viewer.colorMap;
 

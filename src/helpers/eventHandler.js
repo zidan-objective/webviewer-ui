@@ -19,7 +19,6 @@ export default store => {
   const onStampAnnotationAdded = eventListeners.onStampAnnotationAdded(dispatch);
   const onSignatureAnnotationAdded = eventListeners.onSignatureAnnotationAdded(dispatch);
   const onStickyAnnotationAdded = eventListeners.onStickyAnnotationAdded(store);
-  const onFullScreenChange = eventListeners.onFullScreenChange(store);
   const onLayoutChanged = eventListeners.onLayoutChanged(dispatch);
   const onLocationSelected = eventListeners.onLocationSelected(store);
   const onPageComplete = eventListeners.onPageComplete(store);
@@ -45,10 +44,6 @@ export default store => {
       core.getTool('AnnotationCreateSignature').on('locationSelected', onLocationSelected);
       core.getTool('AnnotationCreateSignature').on('annotationAdded', onSignatureAnnotationAdded);
       hotkeysManager.initialize(store);
-      document.addEventListener('fullscreenchange', onFullScreenChange);
-      document.addEventListener('mozfullscreenchange', onFullScreenChange);
-      document.addEventListener('webkitfullscreenchange', onFullScreenChange);
-      document.addEventListener('MSFullscreenChange', onFullScreenChange);
     },
     removeEventHandlers: () => {
       core.removeEventListener('beforeDocumentLoaded', onBeforeDocumentLoaded);
@@ -69,10 +64,6 @@ export default store => {
       core.getTool('AnnotationCreateSticky').off('annotationAdded', onStickyAnnotationAdded);
       core.getTool('AnnotationCreateSignature').off('locationSelected', onLocationSelected);
       hotkeysManager.off();
-      document.removeEventListener('fullscreenchange', onFullScreenChange);
-      document.removeEventListener('mozfullscreenchange', onFullScreenChange);
-      document.removeEventListener('webkitfullscreenchange', onFullScreenChange);
-      document.removeEventListener('MSFullscreenChange', onFullScreenChange);
     },
   };
 };
