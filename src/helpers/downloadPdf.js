@@ -2,60 +2,52 @@ import { saveAs } from 'file-saver';
 
 import core from 'core';
 import { isIE } from 'helpers/device';
-import fireEvent from 'helpers/fireEvent';
+import fireEvent, { fireError } from 'helpers/fireEvent';
 import actions from 'actions';
 
-export default (dispatch, options) => {
-  // TODO: get name
-  const { documentPath = 'document', filename, includeAnnotations = true, xfdfData, externalURL } = options;
+export default async (dispatch, options = {}) => {
+  const {
+    includeAnnotations = true,
+    xfdfData,
+    externalURL,
+  } = options;
   const downloadOptions = { downloadType: 'pdf' };
-  let file;
 
-  return core.exportAnnotations().then(xfdfString => {
-    if (includeAnnotations) {
-      downloadOptions.xfdfString = xfdfData || xfdfString;
-    }
+  if (includeAnnotations) {
+    const xfdfString = await core.exportAnnotations();
+    downloadOptions.xfdfString = xfdfData || xfdfString;
+  }
 
-    const getDownloadFilename = (name, extension) => {
-      if (name && name.slice(-extension.length).toLowerCase() !== extension) {
-        name += extension;
-      }
-      return name;
-    };
+  dispatch(actions.openElement('loadingModal'));
 
-    dispatch(actions.openElement('loadingModal'));
+  const doc = core.getDocument();
+  const filename = doc.getFilename();
 
-    const name = filename || documentPath.split('/').slice(-1)[0];
-    const downloadName = getDownloadFilename(name, '.pdf');
+  if (externalURL) {
+    const downloadIframe =
+      document.getElementById('download-iframe') ||
+      document.createElement('iframe');
+    downloadIframe.width = 0;
+    downloadIframe.height = 0;
+    downloadIframe.id = 'download-iframe';
+    downloadIframe.src = null;
+    document.body.appendChild(downloadIframe);
+    downloadIframe.src = externalURL;
+    dispatch(actions.closeElement('loadingModal'));
+    fireEvent('finishedSavingPDF');
+  } else {
+    try {
+      const mimeType = { type: 'application/pdf' };
+      const data = await doc.getFileData(downloadOptions);
+      const arr = new Uint8Array(data);
+      const file = isIE ? new Blob([arr], mimeType) : new File([arr], filename, mimeType);
 
-    const doc = core.getDocument();
-
-    if (externalURL) {
-      const downloadIframe = document.getElementById('download-iframe') || document.createElement('iframe');
-      downloadIframe.width = 0;
-      downloadIframe.height = 0;
-      downloadIframe.id = 'download-iframe';
-      downloadIframe.src = null;
-      document.body.appendChild(downloadIframe);
-      downloadIframe.src = externalURL;
+      saveAs(file, filename);
       dispatch(actions.closeElement('loadingModal'));
       fireEvent('finishedSavingPDF');
-    } else {
-      return doc.getFileData(downloadOptions).then(data => {
-        const arr = new Uint8Array(data);
-        if (isIE) {
-          file = new Blob([arr], { type: 'application/pdf' });
-        } else {
-          file = new File([arr], downloadName, { type: 'application/pdf' });
-        }
-
-        saveAs(file, downloadName);
-        dispatch(actions.closeElement('loadingModal'));
-        fireEvent('finishedSavingPDF');
-      }, error => {
-        dispatch(actions.closeElement('loadingModal'));
-        throw new Error(error.message);
-      });
+    } catch (error) {
+      dispatch(actions.closeElement('loadingModal'));
+      fireError(error.message);
     }
-  });
+  }
 };

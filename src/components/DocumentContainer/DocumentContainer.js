@@ -64,7 +64,7 @@ class DocumentContainer extends React.PureComponent {
     const options = getWebViewerConstructorOptions();
     const { auto_load = true, initialDoc, startOffline } = options;
     if ((initialDoc && auto_load) || startOffline) {
-      loadDocument(initialDoc, options, this.props.dispatch);
+      loadDocument(this.props.dispatch, initialDoc, options);
     }
 
     if (isIE) {
@@ -106,7 +106,7 @@ class DocumentContainer extends React.PureComponent {
 
     const { files } = e.dataTransfer;
     if (files.length) {
-      core.loadDocument(files[0]);
+      loadDocument(this.props.dispatch, files[0]);
     }
   };
 

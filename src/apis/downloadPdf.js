@@ -29,14 +29,13 @@ viewerElement.addEventListener('ready', function() {
 });
  */
 
+import core from 'core';
 import downloadPdf from 'helpers/downloadPdf';
-import selectors from 'selectors';
 import { workerTypes } from 'constants/types';
 
-export default store => includeAnnotations => {
-  const state = store.getState();
+export default store => (includeAnnotations = true) => {
+  const documentType = core.getDocument()?.getType();
 
-  const documentType = selectors.getDocumentType(state);
   const { PDF, BLACKBOX, OFFICE } = workerTypes;
   if (
     documentType !== PDF &&
@@ -47,9 +46,5 @@ export default store => includeAnnotations => {
     return;
   }
 
-  downloadPdf(store.dispatch, {
-    documentPath: selectors.getDocumentPath(state),
-    filename: state.document.filename,
-    includeAnnotations,
-  });
+  downloadPdf(store.dispatch, { includeAnnotations });
 };

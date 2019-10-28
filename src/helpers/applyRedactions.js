@@ -17,8 +17,6 @@ const webViewerServerApply = (annotations, dispatch) =>
   core.applyRedactions(annotations).then(results => {
     if (results && results.url) {
       return downloadPdf(dispatch, {
-        filename: 'redacted.pdf',
-        includeAnnotations: true,
         externalURL: results.url,
       });
     }

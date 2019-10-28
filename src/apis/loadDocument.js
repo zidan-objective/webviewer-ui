@@ -1,5 +1,3 @@
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
-
 /**
  * Load a document inside WebViewer UI.
  * @method WebViewer#loadDocument
@@ -35,12 +33,6 @@ viewerElement.addEventListener('ready', function() {
 
 import loadDocument from 'helpers/loadDocument';
 
-export default store => (src, options = {}) => {
-  const { pdftronServer } = getWebViewerConstructorOptions();
-  // if WebViewer is initialized with the pdftronServer option then we want to always use WebViewer Server
-  if (pdftronServer) {
-    options.pdftronServer = pdftronServer;
-  }
-
-  loadDocument(src, options, store.dispatch);
+export default store => (src, options) => {
+  loadDocument(store.dispatch, src, options);
 };

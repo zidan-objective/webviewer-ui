@@ -35,13 +35,6 @@ const ErrorModal = () => {
 
   useEffect(() => {
     const onError = error => {
-      // //  TODO: fix this
-      // if (documentPath.indexOf('file:///') > -1) {
-      //   console.error(
-      //     `WebViewer doesn't have access to file URLs because of browser security restrictions. Please see https://www.pdftron.com/documentation/web/guides/basics/troubleshooting-document-loading#not-allowed-to-load-local-resource:-file:`,
-      //   );
-      // }
-
       error = error.detail || error.message;
       let errorMessage;
 
