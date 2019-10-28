@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 
 import core from 'core';
+import { workerTypes } from 'constants/types';
 import selectors from 'selectors';
 
 import './PrintHandler.scss';
@@ -28,7 +29,7 @@ const PrintHandler = () => {
 
   return isDisabled ? null : (
     <div className="PrintHandler">
-      {isEmbedPrintSupported && documentType === 'pdf' ? (
+      {isEmbedPrintSupported && documentType === workerTypes.PDF ? (
         <iframe id="print-handler" tabIndex={-1}></iframe>
       ) : (
         <div id="print-handler"></div>

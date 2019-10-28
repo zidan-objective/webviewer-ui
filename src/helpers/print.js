@@ -1,7 +1,8 @@
 import i18n from 'i18next';
 
-import actions from 'actions';
 import core from 'core';
+import { workerTypes } from 'constants/types';
+import actions from 'actions';
 
 export default (dispatch, isEmbedPrintSupported) => {
   if (!core.getDocument()) {
@@ -17,7 +18,7 @@ export default (dispatch, isEmbedPrintSupported) => {
     bbURLPromise.then(result => {
       printPage.location.href = result.url;
     });
-  } else if (isEmbedPrintSupported && documentType === 'pdf') {
+  } else if (isEmbedPrintSupported && documentType === workerTypes.PDF) {
     dispatch(actions.openElement('loadingModal'));
     printPdf().then(() => {
       dispatch(actions.closeElement('loadingModal'));
