@@ -138,7 +138,7 @@ export default store => {
     enableTools: enableTools(store),
     focusNote: focusNote(store),
     getFitMode: getFitMode(store),
-    getLayoutMode: getLayoutMode(store),
+    getLayoutMode,
     getToolMode,
     getZoomLevel,
     hotkeys,

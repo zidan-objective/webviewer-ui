@@ -31,7 +31,6 @@ class DocumentContainer extends React.PureComponent {
     dispatch: PropTypes.func.isRequired,
     openElement: PropTypes.func.isRequired,
     closeElements: PropTypes.func.isRequired,
-    displayMode: PropTypes.string.isRequired,
     leftPanelWidth: PropTypes.number,
   };
 
@@ -160,17 +159,17 @@ class DocumentContainer extends React.PureComponent {
   };
 
   pageUp = () => {
-    const { currentPage, displayMode } = this.props;
+    const { currentPage } = this.props;
     const { scrollHeight, clientHeight } = this.container.current;
-    const newPage = currentPage - getNumberOfPagesToNavigate(displayMode);
+    const newPage = currentPage - getNumberOfPagesToNavigate(core.getDisplayMode());
 
     core.setCurrentPage(Math.max(newPage, 1));
     this.container.current.scrollTop = scrollHeight - clientHeight;
   };
 
   pageDown = () => {
-    const { currentPage, displayMode, totalPages } = this.props;
-    const newPage = currentPage + getNumberOfPagesToNavigate(displayMode);
+    const { currentPage, totalPages } = this.props;
+    const newPage = currentPage + getNumberOfPagesToNavigate(core.getDisplayMode());
 
     core.setCurrentPage(Math.min(newPage, totalPages));
   };
@@ -250,7 +249,6 @@ const mapStateToProps = state => ({
   isHeaderOpen:
     selectors.isElementOpen(state, 'header') &&
     !selectors.isElementDisabled(state, 'header'),
-  displayMode: selectors.getDisplayMode(state),
   totalPages: selectors.getTotalPages(state),
   // using leftPanelWidth to trigger render
   leftPanelWidth: selectors.getLeftPanelWidth(state),

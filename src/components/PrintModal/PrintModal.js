@@ -32,7 +32,6 @@ class PrintModal extends React.PureComponent {
     t: PropTypes.func.isRequired,
     sortStrategy: PropTypes.string.isRequired,
     colorMap: PropTypes.object.isRequired,
-    layoutMode: PropTypes.string.isRequired,
   };
 
   constructor() {
@@ -79,7 +78,7 @@ class PrintModal extends React.PureComponent {
   }
 
   onChange = () => {
-    const { currentPage, pageLabels, layoutMode } = this.props;
+    const { currentPage, pageLabels } = this.props;
     let pagesToPrint = [];
 
     if (this.allPages.current.checked) {
@@ -88,6 +87,7 @@ class PrintModal extends React.PureComponent {
       }
     } else if (this.currentPage.current.checked) {
       const pageCount = core.getTotalPages();
+      const layoutMode = core.getDisplayMode();
 
       // when displaying 2 pages, "Current" should print both of them
       switch (layoutMode) {
@@ -581,7 +581,6 @@ const mapStateToProps = state => ({
   pageLabels: selectors.getPageLabels(state),
   sortStrategy: selectors.getSortStrategy(state),
   colorMap: selectors.getColorMap(state),
-  layoutMode: selectors.getDisplayMode(state),
 });
 
 const mapDispatchToProps = dispatch => ({

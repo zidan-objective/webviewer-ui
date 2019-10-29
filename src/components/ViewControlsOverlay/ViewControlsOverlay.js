@@ -21,7 +21,6 @@ import './ViewControlsOverlay.scss';
 class ViewControlsOverlay extends React.PureComponent {
   static propTypes = {
     totalPages: PropTypes.number.isRequired,
-    displayMode: PropTypes.string.isRequired,
     fitMode: PropTypes.string.isRequired,
     isDisabled: PropTypes.bool,
     isOpen: PropTypes.bool,
@@ -34,10 +33,12 @@ class ViewControlsOverlay extends React.PureComponent {
   state = {
     left: 0,
     right: 'auto',
+    displayMode: 'Single',
   };
 
   componentDidMount() {
     window.addEventListener('resize', this.handleWindowResize);
+    core.addEventListener('displayModeUpdated', this.onDisplayModeUpdaged);
   }
 
   componentDidUpdate(prevProps) {
@@ -60,6 +61,7 @@ class ViewControlsOverlay extends React.PureComponent {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleWindowResize);
+    core.removeEventListener('displayModeUpdated', this.onDisplayModeUpdaged);
   }
 
   handleWindowResize = () => {
@@ -68,13 +70,20 @@ class ViewControlsOverlay extends React.PureComponent {
     );
   };
 
+  onDisplayModeUpdaged = () => {
+    this.setState({
+      displayMode: core.getDisplayMode(),
+    });
+  };
+
   handleClickOutside = e => {
-    const clickedViewControlsButton = e.target.getAttribute('data-element') === 'viewControlsButton';
+    const clickedViewControlsButton =
+      e.target.getAttribute('data-element') === 'viewControlsButton';
 
     if (!clickedViewControlsButton) {
       this.props.closeElements(['viewControlsOverlay']);
     }
-  }
+  };
 
   handleClick = (pageTransition, layout) => {
     const displayModeObject = displayModeObjects.find(
@@ -85,8 +94,8 @@ class ViewControlsOverlay extends React.PureComponent {
   };
 
   render() {
-    const { isDisabled, displayMode, fitMode, totalPages, t } = this.props;
-    const { left, right } = this.state;
+    const { isDisabled, fitMode, totalPages, t } = this.props;
+    const { left, right, displayMode } = this.state;
     const { pageTransition, layout } = displayModeObjects.find(
       obj => obj.displayMode === displayMode,
     );
@@ -97,8 +106,13 @@ class ViewControlsOverlay extends React.PureComponent {
     }
 
     return (
-      <div className={className} data-element="viewControlsOverlay" style={{ left, right }} ref={this.overlay}>
-        {totalPages < 1000 &&
+      <div
+        className={className}
+        data-element="viewControlsOverlay"
+        style={{ left, right }}
+        ref={this.overlay}
+      >
+        {totalPages < 1000 && (
           <Element className="row" dataElement="pageTransitionButtons">
             <div className="type">{t('option.displayMode.pageTransition')}</div>
             <Button
@@ -116,7 +130,7 @@ class ViewControlsOverlay extends React.PureComponent {
               isActive={pageTransition === 'continuous'}
             />
           </Element>
-        }
+        )}
         <Element className="row" dataElement="layoutButtons">
           <div className="type">{t('option.displayMode.layout')}</div>
           <Button
@@ -201,7 +215,6 @@ class ViewControlsOverlay extends React.PureComponent {
 
 const mapStateToProps = state => ({
   totalPages: selectors.getTotalPages(state),
-  displayMode: selectors.getDisplayMode(state),
   fitMode: selectors.getFitMode(state),
   isDisabled: selectors.isElementDisabled(state, 'viewControlsOverlay'),
   isOpen: selectors.isElementOpen(state, 'viewControlsOverlay'),
@@ -211,4 +224,7 @@ const mapDispatchToProps = {
   closeElements: actions.closeElements,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(onClickOutside(ViewControlsOverlay)));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withTranslation()(onClickOutside(ViewControlsOverlay)));

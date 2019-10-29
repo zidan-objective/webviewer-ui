@@ -129,10 +129,6 @@ export const setRotation = rotation => ({
   type: 'SET_ROTATION',
   payload: { rotation },
 });
-export const setDisplayMode = displayMode => ({
-  type: 'SET_DISPLAY_MODE',
-  payload: { displayMode },
-});
 export const setCurrentPage = currentPage => ({
   type: 'SET_CURRENT_PAGE',
   payload: { currentPage },
