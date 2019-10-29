@@ -114,7 +114,6 @@ class StatefulButton extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => ({
   isOpen: selectors.isElementOpen(state, ownProps.dataElement),
-  openElements: selectors.getOpenElements(state),
 });
 
 export default connect(mapStateToProps)(StatefulButton);

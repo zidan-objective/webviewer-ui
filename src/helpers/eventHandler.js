@@ -21,7 +21,7 @@ export default store => {
   const onStickyAnnotationAdded = eventListeners.onStickyAnnotationAdded(store);
   const onLayoutChanged = eventListeners.onLayoutChanged(dispatch);
   const onLocationSelected = eventListeners.onLocationSelected(store);
-  const onPageComplete = eventListeners.onPageComplete(store);
+  const onPageComplete = eventListeners.onPageComplete();
 
   return {
     addEventHandlers: () => {

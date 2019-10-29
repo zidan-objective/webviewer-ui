@@ -43,11 +43,6 @@ export const getToolNamesByGroup = (state, toolGroup) =>
     name => state.viewer.toolButtonObjects[name].group === toolGroup,
   );
 
-export const getToolNameByDataElement = (state, dataElement) =>
-  Object.keys(state.viewer.toolButtonObjects).find(
-    name => state.viewer.toolButtonObjects[name].dataElement === dataElement,
-  );
-
 export const getActiveToolName = state => state.viewer.activeToolName;
 
 export const getActiveToolStyles = state => state.viewer.activeToolStyles;
@@ -70,13 +65,7 @@ export const getCurrentPage = state => state.viewer.currentPage;
 
 export const getSortStrategy = state => state.viewer.sortStrategy;
 
-export const getRotation = state => state.viewer.rotation;
-
 export const getNoteDateFormat = state => state.viewer.noteDateFormat;
-
-export const doesDocumentAutoLoad = state => state.viewer.doesAutoLoad;
-
-export const isDocumentLoaded = state => state.viewer.isDocumentLoaded;
 
 export const isDocumentReadOnly = state => state.viewer.isReadOnly;
 
@@ -95,10 +84,6 @@ export const getDisabledCustomPanelTabs = state =>
 export const isEmbedPrintSupported = state => isChrome && state.viewer.useEmbeddedPrint;
 
 export const getColorMap = state => state.viewer.colorMap;
-
-export const getCursorOverlayData = state => state.viewer.cursorOverlay;
-
-export const getOpenElements = state => state.viewer.openElements;
 
 export const getCurrentPalette = (state, colorMapKey) =>
   state.viewer.colorMap[colorMapKey]?.currentPalette;
@@ -131,14 +116,10 @@ export const getWarningConfirmBtnText = state =>
 
 export const getWarningCancelEvent = state => state.viewer.warning?.onCancel;
 
-export const isAccessibleMode = state => state.viewer.isAccessibleMode;
-
 // error message
 export const getErrorMessage = state => state.viewer.errorMessage || '';
 
 // document
-
-export const getCheckPasswordFunction = state => state.document.checkPassword;
 
 export const getPasswordAttempts = state => state.document.passwordAttempts;
 

@@ -1,8 +1,10 @@
 import core from 'core';
+import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
 
-export default store => pageIndex => {
-  const state = store.getState();
-  if (state.viewer.isAccessibleMode) {
+export default () => pageIndex => {
+  const { isAccessibleMode } = getWebViewerConstructorOptions();
+
+  if (isAccessibleMode) {
     core.getDocument().loadPageText(pageIndex, text => {
       const textContainer = document.createElement('div');
       textContainer.tabIndex = 0;
