@@ -167,7 +167,6 @@ export default {
     notePopupId: '',
     isNoteEditing: false,
     fitMode: '',
-    zoom: 1,
     currentPage: 1,
     sortStrategy: 'position',
     isReadOnly: enableReadOnlyMode,

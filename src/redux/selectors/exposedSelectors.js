@@ -57,8 +57,6 @@ export const getNotePopupId = state => state.viewer.notePopupId;
 
 export const getFitMode = state => state.viewer.fitMode;
 
-export const getZoom = state => state.viewer.zoom;
-
 export const getCurrentPage = state => state.viewer.currentPage;
 
 export const getSortStrategy = state => state.viewer.sortStrategy;

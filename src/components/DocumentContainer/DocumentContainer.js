@@ -24,7 +24,6 @@ class DocumentContainer extends React.PureComponent {
     isLeftPanelOpen: PropTypes.bool,
     isRightPanelOpen: PropTypes.bool,
     isSearchOverlayOpen: PropTypes.bool,
-    zoom: PropTypes.number.isRequired,
     currentPage: PropTypes.number,
     totalPages: PropTypes.number,
     isHeaderOpen: PropTypes.bool,
@@ -175,7 +174,7 @@ class DocumentContainer extends React.PureComponent {
   };
 
   wheelToZoom = e => {
-    const currentZoomFactor = this.props.zoom;
+    const currentZoomFactor = core.getZoom();
     let newZoomFactor = currentZoomFactor;
     let multiple;
 
@@ -244,7 +243,6 @@ const mapStateToProps = state => ({
   isLeftPanelOpen: selectors.isElementOpen(state, 'leftPanel'),
   isRightPanelOpen: selectors.isElementOpen(state, 'searchPanel'),
   isSearchOverlayOpen: selectors.isElementOpen(state, 'searchOverlay'),
-  zoom: selectors.getZoom(state),
   currentPage: selectors.getCurrentPage(state),
   isHeaderOpen:
     selectors.isElementOpen(state, 'header') &&

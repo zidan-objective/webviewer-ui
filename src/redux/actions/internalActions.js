@@ -124,11 +124,6 @@ export const setFitMode = fitMode => ({
   type: 'SET_FIT_MODE',
   payload: { fitMode },
 });
-export const setZoom = zoom => ({ type: 'SET_ZOOM', payload: { zoom } });
-export const setRotation = rotation => ({
-  type: 'SET_ROTATION',
-  payload: { rotation },
-});
 export const setCurrentPage = currentPage => ({
   type: 'SET_CURRENT_PAGE',
   payload: { currentPage },

@@ -84,10 +84,6 @@ export default initialState => (state = initialState, action) => {
       return { ...state, isNoteEditing: payload.isNoteEditing };
     case 'SET_FIT_MODE':
       return { ...state, fitMode: payload.fitMode };
-    case 'SET_ZOOM':
-      return { ...state, zoom: payload.zoom };
-    case 'SET_ROTATION':
-      return { ...state, rotation: payload.rotation };
     case 'SET_CURRENT_PAGE':
       return { ...state, currentPage: payload.currentPage };
     case 'SET_SORT_STRATEGY':
