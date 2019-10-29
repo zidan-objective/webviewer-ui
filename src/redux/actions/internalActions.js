@@ -206,10 +206,6 @@ export const resetLoadingProgress = () => ({
   type: 'SET_LOADING_PROGRESS',
   payload: { loadingProgress: 0 },
 });
-export const setPassword = password => ({
-  type: 'SET_PASSWORD',
-  payload: { password },
-});
 
 // search
 export const searchText = (searchValue, options) => ({

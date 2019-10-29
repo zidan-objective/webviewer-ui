@@ -168,7 +168,6 @@ export default {
     isNoteEditing: false,
     fitMode: '',
     zoom: 1,
-    rotation: 0,
     displayMode: 'Single',
     currentPage: 1,
     sortStrategy: 'position',
@@ -209,9 +208,7 @@ export default {
     totalPages: 0,
     outlines: [],
     layers: [],
-    checkPassword: null, // move to passwordModal.js
     printQuality: 1,
-    password: '',
     passwordAttempts: -1,
     loadingProgress: 0,
   },
