@@ -137,10 +137,6 @@ export const setCurrentPage = currentPage => ({
   type: 'SET_CURRENT_PAGE',
   payload: { currentPage },
 });
-export const setDocumentLoaded = isDocumentLoaded => ({
-  type: 'SET_DOCUMENT_LOADED',
-  payload: { isDocumentLoaded },
-});
 export const setReadOnly = isReadOnly => ({
   type: 'SET_READ_ONLY',
   payload: { isReadOnly },
@@ -153,17 +149,6 @@ export const unregisterTool = toolName => ({
   type: 'UNREGISTER_TOOL',
   payload: { toolName },
 });
-export const setToolButtonObjects = toolButtonObjects => ({
-  type: 'SET_TOOL_BUTTON_OBJECTS',
-  payload: { toolButtonObjects },
-});
-export const setIsNoteEditing = isNoteEditing => (dispatch, getState) => {
-  const state = getState();
-
-  if (state.viewer.isNoteEditing !== isNoteEditing) {
-    dispatch({ type: 'SET_IS_NOTE_EDITING', payload: { isNoteEditing } });
-  }
-};
 export const setHeaderItems = (header, headerItems) => ({
   type: 'SET_HEADER_ITEMS',
   payload: { header, headerItems },
@@ -204,10 +189,6 @@ export const setOutlines = outlines => ({
 export const setLayers = layers => ({
   type: 'SET_LAYERS',
   payload: { layers },
-});
-export const setCheckPasswordFunction = func => ({
-  type: 'SET_CHECKPASSWORD',
-  payload: { func },
 });
 export const setPasswordAttempts = attempt => ({
   type: 'SET_PASSWORD_ATTEMPTS',

@@ -172,8 +172,6 @@ export default {
     displayMode: 'Single',
     currentPage: 1,
     sortStrategy: 'position',
-    isFullScreen: false,
-    isDocumentLoaded: false,
     isReadOnly: enableReadOnlyMode,
     customPanels: [],
     useEmbeddedPrint: false,
