@@ -13,7 +13,6 @@ export default dispatch => () => {
     enableRedaction,
   } = getWebViewerConstructorOptions();
 
-  dispatch(actions.setDocumentLoaded(true));
   dispatch(actions.openElement('pageNavOverlay'));
 
   if (onFirstLoad) {
