@@ -1,7 +1,7 @@
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 
 export default () => {
-  const { css } = getWebViewerConstructorOptions();
+  const { css } = getHashParams();
 
   if (css) {
     const link = document.createElement('link');

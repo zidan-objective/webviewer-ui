@@ -3,7 +3,7 @@ import i18next from 'i18next';
 import LayoutMode from 'constants/layoutMode';
 import FitMode from 'constants/fitMode';
 import Feature from 'constants/feature';
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 import addSearchListener from './addSearchListener';
 import addSortStrategy from './addSortStrategy';
 import annotationPopup from './annotationPopup';
@@ -242,7 +242,7 @@ export default store => {
     setColorPalette: setColorPalette(store),
     showWarningMessage: showWarningMessage(store),
     updateOutlines: updateOutlines(store),
-    getCustomData: () => getWebViewerConstructorOptions().custom || null,
+    getCustomData: () => getHashParams().custom || null,
     getBBAnnotManager: getBBAnnotManager(store),
     selectors: getSelectors(store),
   };

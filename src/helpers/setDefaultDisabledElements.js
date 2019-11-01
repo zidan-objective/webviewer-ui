@@ -1,6 +1,6 @@
 import core from 'core';
 import createDisableFeatures from 'src/apis/disableFeatures';
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 import { isMobileDevice } from 'helpers/device';
 import { PRIORITY_THREE, PRIORITY_ONE } from 'constants/actionPriority';
 import Feature from 'constants/feature';
@@ -10,15 +10,15 @@ export default store => {
   const { dispatch } = store;
   const disableFeatures = createDisableFeatures(store);
   const {
-    enableAnnotations,
-    enableFilePicker,
-    enableReadOnlyMode,
+    a: enableAnnotations,
+    filepicker: enableFilePicker,
+    readonly: enableReadOnlyMode,
     hideAnnotationPanel,
     enableMeasurement,
     enableRedaction,
     disabledElements,
-    showToolbarControl = true,
-  } = getWebViewerConstructorOptions();
+    toolbar = true,
+  } = getHashParams();
 
   if (disabledElements) {
     const elements = disabledElements.split(',');
@@ -49,7 +49,7 @@ export default store => {
     disableFeatures([Feature.Redaction]);
   }
 
-  if (!showToolbarControl) {
+  if (!toolbar) {
     dispatch(actions.disableElement('header', PRIORITY_ONE));
   }
 

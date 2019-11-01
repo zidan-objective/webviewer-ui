@@ -12,7 +12,7 @@ import {
 import loadDocument from 'helpers/loadDocument';
 import getNumberOfPagesToNavigate from 'helpers/getNumberOfPagesToNavigate';
 import touchEventManager from 'helpers/TouchEventManager';
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 import { getMinZoomLevel, getMaxZoomLevel } from 'constants/zoomFactors';
 import actions from 'actions';
 import selectors from 'selectors';
@@ -59,9 +59,15 @@ class DocumentContainer extends React.PureComponent {
     core.setViewerElement(this.document.current);
 
     /* eslint-disable camelcase */
-    const options = getWebViewerConstructorOptions();
-    const { auto_load = true, initialDoc, startOffline } = options;
+    const params = getHashParams();
+    const { auto_load = true, d: initialDoc, startOffline } = params;
     if ((initialDoc && auto_load) || startOffline) {
+      const options = {
+        ...params,
+        externalPath: params.p,
+        documentId: params.did,
+      };
+
       loadDocument(this.props.dispatch, initialDoc, options);
     }
 

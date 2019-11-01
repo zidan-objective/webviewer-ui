@@ -1,9 +1,9 @@
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 import packageConfig from '../../package.json';
 
 /* eslint-disable no-console */
 export default () => {
-  const { pdftronServer, fullAPI } = getWebViewerConstructorOptions();
+  const { pdftronServer, pdfnet: fullAPI } = getHashParams();
 
   // log UI and Core versions and warn/error if necessary
   const coreVersion = window.CoreControls.DocumentViewer.prototype.version;

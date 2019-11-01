@@ -2,7 +2,7 @@ import { setCheckPasswordFunction } from 'components/PasswordModal';
 
 import core from 'core';
 import { fireError } from 'helpers/fireEvent';
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 import actions from 'actions';
 
 export default (dispatch, src, options = {}) => {
@@ -12,14 +12,10 @@ export default (dispatch, src, options = {}) => {
   options.onProgress = percent => dispatch(actions.setLoadingProgress(percent));
   options.password = transformPasswordOption(options.password, dispatch);
 
-  // https://www.pdftron.com/documentation/web/guides/xod-and-encryption/#decrypt-a-document-on-clientside
-  // encryption is passed down from WebViewer constructor while decryptionOptions is passed from instance.loadDocument
-  // not very sure why we use different names
-  const { encryption, decryptOptions } = options;
-  if (encryption || decryptOptions) {
+  if (options.decryptOptions) {
     options.xodOptions = {
       decrypt: window.CoreControls.Encryption.decrypt,
-      decryptOptions: encryption || decryptOptions,
+      decryptOptions: options.decryptOptions,
     };
   }
 
@@ -47,11 +43,11 @@ const getDefaultOptions = () => {
     'subzero',
     'useDownloader',
   ];
-  const constructorOptions = getWebViewerConstructorOptions();
+  const params = getHashParams();
 
-  return Object.keys(constructorOptions).reduce((defaultOptions, key) => {
+  return Object.keys(params).reduce((defaultOptions, key) => {
     if (defaultOptionNames.includes(key)) {
-      defaultOptions[key] = constructorOptions[key];
+      defaultOptions[key] = params[key];
     }
     return defaultOptions;
   }, {});

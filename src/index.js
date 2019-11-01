@@ -19,16 +19,16 @@ import setupDocViewer from 'helpers/setupDocViewer';
 import setDefaultToolStyles from 'helpers/setDefaultToolStyles';
 import logDebugInfo from 'helpers/logDebugInfo';
 import prepareWorkerTransport from 'helpers/prepareWorkerTransport';
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 import createStore from 'src/redux';
 
 if (window.CanvasRenderingContext2D) {
   const {
-    fullAPI,
+    pdfnet: fullAPI,
     subzero = false,
-    annotationUser = 'Guest',
-    annotationAdmin = false,
-  } = getWebViewerConstructorOptions();
+    user: annotationUser = 'Guest',
+    admin: annotationAdmin = false,
+  } = getHashParams();
   let fullAPIReady = Promise.resolve();
 
   if (fullAPI) {

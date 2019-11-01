@@ -1,8 +1,8 @@
 import core from 'core';
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 
 export default () => pageIndex => {
-  const { isAccessibleMode } = getWebViewerConstructorOptions();
+  const { isAccessibleMode } = getHashParams();
 
   if (isAccessibleMode) {
     core.getDocument().loadPageText(pageIndex, text => {

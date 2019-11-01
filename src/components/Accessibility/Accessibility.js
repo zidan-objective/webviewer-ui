@@ -1,6 +1,6 @@
 import React from 'react';
 
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 
 import './Accessibility.scss';
 
@@ -18,7 +18,7 @@ class Accessibility extends React.PureComponent {
   }
 
   render() {
-    const { accessibleMode } = getWebViewerConstructorOptions();
+    const { accessibleMode } = getHashParams();
     const { isVisible } = this.state;
 
     if (!accessibleMode) {

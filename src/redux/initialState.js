@@ -4,7 +4,7 @@ import ToggleElementOverlay from 'components/ToggleElementOverlay';
 import SignatureToolButton from 'components/SignatureToolButton';
 
 import core from 'core';
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 import { zoomIn, zoomOut } from 'helpers/zoom';
 import defaultTool from 'constants/defaultTool';
 import { copyMapWithDataProperties } from 'constants/map';
@@ -12,9 +12,9 @@ import actions from 'actions';
 
 const {
   hideAnnotationPanel,
-  enableAnnotations,
-  enableReadOnlyMode,
-} = getWebViewerConstructorOptions();
+  a: enableAnnotations,
+  readonly: enableReadOnlyMode,
+} = getHashParams();
 
 export default {
   viewer: {

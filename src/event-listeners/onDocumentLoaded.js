@@ -1,5 +1,5 @@
 import core from 'core';
-import getWebViewerConstructorOptions from 'helpers/getWebViewerConstructorOptions';
+import getHashParams from 'helpers/getHashParams';
 import fireEvent from 'helpers/fireEvent';
 import actions from 'actions';
 import { workerTypes } from 'constants/types';
@@ -9,9 +9,9 @@ let onFirstLoad = true;
 
 export default dispatch => () => {
   const {
-    enableAnnotations,
+    a: enableAnnotations,
     enableRedaction,
-  } = getWebViewerConstructorOptions();
+  } = getHashParams();
 
   dispatch(actions.openElement('pageNavOverlay'));
 
