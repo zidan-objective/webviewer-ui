@@ -1,5 +1,7 @@
 @import './styles';
 
+$selected-page-color: blue;
+
 %panel {
   position: fixed;
   top: $top-bar-height;

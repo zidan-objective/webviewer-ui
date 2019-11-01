@@ -1,0 +1,30 @@
+@import '../../constants/styles';
+
+.documentControls {
+    background-color: var(--border-color);
+    transition: height 0.5s;
+
+    $page-input-border: 2px;
+    .pagesInput{
+        border-width: $page-input-border;
+        width: calc(100% - #{$page-input-border * 2});
+    }
+
+    .documentControlsButton{
+        display: flex;
+
+        .Button{
+            display: inline-flex;
+            height: 100%;
+            min-width: $icon-width;
+            flex-grow: 1;
+
+            &:hover{
+                background-color: var(--icon-color);
+                .Icon {
+                    color: var(--border-color);
+                }
+            }
+        }  
+    }  
+}

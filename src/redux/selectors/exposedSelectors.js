@@ -86,6 +86,8 @@ export const getCustomPanels = state => state.viewer.customPanels;
 
 export const getPageLabels = state => state.viewer.pageLabels;
 
+export const getSelectedThumbnailPageIndexes = state => state.viewer.selectedThumbnailPageIndexes;
+
 export const getDisabledCustomPanelTabs = state =>
   state.viewer.customPanels.reduce((disabledTabs, { tab }) => {
     if (state.viewer.disabledElements[tab.dataElement]?.disabled) {
@@ -140,6 +142,8 @@ export const getWarningConfirmBtnText = state =>
   state.viewer.warning?.confirmBtnText;
 
 export const getWarningCancelEvent = state => state.viewer.warning?.onCancel;
+
+export const getWarningKeepOpen = state => state.viewer.warning?.keepOpen;
 
 export const isAccessibleMode = state => state.viewer.isAccessibleMode;
 

@@ -1,0 +1,12 @@
+@import '../../constants/styles';
+@import '../../constants/overlay';
+
+.ThumbnailOverlay {
+    background-color: red;
+    z-index: 100000000;
+
+
+    
+    right: 0px;
+    bottom: 10px;
+}

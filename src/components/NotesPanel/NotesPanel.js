@@ -67,6 +67,16 @@ const NotesPanel = ({ display }) => {
               !annot.isGrouped(),
           ),
       );
+      onAnnotationSelected();
+    };
+
+    const onAnnotationSelected = () => {
+      const ids = {};
+
+      core.getSelectedAnnotations().forEach(annot => {
+        ids[annot.Id] = true;
+      });
+      setSelectedNoteIds(ids);
     };
 
     core.addEventListener('annotationChanged', _setNotes);
@@ -78,6 +88,7 @@ const NotesPanel = ({ display }) => {
     };
   }, []);
 
+  /*
   useEffect(() => {
     const onAnnotationSelected = () => {
       const ids = {};
@@ -88,10 +99,11 @@ const NotesPanel = ({ display }) => {
       setSelectedNoteIds(ids);
     };
 
-    core.addEventListener('annotationSelected', onAnnotationSelected);
+    core.addEventListener('annotationChanged', onAnnotationSelected);
     return () =>
-      core.removeEventListener('annotationSelected', onAnnotationSelected);
+      core.removeEventListener('annotationChanged', onAnnotationSelected);
   }, []);
+*/
 
   let singleSelectedNoteIndex = -1;
   useEffect(() => {
