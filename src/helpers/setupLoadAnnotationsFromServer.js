@@ -1,10 +1,10 @@
 import core from 'core';
 import { workerTypes } from 'constants/types';
-import hashParams from 'helpers/hashParams';
+import getHashParams from 'helpers/getHashParams';
 
 /* eslint-disable camelcase */
 export default () => {
-  const params = hashParams();
+  const params = getHashParams();
   let { server_url: serverUrl } = params;
   const { serverUrlHeaders, did } = params;
 
