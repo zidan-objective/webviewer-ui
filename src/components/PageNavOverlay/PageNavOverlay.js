@@ -15,7 +15,6 @@ class PageNavOverlay extends React.PureComponent {
     isLeftPanelOpen: PropTypes.bool,
     isDisabled: PropTypes.bool,
     isOpen: PropTypes.bool,
-    currentPage: PropTypes.number,
     totalPages: PropTypes.number,
     pageLabels: PropTypes.array.isRequired,
   };
@@ -25,18 +24,23 @@ class PageNavOverlay extends React.PureComponent {
     this.textInput = React.createRef();
     this.state = {
       input: '',
+      currentPage: 1,
       isCustomPageLabels: false,
     };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+    core.addEventListener('pageNumberUpdated', this.onPageNumberUpdated);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.pageLabels !== this.props.pageLabels) {
       const isCustomPageLabels = this.props.pageLabels.some((label, index) => label !== `${index + 1}`);
       this.setState({ isCustomPageLabels });
     }
 
-    if (prevProps.currentPage !== this.props.currentPage || prevProps.pageLabels !== this.props.pageLabels) {
-      this.setState({ input: this.props.pageLabels[this.props.currentPage - 1] });
+    if (prevState.currentPage !== this.state.currentPage || prevProps.pageLabels !== this.props.pageLabels) {
+      this.setState({ input: this.props.pageLabels[this.state.currentPage - 1] });
     }
 
     if (prevProps.totalPages !== this.props.totalPages && !this.props.isDisabled) {
@@ -46,6 +50,16 @@ class PageNavOverlay extends React.PureComponent {
     if (prevProps.isDisabled && !this.props.isDisabled) {
       this.setInputWidth();
     }
+  }
+
+  componentWillUnmount() {
+    core.removeEventListener('pageNumberUpdated', this.onPageNumberUpdated);
+  }
+
+  onPageNumberUpdated = pageNumber => {
+    this.setState({
+      currentPage: pageNumber,
+    });
   }
 
   setInputWidth = () => {
@@ -85,13 +99,14 @@ class PageNavOverlay extends React.PureComponent {
   }
 
   onBlur = () => {
-    const { currentPage, pageLabels } = this.props;
+    const { currentPage } = this.state;
+    const { pageLabels } = this.props;
 
     this.setState({ input: pageLabels[currentPage - 1] });
   }
 
   render() {
-    const { isDisabled, isLeftPanelOpen, isLeftPanelDisabled, currentPage, totalPages } = this.props;
+    const { isDisabled, isLeftPanelOpen, isLeftPanelDisabled, totalPages } = this.props;
     if (isDisabled) {
       return null;
     }
@@ -103,7 +118,7 @@ class PageNavOverlay extends React.PureComponent {
         <form onSubmit={this.onSubmit} onBlur={this.onBlur}>
           <input ref={this.textInput} type="text" value={this.state.input} onChange={this.onChange} tabIndex={-1} />
           {this.state.isCustomPageLabels
-            ? ` (${currentPage}/${totalPages})`
+            ? ` (${this.state.currentPage}/${totalPages})`
             : ` / ${totalPages}`
           }
         </form>
@@ -117,7 +132,6 @@ const mapStateToProps = state => ({
   isLeftPanelOpen: selectors.isElementOpen(state, 'leftPanel'),
   isDisabled: selectors.isElementDisabled(state, 'pageNavOverlay'),
   isOpen: selectors.isElementOpen(state, 'pageNavOverlay'),
-  currentPage: selectors.getCurrentPage(state),
   totalPages: selectors.getTotalPages(state),
   pageLabels: selectors.getPageLabels(state),
 });

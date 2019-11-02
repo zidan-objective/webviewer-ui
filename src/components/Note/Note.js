@@ -83,18 +83,17 @@ export default Note;
 // a component that contains the reply textarea, the reply button and the cancel button
 const ReplyArea = ({ annotation }) => {
   const [
-    isReadOnly,
     isReplyDisabled,
     isNoteEditingTriggeredByAnnotationPopup,
   ] = useSelector(
     state => [
-      selectors.isDocumentReadOnly(state),
       selectors.isElementDisabled(state, 'noteReply'),
       selectors.getIsNoteEditing(state),
     ],
     shallowEqual,
   );
   const { resize, isContentEditable, isSelected } = useContext(NoteContext);
+  const [isReadOnly, setIsReadOnly] = useState(core.getIsReadOnly());
   const [isFocused, setIsFocused] = useState(false);
   const [value, setValue] = useState('');
   const [t] = useTranslation();
@@ -119,6 +118,21 @@ const ReplyArea = ({ annotation }) => {
     }
   }, [isContentEditable, isNoteEditingTriggeredByAnnotationPopup, isSelected]);
 
+  useEffect(() => {
+    const onUpdateAnnotationPermission = () => {
+      setIsReadOnly(core.getIsReadOnly());
+    };
+
+    core.addEventListener(
+      'updateAnnotationPermission',
+      onUpdateAnnotationPermission,
+    );
+    return () =>
+      core.addEventListener(
+        'updateAnnotationPermission',
+        onUpdateAnnotationPermission,
+      );
+  });
 
   const postReply = e => {
     // prevent the textarea from blurring out

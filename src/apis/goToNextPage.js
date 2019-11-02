@@ -10,7 +10,7 @@ export default store => () => {
   );
 
   const state = store.getState();
-  const currentPage = selectors.getCurrentPage(state);
+  const currentPage = core.getCurrentPage();
 
   if (currentPage === selectors.getTotalPages(state)) {
     console.warn('you are at the last page');

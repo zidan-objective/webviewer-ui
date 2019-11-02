@@ -124,14 +124,6 @@ export const setFitMode = fitMode => ({
   type: 'SET_FIT_MODE',
   payload: { fitMode },
 });
-export const setCurrentPage = currentPage => ({
-  type: 'SET_CURRENT_PAGE',
-  payload: { currentPage },
-});
-export const setReadOnly = isReadOnly => ({
-  type: 'SET_READ_ONLY',
-  payload: { isReadOnly },
-});
 export const registerTool = tool => ({
   type: 'REGISTER_TOOL',
   payload: { ...tool },

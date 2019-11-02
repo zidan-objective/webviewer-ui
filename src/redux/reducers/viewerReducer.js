@@ -84,8 +84,6 @@ export default initialState => (state = initialState, action) => {
       return { ...state, isNoteEditing: payload.isNoteEditing };
     case 'SET_FIT_MODE':
       return { ...state, fitMode: payload.fitMode };
-    case 'SET_CURRENT_PAGE':
-      return { ...state, currentPage: payload.currentPage };
     case 'SET_SORT_STRATEGY':
       return { ...state, sortStrategy: payload.sortStrategy };
     case 'SET_NOTE_DATE_FORMAT':
@@ -142,8 +140,6 @@ export default initialState => (state = initialState, action) => {
     }
     case 'SET_TOOL_BUTTON_OBJECTS':
       return { ...state, toolButtonObjects: { ...payload.toolButtonObjects } };
-    case 'SET_READ_ONLY':
-      return { ...state, isReadOnly: payload.isReadOnly };
     case 'SET_CUSTOM_PANEL':
       return {
         ...state,

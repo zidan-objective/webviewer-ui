@@ -57,13 +57,9 @@ export const getNotePopupId = state => state.viewer.notePopupId;
 
 export const getFitMode = state => state.viewer.fitMode;
 
-export const getCurrentPage = state => state.viewer.currentPage;
-
 export const getSortStrategy = state => state.viewer.sortStrategy;
 
 export const getNoteDateFormat = state => state.viewer.noteDateFormat;
-
-export const isDocumentReadOnly = state => state.viewer.isReadOnly;
 
 export const getCustomPanels = state => state.viewer.customPanels;
 

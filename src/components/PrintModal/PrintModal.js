@@ -23,7 +23,6 @@ class PrintModal extends React.PureComponent {
   static propTypes = {
     isDisabled: PropTypes.bool,
     isOpen: PropTypes.bool,
-    currentPage: PropTypes.number,
     printQuality: PropTypes.number.isRequired,
     pageLabels: PropTypes.array.isRequired,
     closeElement: PropTypes.func.isRequired,
@@ -78,7 +77,8 @@ class PrintModal extends React.PureComponent {
   }
 
   onChange = () => {
-    const { currentPage, pageLabels } = this.props;
+    const currentPage = core.getCurrentPage();
+    const { pageLabels } = this.props;
     let pagesToPrint = [];
 
     if (this.allPages.current.checked) {
@@ -477,8 +477,6 @@ class PrintModal extends React.PureComponent {
       <React.Fragment>
         <WatermarkModal
           isVisible={this.state.isWatermarkModalVisible}
-          // pageIndex starts at index 0 and getCurrPage number starts at index 1
-          pageIndexToView={this.props.currentPage - 1}
           modalClosed={this.setWatermarkModalVisibility}
           formSubmitted={this.setWatermarkModalOption}
         />
@@ -576,7 +574,6 @@ class PrintModal extends React.PureComponent {
 const mapStateToProps = state => ({
   isDisabled: selectors.isElementDisabled(state, 'printModal'),
   isOpen: selectors.isElementOpen(state, 'printModal'),
-  currentPage: selectors.getCurrentPage(state),
   printQuality: selectors.getPrintQuality(state),
   pageLabels: selectors.getPageLabels(state),
   sortStrategy: selectors.getSortStrategy(state),

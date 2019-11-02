@@ -12,7 +12,6 @@ import './Thumbnail.scss';
 class Thumbnail extends React.PureComponent {
   static propTypes = {
     index: PropTypes.number.isRequired,
-    currentPage: PropTypes.number,
     pageLabels: PropTypes.array.isRequired,
     canLoad: PropTypes.bool.isRequired,
     onLoad: PropTypes.func.isRequired,
@@ -24,8 +23,10 @@ class Thumbnail extends React.PureComponent {
 
   constructor(props) {
     super(props);
+    this.state = {
+      currentPage: 1,
+    };
     this.thumbContainer = React.createRef();
-    this.onLayoutChangedHandler = this.onLayoutChanged.bind(this);
   }
 
   componentDidMount() {
@@ -33,6 +34,7 @@ class Thumbnail extends React.PureComponent {
 
     onLoad(index, this.thumbContainer.current);
     core.addEventListener('layoutChanged', this.onLayoutChangedHandler);
+    core.addEventListener('pageNumberUpdated', this.onPageNumberUpdated);
   }
 
   componentDidUpdate(prevProps) {
@@ -49,10 +51,11 @@ class Thumbnail extends React.PureComponent {
   componentWillUnmount() {
     const { onRemove, index } = this.props;
     core.removeEventListener('layoutChanged', this.onLayoutChangedHandler);
+    core.removeEventListener('pageNumberUpdated', this.onPageNumberUpdated);
     onRemove(index);
   }
 
-  onLayoutChanged(changes) {
+  onLayoutChanged = changes => {
     const { contentChanged, moved, added, removed } = changes;
     const { index } = this.props;
 
@@ -79,6 +82,12 @@ class Thumbnail extends React.PureComponent {
     }
   }
 
+  onPageNumberUpdated = pageNumber => {
+    this.setState({
+      currentPage: pageNumber,
+    });
+  }
+
   handleClick = () => {
     const { index, closeElement } = this.props;
 
@@ -90,8 +99,8 @@ class Thumbnail extends React.PureComponent {
   }
 
   render() {
-    const { index, currentPage, pageLabels } = this.props;
-    const isActive = currentPage === index + 1;
+    const { index, pageLabels } = this.props;
+    const isActive = this.state.currentPage === index + 1;
     const pageLabel = pageLabels[index];
 
     return (
@@ -104,7 +113,6 @@ class Thumbnail extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
-  currentPage: selectors.getCurrentPage(state),
   pageLabels: selectors.getPageLabels(state),
 });
 

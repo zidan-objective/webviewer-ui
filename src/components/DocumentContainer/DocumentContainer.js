@@ -24,7 +24,6 @@ class DocumentContainer extends React.PureComponent {
     isLeftPanelOpen: PropTypes.bool,
     isRightPanelOpen: PropTypes.bool,
     isSearchOverlayOpen: PropTypes.bool,
-    currentPage: PropTypes.number,
     totalPages: PropTypes.number,
     isHeaderOpen: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
@@ -115,7 +114,8 @@ class DocumentContainer extends React.PureComponent {
   };
 
   onKeyDown = e => {
-    const { currentPage, totalPages } = this.props;
+    const { totalPages } = this.props;
+    const currentPage = core.getCurrentPage();
     const { scrollTop, clientHeight, scrollHeight } = this.container.current;
     const reachedTop = scrollTop === 0;
     const reachedBottom =
@@ -150,7 +150,7 @@ class DocumentContainer extends React.PureComponent {
   };
 
   wheelToNavigatePages = e => {
-    const { currentPage, totalPages } = this.props;
+    const currentPage = core.getCurrentPage();
     const { scrollTop, scrollHeight, clientHeight } = this.container.current;
     const reachedTop = scrollTop === 0;
     const reachedBottom =
@@ -158,13 +158,13 @@ class DocumentContainer extends React.PureComponent {
 
     if (e.deltaY < 0 && reachedTop && currentPage > 1) {
       this.pageUp();
-    } else if (e.deltaY > 0 && reachedBottom && currentPage < totalPages) {
+    } else if (e.deltaY > 0 && reachedBottom && currentPage < this.props.totalPages) {
       this.pageDown();
     }
   };
 
   pageUp = () => {
-    const { currentPage } = this.props;
+    const currentPage = core.getCurrentPage();
     const { scrollHeight, clientHeight } = this.container.current;
     const newPage = currentPage - getNumberOfPagesToNavigate(core.getDisplayMode());
 
@@ -173,10 +173,10 @@ class DocumentContainer extends React.PureComponent {
   };
 
   pageDown = () => {
-    const { currentPage, totalPages } = this.props;
+    const currentPage = core.getCurrentPage();
     const newPage = currentPage + getNumberOfPagesToNavigate(core.getDisplayMode());
 
-    core.setCurrentPage(Math.min(newPage, totalPages));
+    core.setCurrentPage(Math.min(newPage, this.props.totalPages));
   };
 
   wheelToZoom = e => {
@@ -249,7 +249,6 @@ const mapStateToProps = state => ({
   isLeftPanelOpen: selectors.isElementOpen(state, 'leftPanel'),
   isRightPanelOpen: selectors.isElementOpen(state, 'searchPanel'),
   isSearchOverlayOpen: selectors.isElementOpen(state, 'searchOverlay'),
-  currentPage: selectors.getCurrentPage(state),
   isHeaderOpen:
     selectors.isElementOpen(state, 'header') &&
     !selectors.isElementDisabled(state, 'header'),

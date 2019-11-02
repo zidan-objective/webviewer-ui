@@ -64,7 +64,6 @@ class WatermarkModal extends React.PureComponent {
 
   static propTypes = {
     isVisible: PropTypes.bool,
-    pageIndexToView: PropTypes.number,
     modalClosed: PropTypes.func,
     formSubmitted: PropTypes.func,
     t: PropTypes.func.isRequired,
@@ -108,12 +107,13 @@ class WatermarkModal extends React.PureComponent {
   }
 
   addWatermarks = () => {
+    const pageIndex = core.getCurrentPage() - 1;
     const watermarkOptions = this.createWatermarks();
 
     core.setWatermark(watermarkOptions);
 
-    const pageHeight = core.getPageHeight(this.props.pageIndexToView);
-    const pageWidth = core.getPageWidth(this.props.pageIndexToView);
+    const pageHeight = core.getPageHeight(pageIndex);
+    const pageWidth = core.getPageWidth(pageIndex);
 
     const desiredZoomForWidth = DESIRED_WIDTH / pageWidth;
     const desiredZoomForHeight = DESIRED_HEIGHT / pageHeight;
@@ -121,7 +121,7 @@ class WatermarkModal extends React.PureComponent {
     const desiredZoom = Math.min(desiredZoomForHeight, desiredZoomForWidth);
 
     core.getDocument().loadCanvasAsync({
-      pageIndex: this.props.pageIndexToView,
+      pageIndex,
       zoom: desiredZoom,
       drawComplete: canvas => {
         const nodes = this.canvasContainerRef.current.childNodes;

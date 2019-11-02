@@ -13,7 +13,6 @@ import actions from 'actions';
 const {
   hideAnnotationPanel,
   a: enableAnnotations,
-  readonly: enableReadOnlyMode,
 } = getHashParams();
 
 export default {
@@ -167,9 +166,7 @@ export default {
     notePopupId: '',
     isNoteEditing: false,
     fitMode: '',
-    currentPage: 1,
     sortStrategy: 'position',
-    isReadOnly: enableReadOnlyMode,
     customPanels: [],
     useEmbeddedPrint: false,
     pageLabels: [],

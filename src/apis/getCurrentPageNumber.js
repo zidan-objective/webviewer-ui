@@ -1,12 +1,12 @@
 import warnDeprecatedAPI from 'helpers/warnDeprecatedAPI';
-import selectors from 'selectors';
+import core from 'core';
 
-export default store => () => {
+export default () => {
   warnDeprecatedAPI(
     'getCurrentPageNumber',
     'docViewer.getCurrentPage',
     '7.0',
   );
 
-  return selectors.getCurrentPage(store.getState());
+  return core.getCurrentPage();
 };

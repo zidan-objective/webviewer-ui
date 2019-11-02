@@ -22,6 +22,5 @@ export default store => () => {
     dispatch(actions.enableElements(elements, PRIORITY_ONE));
   }
 
-  dispatch(actions.setReadOnly(core.getIsReadOnly()));
   core.drawAnnotationsFromList(core.getSelectedAnnotations());
 };
