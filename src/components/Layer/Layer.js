@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -17,26 +17,30 @@ const Layer = ({ layer, parentLayer, updateLayer }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const unCheckChildren = layer => {
+    const newLayer = { ...layer };
+
     layer.children?.forEach((childLayer, i) => {
-      childLayer.visible = false;
-      childLayer = unCheckChildren(childLayer);
-      layer.children[i] = childLayer;
+      let newChildLayer = { ...childLayer };
+      newChildLayer.visible = false;
+      newChildLayer = unCheckChildren(newChildLayer);
+      newLayer.children[i] = newChildLayer;
     });
 
-    return layer;
+    return newLayer;
   };
 
   const onChange = e => {
-    if (e.target.checked && !parentLayer?.visible) {
+    if (e.target.checked && parentLayer && !parentLayer.visible) {
       window.alert(
         'This layer has been disabled because its parent layer is disabled.',
       );
     } else {
-      layer.visible = e.target.checked;
+      let newLayer = { ...layer };
+      newLayer.visible = e.target.checked;
       if (!e.target.checked) {
-        layer = unCheckChildren(layer);
+        newLayer = unCheckChildren(newLayer);
       }
-      updateLayer(layer);
+      updateLayer(newLayer);
     }
   };
 
@@ -52,7 +56,7 @@ const Layer = ({ layer, parentLayer, updateLayer }) => {
                 arrow: true,
                 expanded: isExpanded,
               })}
-              onClick={setIsExpanded(!isExpanded)}
+              onClick={() => setIsExpanded(!isExpanded)}
             >
               <Icon glyph="ic_chevron_right_black_24px" />
             </div>
@@ -74,8 +78,12 @@ const Layer = ({ layer, parentLayer, updateLayer }) => {
               layer={subLayer}
               parentLayer={layer}
               updateLayer={modifiedSubLayer => {
-                layer.children[i] = modifiedSubLayer;
-                updateLayer(layer);
+                const children = [...layer.children];
+                children[i] = modifiedSubLayer;
+                const newLayer = { ...layer };
+                newLayer.children = children;
+
+                updateLayer(newLayer);
               }}
             />
           ))}
@@ -87,4 +95,4 @@ const Layer = ({ layer, parentLayer, updateLayer }) => {
 
 Layer.propTypes = propTypes;
 
-export default React.memo(Layer);
+export default Layer;

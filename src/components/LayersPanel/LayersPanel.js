@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import Layer from 'components/Layer';
 
+import core from 'core';
 import useLayers from 'hooks/useLayers';
 import selectors from 'selectors';
 
@@ -18,8 +19,6 @@ const LayersPanel = ({ display }) => {
     selectors.isElementDisabled(state, 'layersPanel'),
   );
   const [layers, setLayers] = useLayers();
-
-  console.log(layers);
 
   return isDisabled || layers.length === 0 ? null : (
     <div
@@ -36,6 +35,10 @@ const LayersPanel = ({ display }) => {
             const newLayers = [...layers];
             newLayers[i] = modifiedSubLayer;
             setLayers(newLayers);
+
+            core.getDocument().setLayersArray(newLayers);
+            window.docViewer.refreshAll();
+            window.docViewer.updateView();
           }}
         />
       ))}
