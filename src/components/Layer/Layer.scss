@@ -13,13 +13,10 @@
 
     .arrow {
       transition: transform .1s ease;
+      transform: none;
       
       &.expanded {
         transform: rotate(90deg);
-      }
-
-      &.collapsed {
-        transform: none;
       }
 
       &:hover {

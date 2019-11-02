@@ -102,7 +102,7 @@ const ResizeBar = () => {
 
     document.addEventListener('mousemove', dragMouseMove);
     return () => document.removeEventListener('mousemove', dragMouseMove);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const finishDrag = () => {

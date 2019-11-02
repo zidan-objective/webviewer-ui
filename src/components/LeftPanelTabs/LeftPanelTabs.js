@@ -1,97 +1,76 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import Button from 'components/Button';
 import Element from 'components/Element';
 
+import useLayers from 'hooks/useLayers';
 import actions from 'actions';
 import selectors from 'selectors';
 
 import './LeftPanelTabs.scss';
 
-class LeftPanelTabs extends React.Component {
-  static propTypes = {
-    activePanel: PropTypes.string.isRequired,
-    disabledCustomPanelTabs: PropTypes.array.isRequired,
-    customPanels: PropTypes.array.isRequired,
-    isLeftPanelTabsDisabled: PropTypes.bool,
-    setActiveLeftPanel: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired,
-  };
+const LeftPanelTabs = () => {
+  const [isDisabled, activePanel, customPanels] = useSelector(
+    state => [
+      selectors.isElementDisabled(state, 'leftPanelTabs'),
+      selectors.getActiveLeftPanel(state),
+      selectors.getCustomPanels(state),
+    ],
+    shallowEqual,
+  );
+  const dispatch = useDispatch();
+  const [layers] = useLayers();
 
-  isActive = panel => this.props.activePanel === panel;
+  const isActive = panel => activePanel === panel;
 
-  render() {
-    const {
-      customPanels,
-      isLeftPanelTabsDisabled,
-      setActiveLeftPanel,
-    } = this.props;
-
-    if (isLeftPanelTabsDisabled) {
-      return null;
-    }
-
-    return (
-      <Element className="LeftPanelTabs" dataElement="leftPanelTabs">
+  return isDisabled ? null : (
+    <Element className="LeftPanelTabs" dataElement="leftPanelTabs">
+      <Button
+        isActive={isActive('thumbnailsPanel')}
+        dataElement="thumbnailsPanelButton"
+        img="ic_thumbnails_black_24px"
+        onClick={() => dispatch(actions.setActiveLeftPanel('thumbnailsPanel'))}
+        title="component.thumbnailsPanel"
+      />
+      <Button
+        isActive={isActive('outlinesPanel')}
+        dataElement="outlinesPanelButton"
+        img="ic_outline_black_24px"
+        onClick={() => dispatch(actions.setActiveLeftPanel('outlinesPanel'))}
+        title="component.outlinesPanel"
+      />
+      <Button
+        isActive={isActive('notesPanel')}
+        dataElement="notesPanelButton"
+        img="ic_annotations_black_24px"
+        onClick={() => dispatch(actions.setActiveLeftPanel('notesPanel'))}
+        title="component.notesPanel"
+      />
+      {layers.length > 0 && (
         <Button
-          isActive={this.isActive('thumbnailsPanel')}
-          dataElement="thumbnailsPanelButton"
-          img="ic_thumbnails_black_24px"
-          onClick={() => setActiveLeftPanel('thumbnailsPanel')}
-          title="component.thumbnailsPanel"
-        />
-        <Button
-          isActive={this.isActive('outlinesPanel')}
-          dataElement="outlinesPanelButton"
-          img="ic_outline_black_24px"
-          onClick={() => setActiveLeftPanel('outlinesPanel')}
-          title="component.outlinesPanel"
-        />
-        <Button
-          isActive={this.isActive('notesPanel')}
-          dataElement="notesPanelButton"
-          img="ic_annotations_black_24px"
-          onClick={() => setActiveLeftPanel('notesPanel')}
-          title="component.notesPanel"
-        />
-        <Button
-          isActive={this.isActive('layersPanel')}
+          isActive={isActive('layersPanel')}
           dataElement="layersPanelButton"
           img="ic_layers_24px"
-          onClick={() => setActiveLeftPanel('layersPanel')}
+          onClick={() => dispatch(actions.setActiveLeftPanel('layersPanel'))}
           title="component.layersPanel"
         />
+      )}
 
-        {customPanels.map(({ panel, tab }, index) => (
-          <Button
-            key={tab.dataElement || index}
-            isActive={this.isActive(panel.dataElement)}
-            dataElement={tab.dataElement}
-            img={tab.img}
-            onClick={() => setActiveLeftPanel(panel.dataElement)}
-            title={tab.title}
-          />
-        ))}
-      </Element>
-    );
-  }
-}
-
-const mapStateToProps = state => ({
-  activePanel: selectors.getActiveLeftPanel(state),
-  customPanels: selectors.getCustomPanels(state),
-  disabledCustomPanelTabs: selectors.getDisabledCustomPanelTabs(state),
-  isLeftPanelTabsDisabled: selectors.isElementDisabled(state, 'leftPanelTabs'),
-});
-
-const mapDispatchToProps = {
-  setActiveLeftPanel: actions.setActiveLeftPanel,
+      {customPanels.map(({ panel, tab }, index) => (
+        <Button
+          key={tab.dataElement || index}
+          isActive={isActive(panel.dataElement)}
+          dataElement={tab.dataElement}
+          img={tab.img}
+          onClick={() =>
+            dispatch(actions.setActiveLeftPanel(panel.dataElement))
+          }
+          title={tab.title}
+        />
+      ))}
+    </Element>
+  );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withTranslation()(LeftPanelTabs));
+export default React.memo(LeftPanelTabs);

@@ -61,9 +61,4 @@ export default store => {
     // we could potentially improve the 'hidden' property in the future.
     dispatch(actions.disableElement('textSelectButton', PRIORITY_THREE));
   }
-
-  // disable layersPanel by default, it will be enabled in onDocumentLoaded.js
-  dispatch(
-    actions.disableElements(['layersPanel', 'layersPanelButton'], PRIORITY_ONE),
-  );
 };

@@ -37,19 +37,6 @@ export default dispatch => () => {
   });
 
   const doc = core.getDocument();
-  if (!doc.isWebViewerServerDocument()) {
-    doc.getLayersArray().then(layers => {
-      if (layers.length === 0) {
-        dispatch(actions.disableElement('layersPanel', PRIORITY_ONE));
-        dispatch(actions.disableElement('layersPanelButton', PRIORITY_ONE));
-      } else {
-        dispatch(actions.enableElement('layersPanel', PRIORITY_ONE));
-        dispatch(actions.enableElement('layersPanelButton', PRIORITY_ONE));
-        dispatch(actions.setLayers(layers));
-      }
-    });
-  }
-
   if (doc.getType() === workerTypes.PDF) {
     dispatch(actions.enableElement('cropToolButton', PRIORITY_THREE));
   } else {

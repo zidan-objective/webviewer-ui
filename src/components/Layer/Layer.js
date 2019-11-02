@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 import Icon from 'components/Icon';
@@ -6,102 +7,84 @@ import Input from 'components/Input';
 
 import './Layer.scss';
 
-class Layer extends React.PureComponent {
-  static propTypes = {
-    layer: PropTypes.object.isRequired,
-    parentLayer: PropTypes.object,
-    updateLayer: PropTypes.func.isRequired,
-  };
+const propTypes = {
+  layer: PropTypes.object.isRequired,
+  parentLayer: PropTypes.object,
+  updateLayer: PropTypes.func.isRequired,
+};
 
-  state = {
-    isExpanded: false,
-  };
+const Layer = ({ layer, parentLayer, updateLayer }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  unCheckChildren = (layer) => {
-    // new references for redux state
-    const newLayer = {...layer};
-    layer.children && layer.children.forEach((childLayer, i) => {
-      let newChildLayer = {...childLayer};
-      newChildLayer.visible = false;
-      newChildLayer = this.unCheckChildren(newChildLayer);
-      newLayer.children[i] = newChildLayer;
+  const unCheckChildren = layer => {
+    layer.children?.forEach((childLayer, i) => {
+      childLayer.visible = false;
+      childLayer = unCheckChildren(childLayer);
+      layer.children[i] = childLayer;
     });
-    return newLayer;
-  }
 
-  onChange = e => {
-    const { updateLayer, layer, parentLayer } = this.props;
+    return layer;
+  };
 
-    if (e.target.checked === true && parentLayer && !parentLayer.visible) {
-      window.alert('This layer has been disabled because its parent layer is disabled.');
+  const onChange = e => {
+    if (e.target.checked && !parentLayer?.visible) {
+      window.alert(
+        'This layer has been disabled because its parent layer is disabled.',
+      );
     } else {
-      // new references for redux state
-      let newLayer = {...layer};
-      newLayer.visible = e.target.checked;
-      if (e.target.checked === false) {
-        newLayer = this.unCheckChildren(newLayer);
+      layer.visible = e.target.checked;
+      if (!e.target.checked) {
+        layer = unCheckChildren(layer);
       }
-      updateLayer(newLayer);
+      updateLayer(layer);
     }
   };
 
-  onClickExpand = () => {
-    this.setState(prevState => ({
-      isExpanded: !prevState.isExpanded,
-    }));
-  };
+  const hasSubLayers = layer.children.length > 0;
 
-  render() {
-    const { isExpanded } = this.state;
-    const { layer, updateLayer } = this.props;
-    const hasSubLayers = layer.children.length > 0;
-
-    return (
-      <div className="Layer">
-        <div className="layer-wrapper">
-          <div className="padding">
-            {hasSubLayers && (
-              <div
-                className={`arrow ${
-                  isExpanded ? 'expanded' : 'collapsed'
-                }`}
-                onClick={this.onClickExpand}
-              >
-                <Icon glyph="ic_chevron_right_black_24px" />
-              </div>
-            )}
-          </div>
-          <Input
-            id={layer.name}
-            type="checkbox"
-            label={layer.name}
-            onChange={this.onChange}
-            checked={layer.visible}
-          />
+  return (
+    <div className="Layer">
+      <div className="layer-wrapper">
+        <div className="padding">
+          {hasSubLayers && (
+            <div
+              className={classNames({
+                arrow: true,
+                expanded: isExpanded,
+              })}
+              onClick={setIsExpanded(!isExpanded)}
+            >
+              <Icon glyph="ic_chevron_right_black_24px" />
+            </div>
+          )}
         </div>
-        {hasSubLayers && isExpanded && (
-          <div className="sub-layers">
-            {layer.children.map((subLayer, i) => (
-              <Layer
-                key={i}
-                layer={subLayer}
-                parentLayer={layer}
-                updateLayer={(modifiedSubLayer) => {
-                  // new references for redux state
-                  const children = [...layer.children];
-                  children[i] = modifiedSubLayer;
-                  const newLayer = {...layer};
-                  newLayer.children = children;
-
-                  updateLayer(newLayer);
-                }}
-              />
-            ))}
-          </div>
-        )}
+        <Input
+          id={layer.name}
+          type="checkbox"
+          label={layer.name}
+          onChange={onChange}
+          checked={layer.visible}
+        />
       </div>
-    );
-  }
-}
+      {hasSubLayers && isExpanded && (
+        <div className="sub-layers">
+          {layer.children.map((subLayer, i) => (
+            <Layer
+              key={i}
+              layer={subLayer}
+              parentLayer={layer}
+              updateLayer={modifiedSubLayer => {
+                layer.children[i] = modifiedSubLayer;
+                updateLayer(layer);
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
-export default Layer;
+Layer.propTypes = propTypes;
+
+export default React.memo(Layer);
