@@ -6,8 +6,6 @@ export default initialState => (state = initialState, action) => {
       return { ...state, totalPages: payload.totalPages };
     case 'SET_OUTLINES':
       return { ...state, outlines: payload.outlines };
-    case 'SET_LAYERS':
-      return { ...state, layers: payload.layers };
     case 'SET_PASSWORD_ATTEMPTS':
       return { ...state, passwordAttempts: payload.attempt };
     case 'SET_PRINT_QUALITY':

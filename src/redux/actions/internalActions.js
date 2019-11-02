@@ -177,10 +177,6 @@ export const setOutlines = outlines => ({
   type: 'SET_OUTLINES',
   payload: { outlines },
 });
-export const setLayers = layers => ({
-  type: 'SET_LAYERS',
-  payload: { layers },
-});
 export const setPasswordAttempts = attempt => ({
   type: 'SET_PASSWORD_ATTEMPTS',
   payload: { attempt },

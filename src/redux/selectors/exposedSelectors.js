@@ -125,8 +125,6 @@ export const getTotalPages = state => state.document.totalPages;
 
 export const getOutlines = state => state.document.outlines;
 
-export const getLayers = state => state.document.layers;
-
 export const getLoadingProgress = state => state.document.loadingProgress;
 
 // search
