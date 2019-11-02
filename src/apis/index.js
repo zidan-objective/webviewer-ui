@@ -112,7 +112,6 @@ import textPopup from './textPopup';
 import toggleElement from './toggleElement';
 import toggleFullScreen from './toggleFullScreen';
 import unregisterTool from './unregisterTool';
-import updateOutlines from './updateOutlines';
 import updateTool from './updateTool';
 import useEmbeddedPrint from './useEmbeddedPrint';
 import setMeasurementUnits from './setMeasurementUnits';
@@ -241,7 +240,6 @@ export default store => {
     i18n: i18next,
     setColorPalette: setColorPalette(store),
     showWarningMessage: showWarningMessage(store),
-    updateOutlines: updateOutlines(store),
     getCustomData: () => getHashParams().custom || null,
     getBBAnnotManager: getBBAnnotManager(store),
     selectors: getSelectors(store),

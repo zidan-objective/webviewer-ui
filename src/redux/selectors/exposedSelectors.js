@@ -123,8 +123,6 @@ export const getPrintQuality = state => state.document.printQuality;
 
 export const getTotalPages = state => state.document.totalPages;
 
-export const getOutlines = state => state.document.outlines;
-
 export const getLoadingProgress = state => state.document.loadingProgress;
 
 // search

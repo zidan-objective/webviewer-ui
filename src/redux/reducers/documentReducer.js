@@ -4,8 +4,6 @@ export default initialState => (state = initialState, action) => {
   switch (type) {
     case 'SET_TOTAL_PAGES':
       return { ...state, totalPages: payload.totalPages };
-    case 'SET_OUTLINES':
-      return { ...state, outlines: payload.outlines };
     case 'SET_PASSWORD_ATTEMPTS':
       return { ...state, passwordAttempts: payload.attempt };
     case 'SET_PRINT_QUALITY':

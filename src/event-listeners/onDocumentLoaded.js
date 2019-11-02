@@ -32,10 +32,6 @@ export default dispatch => () => {
     enableAnnotations,
   });
 
-  core.getOutlines(outlines => {
-    dispatch(actions.setOutlines(outlines));
-  });
-
   const doc = core.getDocument();
   if (doc.getType() === workerTypes.PDF) {
     dispatch(actions.enableElement('cropToolButton', PRIORITY_THREE));

@@ -173,10 +173,6 @@ export const setTotalPages = totalPages => ({
   type: 'SET_TOTAL_PAGES',
   payload: { totalPages },
 });
-export const setOutlines = outlines => ({
-  type: 'SET_OUTLINES',
-  payload: { outlines },
-});
 export const setPasswordAttempts = attempt => ({
   type: 'SET_PASSWORD_ATTEMPTS',
   payload: { attempt },

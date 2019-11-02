@@ -1,48 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import Outline from 'components/Outline';
 
-import getClassName from 'helpers/getClassName';
+import core from 'core';
 import selectors from 'selectors';
 
 import './OutlinesPanel.scss';
 
-class OutlinesPanel extends React.PureComponent {
-  static propTypes = {
-    outlines: PropTypes.arrayOf(PropTypes.object),
-    display: PropTypes.string.isRequired,
-    isDisabled: PropTypes.bool,
-    t: PropTypes.func.isRequired,
-  }
+const propTypes = {
+  display: PropTypes.string.isRequired,
+};
 
-  render() {
-    const { isDisabled, outlines, t, display } = this.props;
+const OutlinesPanel = ({ display }) => {
+  const isDisabled = useSelector(state =>
+    selectors.isElementDisabled(state, 'outlinePanel'),
+  );
+  const [t] = useTranslation();
+  const [outlines, setOutlines] = useState([]);
 
-    if (isDisabled) {
-      return null;
-    }
+  useEffect(() => {
+    const onDocumentLoaded = () => {
+      core.getOutlines(setOutlines);
+    };
 
-    const className = getClassName('Panel OutlinesPanel', this.props);
+    const onDocumentUnLoaded = () => {
+      setOutlines([]);
+    };
 
-    return (
-      <div className={className} style={{ display }} data-element="outlinesPanel">
-        {outlines.length === 0 &&
-          <div className="no-outlines">{t('message.noOutlines')}</div>
-        }
-        {outlines.map((outline, i) => (
-          <Outline key={i} outline={outline} isVisible />
-        ))}
-      </div>
-    );
-  }
-}
+    core.addEventListener('documentLoaded', onDocumentLoaded);
+    core.addEventListener('documentUnloaded', onDocumentUnLoaded);
+    return () => {
+      core.removeEventListener('documentLoaded', onDocumentLoaded);
+      core.removeEventListener('documentUnloaded', onDocumentUnLoaded);
+    };
+  }, []);
 
-const mapStateToProps = state => ({
-  outlines: selectors.getOutlines(state),
-  isDisabled: selectors.isElementDisabled(state, 'outlinePanel'),
-});
+  return isDisabled ? null : (
+    <div
+      className="Panel OutlinesPanel"
+      style={{ display }}
+      data-element="outlinesPanel"
+    >
+      {outlines.length === 0 && (
+        <div className="no-outlines">{t('message.noOutlines')}</div>
+      )}
+      {outlines.map((outline, i) => (
+        <Outline key={i} outline={outline} isVisible />
+      ))}
+    </div>
+  );
+};
 
-export default connect(mapStateToProps)(withTranslation()(OutlinesPanel));
+OutlinesPanel.propTypes = propTypes;
+
+export default OutlinesPanel;
