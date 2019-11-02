@@ -201,7 +201,6 @@ export default {
   },
   document: {
     totalPages: 0,
-    outlines: [],
     printQuality: 1,
     passwordAttempts: -1,
     loadingProgress: 0,
