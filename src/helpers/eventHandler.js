@@ -13,11 +13,11 @@ export default store => {
   const onToolUpdated = eventListeners.onToolUpdated(dispatch);
   const onToolModeUpdated = eventListeners.onToolModeUpdated(dispatch);
   const onZoomUpdated = eventListeners.onZoomUpdated();
-  const onPageNumberUpdated = eventListeners.onPageNumberUpdated(dispatch);
+  const onPageNumberUpdated = eventListeners.onPageNumberUpdated();
   const onUpdateAnnotationPermission = eventListeners.onUpdateAnnotationPermission(store);
   const onAnnotationChanged = eventListeners.onAnnotationChanged(dispatch);
   const onStampAnnotationAdded = eventListeners.onStampAnnotationAdded(dispatch);
-  const onSignatureAnnotationAdded = eventListeners.onSignatureAnnotationAdded(dispatch);
+  const onSignatureAnnotationAdded = eventListeners.onSignatureAnnotationAdded();
   const onStickyAnnotationAdded = eventListeners.onStickyAnnotationAdded(store);
   const onLayoutChanged = eventListeners.onLayoutChanged(dispatch);
   const onLocationSelected = eventListeners.onLocationSelected(store);
@@ -63,6 +63,7 @@ export default store => {
       core.getTool('AnnotationCreateStamp').off('annotationAdded', onStampAnnotationAdded);
       core.getTool('AnnotationCreateSticky').off('annotationAdded', onStickyAnnotationAdded);
       core.getTool('AnnotationCreateSignature').off('locationSelected', onLocationSelected);
+      core.getTool('AnnotationCreateSignature').off('annotationAdded', onSignatureAnnotationAdded);
       hotkeysManager.off();
     },
   };

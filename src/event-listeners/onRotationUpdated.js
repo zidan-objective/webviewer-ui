@@ -1,8 +1,5 @@
-import actions from 'actions';
 import fireEvent from 'helpers/fireEvent';
 
-export default dispatch => rotation => {
-  dispatch(actions.setRotation(rotation));
-
+export default () => rotation => {
   fireEvent('rotationChanged', [rotation]);
 };
