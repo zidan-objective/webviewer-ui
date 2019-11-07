@@ -77,7 +77,7 @@ class MeasurementOverlay extends React.PureComponent {
     }
   };
 
-  onAnnotationSelected = (e, annotations, action) => {
+  onAnnotationSelected = (annotations, action) => {
     const { openElement, closeElement } = this.props;
 
     if (
@@ -95,7 +95,7 @@ class MeasurementOverlay extends React.PureComponent {
     }
   };
 
-  onAnnotationChanged = (e, annotations, action) => {
+  onAnnotationChanged = (annotations, action) => {
     // measurement overlay will open and show the annotation information when we are creating an annotation using measurement tools
     // since by default we don't auto select an annotation after it's created, we close the overlay here to avoid the confusion
     // where no annotation is selected but measurement overlay shows the information about the annotation we were creating
@@ -112,9 +112,6 @@ class MeasurementOverlay extends React.PureComponent {
       annotations.length === 1 &&
       annotations[0] === this.state.annotation
     ) {
-      // a style change won't result in a adjustRect call,
-      // so we call it here manually to update the content of the annotation to display the correct measurement
-      this.state.annotation.adjustRect();
       this.forceUpdate();
     }
   };

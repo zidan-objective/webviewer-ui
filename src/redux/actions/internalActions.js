@@ -172,6 +172,13 @@ export const setHeaderItems = (header, headerItems) => ({
   type: 'SET_HEADER_ITEMS',
   payload: { header, headerItems },
 });
+export const setPopupItems = (dataElement, items) => ({
+  type: 'SET_POPUP_ITEMS',
+  payload: {
+    dataElement,
+    items,
+  },
+});
 export const setColorPalette = (colorMapKey, colorPalette) => ({
   type: 'SET_COLOR_PALETTE',
   payload: { colorMapKey, colorPalette },
@@ -187,6 +194,10 @@ export const setColorMap = colorMap => ({
 export const setLeftPanelWidth = width => ({
   type: 'SET_LEFT_PANEL_WIDTH',
   payload: { width },
+});
+export const disableReplyForAnnotations = func => ({
+  type: 'SET_REPLY_DISABLED_FUNC',
+  payload: { func },
 });
 
 // document
@@ -225,6 +236,10 @@ export const setTotalPages = totalPages => ({
 export const setOutlines = outlines => ({
   type: 'SET_OUTLINES',
   payload: { outlines },
+});
+export const setLayers = layers => ({
+  type: 'SET_LAYERS',
+  payload: { layers },
 });
 export const setCheckPasswordFunction = func => ({
   type: 'SET_CHECKPASSWORD',

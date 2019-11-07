@@ -4,6 +4,10 @@ import actions from 'actions';
 import core from 'core';
 
 export default (dispatch, isEmbedPrintSupported) => {
+  if (!core.getDocument()) {
+    return;
+  }
+
   const bbURLPromise = core.getPrintablePDF();
 
   if (bbURLPromise) {
@@ -22,26 +26,28 @@ export default (dispatch, isEmbedPrintSupported) => {
   }
 };
 
-const printPdf = () => {
-  const xfdfString = core.exportAnnotations();
-  const printDocument = true;
-  return new Promise(resolve => {
-    core
+const printPdf = () =>
+  core.exportAnnotations().then(xfdfString => {
+    const printDocument = true;
+    return core
       .getDocument()
       .getFileData({ xfdfString, printDocument })
       .then(data => {
         const arr = new Uint8Array(data);
         const blob = new Blob([arr], { type: 'application/pdf' });
 
-        var printHandler = document.getElementById('print-handler');
+        const printHandler = document.getElementById('print-handler');
         printHandler.src = URL.createObjectURL(blob);
 
-        var loadListener = function() {
-          printHandler.contentWindow.print();
-          printHandler.removeEventListener('load', loadListener);
-          resolve();
-        };
-        printHandler.addEventListener('load', loadListener);
+        return new Promise(resolve => {
+          const loadListener = function() {
+            printHandler.contentWindow.print();
+            printHandler.removeEventListener('load', loadListener);
+
+            resolve();
+          };
+
+          printHandler.addEventListener('load', loadListener);
+        });
       });
   });
-};

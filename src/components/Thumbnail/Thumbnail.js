@@ -52,14 +52,19 @@ class Thumbnail extends React.PureComponent {
     onRemove(index);
   }
 
-  onLayoutChanged(e, changes) {
-    const { contentChanged } = changes;
+  onLayoutChanged(changes) {
+    const { contentChanged, moved, added, removed } = changes;
     const { index } = this.props;
 
     const currentPage = index + 1;
-    const didLayoutChange = contentChanged.some(changedPage => `${currentPage}` === changedPage);
+    const currentPageStr = `${currentPage}`;
 
-    if (didLayoutChange) {
+    const isPageAdded = added.indexOf(currentPage) > -1;
+    const didPageChange = contentChanged.some(changedPage => currentPageStr === changedPage);
+    const didPageMove = Object.keys(moved).some(movedPage => currentPageStr === movedPage);
+    const isPageRemoved = removed.indexOf(currentPage) > -1;
+
+    if (isPageAdded || didPageChange || didPageMove || isPageRemoved) {
       const { thumbContainer } = this;
       const { current } = thumbContainer;
 
@@ -68,7 +73,7 @@ class Thumbnail extends React.PureComponent {
         current.removeChild(current.querySelector('.page-image'));
         current.appendChild(thumb);
         if (this.props.updateAnnotations) {
-          this.props.updateAnnotations(index, thumb);
+          this.props.updateAnnotations(index);
         }
       });
     }

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import ToggleElementOverlay from 'components/ToggleElementOverlay';
+import SignatureToolButton from 'components/SignatureToolButton';
 
 import core from 'core';
 import getHashParams from 'helpers/getHashParams';
@@ -13,7 +14,6 @@ import actions from 'actions';
 export default {
   viewer: {
     disabledElements: {},
-    disabledFeatures: {},
     openElements: {
       header: true,
     },
@@ -39,8 +39,13 @@ export default {
         { type: 'toolGroupButton', toolGroup: 'freeHandTools', dataElement: 'freeHandToolGroupButton', title: 'component.freehandToolsButton', hidden: ['tablet', 'mobile'] },
         { type: 'toolGroupButton', toolGroup: 'textTools', dataElement: 'textToolGroupButton', title: 'component.textToolsButton', hidden: ['tablet', 'mobile'] },
         { type: 'toolGroupButton', toolGroup: 'shapeTools', dataElement: 'shapeToolGroupButton', title: 'component.shapeToolsButton', hidden: ['tablet', 'mobile'] },
-        { type: 'toolButton', img: 'ic_annotation_eraser_black_24px', toolName: 'AnnotationEraserTool', dataElement: 'eraserToolButton', title: 'annotation.eraser' },
-        { type: 'statefulButton', dataElement: 'signatureToolButton', hidden: ['tablet', 'mobile'] },
+        { type: 'toolButton', toolName: 'AnnotationEraserTool', hidden: ['tablet', 'mobile'] },
+        {
+          type: 'customElement',
+          render: () => <SignatureToolButton />,
+          dataElement: 'signatureToolButton',
+          hidden: ['tablet', 'mobile'],
+        },
         { type: 'toggleElementButton', toolName: 'AnnotationCreateRedaction', className: 'redactHeader', dataElement: 'redactionButton', element: 'redactionOverlay', img: 'ic_annotation_add_redact_black_24px', title: 'component.redaction', hidden: ['tablet', 'mobile'] },
         { type: 'toolButton', toolName: 'AnnotationCreateFreeText', hidden: ['tablet', 'mobile'] },
         { type: 'toolButton', toolName: 'AnnotationCreateSticky', hidden: ['tablet', 'mobile'] },
@@ -65,11 +70,16 @@ export default {
         { type: 'toolGroupButton', toolGroup: 'freeHandTools', dataElement: 'freeHandToolGroupButton', title: 'component.freehandToolsButton' },
         { type: 'toolGroupButton', toolGroup: 'textTools', dataElement: 'textToolGroupButton', title: 'component.textToolsButton' },
         { type: 'toolGroupButton', toolGroup: 'shapeTools', dataElement: 'shapeToolGroupButton', title: 'component.shapeToolsButton' },
-        { type: 'statefulButton', dataElement: 'signatureToolButton' },
+        {
+          type: 'customElement',
+          render: () => <SignatureToolButton />,
+          dataElement: 'signatureToolButton',
+        },
         { type: 'toolGroupButton', toolGroup: 'measurementTools', dataElement: 'measurementToolGroupButton', title: 'component.measurementToolsButton' },
         { type: 'toggleElementButton', toolName: 'AnnotationCreateRedaction', className: 'redactHeader', dataElement: 'redactionButton', element: 'redactionOverlay', img: 'ic_annotation_add_redact_black_24px', title: 'component.redaction' },
         { type: 'toolButton', toolName: 'AnnotationCreateFreeText' },
         { type: 'toolButton', toolName: 'AnnotationCreateSticky' },
+        { type: 'toolButton', toolName: 'AnnotationEraserTool' },
         { type: 'toolGroupButton', toolGroup: 'miscTools', img: 'ic_more_black_24px', dataElement: 'miscToolGroupButton', title: 'component.miscToolsButton' },
         { type: 'spacer' },
         {
@@ -85,6 +95,30 @@ export default {
         },
       ],
     },
+    annotationPopup: [
+      { dataElement: 'annotationCommentButton' },
+      { dataElement: 'annotationStyleEditButton' },
+      { dataElement: 'annotationRedactButton' },
+      { dataElement: 'annotationCropButton' },
+      { dataElement: 'annotationGroupButton' },
+      { dataElement: 'annotationUngroupButton' },
+      { dataElement: 'annotationDeleteButton' },
+    ],
+    textPopup: [
+      { dataElement: 'copyTextButton' },
+      { dataElement: 'textHighlightToolButton' },
+      { dataElement: 'textUnderlineToolButton' },
+      { dataElement: 'textSquigglyToolButton' },
+      { dataElement: 'textStrikeoutToolButton' },
+      { dataElement: 'textRedactToolButton' },
+    ],
+    contextMenuPopup: [
+      { dataElement: 'panToolButton' },
+      { dataElement: 'stickyToolButton' },
+      { dataElement: 'highlightToolButton' },
+      { dataElement: 'freeHandToolButton' },
+      { dataElement: 'freeTextToolButton' },
+    ],
     toolButtonObjects: {
       AnnotationCreateDistanceMeasurement: { dataElement: 'distanceMeasurementToolButton', title: 'annotation.distanceMeasurement', img: 'ic_annotation_distance_black_24px', group: 'measurementTools', showColor: 'active' },
       AnnotationCreatePerimeterMeasurement: { dataElement: 'perimeterMeasurementToolButton', title: 'annotation.perimeterMeasurement', img: 'ic_annotation_perimeter_black_24px', group: 'measurementTools', showColor: 'active' },
@@ -118,11 +152,12 @@ export default {
       TextSelect: { dataElement: 'textSelectButton', img: 'textselect_cursor', showColor: 'never' },
       MarqueeZoomTool: { dataElement: 'marqueeToolButton', showColor: 'never' },
       AnnotationEraserTool: { dataElement: 'eraserToolButton', title: 'annotation.eraser', img: 'ic_annotation_eraser_black_24px', showColor: 'never' },
+      CropPage: { dataElement: 'cropToolButton', title: 'annotation.crop', img: 'ic_crop_black_24px', showColor: 'never', group: 'miscTools' },
     },
     activeHeaderGroup: 'default',
     activeToolName: 'AnnotationEdit',
     activeToolStyles: {},
-    activeLeftPanel: getHashParams('hideAnnotationPanel', false) || !getHashParams('a', false) || getHashParams('readonly', false) ? 'thumbnailsPanel' : 'notesPanel',
+    activeLeftPanel: getHashParams('hideAnnotationPanel', false) || !getHashParams('a', false) ? 'thumbnailsPanel' : 'notesPanel',
     activeToolGroup: '',
     notePopupId: '',
     isNoteEditing: false,
@@ -137,20 +172,21 @@ export default {
     isDocumentLoaded: false,
     isReadOnly: getHashParams('readonly', false),
     customPanels: [],
-    useEmbeddedPrint: true,
+    useEmbeddedPrint: false,
     pageLabels: [],
     noteDateFormat: 'MMM D, h:mma',
     colorMap: copyMapWithDataProperties('currentPalette', 'iconColor'),
-    cursorOverlay: {},
     warning: {},
     customNoteFilter: null,
     zoomList: [0.1, 0.25, 0.5, 1, 1.25, 1.5, 2, 4, 8, 16, 64],
+    isAccessibleMode: getHashParams('accessibleMode', false),
     measurementUnits: {
       from: ['in', 'mm', 'cm', 'pt'],
       to: ['in', 'mm', 'cm', 'pt', 'ft', 'm', 'yd', 'km', 'mi'],
     },
     maxSignaturesCount: 2,
     leftPanelWidth: 300,
+    isReplyDisabledFunc: null,
   },
   search: {
     listeners: [],
@@ -183,6 +219,7 @@ export default {
     isOffline: getHashParams('startOffline', false),
     totalPages: 0,
     outlines: [],
+    layers: [],
     checkPassword: null,
     password: '',
     printQuality: 1,

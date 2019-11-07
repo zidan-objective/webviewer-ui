@@ -51,6 +51,7 @@ const NoteContent = ({ annotation }) => {
   );
   const [isEditing, setIsEditing] = useState(false);
   const [textAreaValue, setTextAreaValue] = useState(annotation.getContents());
+  const [t] = useTranslation();
   const dispatch = useDispatch();
   const isReply = annotation.isReply();
 
@@ -106,12 +107,17 @@ const NoteContent = ({ annotation }) => {
       contents = escapeHtml(contents);
 
       let text;
-      const transformedContents = Autolinker.link(contents, { stripPrefix: false });
+      const transformedContents = Autolinker.link(contents, {
+        stripPrefix: false,
+      });
       const isContentsLinkable = transformedContents.indexOf('<a') !== -1;
       if (isContentsLinkable) {
         // if searchInput is 't', replace <a ...>text</a> with
         // <a ...><span class="highlight">t</span>ext</a>
-        text = transformedContents.replace(/>(.+)</i, (_, p1) => `>${getText(p1)}<`);
+        text = transformedContents.replace(
+          />(.+)</i,
+          (_, p1) => `>${getText(p1)}<`,
+        );
       } else {
         text = getText(contents);
       }
@@ -191,6 +197,7 @@ const NoteContent = ({ annotation }) => {
     sortStrategy,
   ]);
 
+  const annotationState = annotation.getStatus();
   const contents = annotation.getContents();
 
   return useMemo(
@@ -201,6 +208,11 @@ const NoteContent = ({ annotation }) => {
         onMouseDown={e => e.preventDefault()}
       >
         {header}
+        {annotationState && annotationState !== 'None' && (
+          <div className="status">
+            {t('option.status.status')}: {annotationState}
+          </div>
+        )}
         <div className="content-container" onMouseDown={handleContainerClick}>
           {isEditing ? (
             <ContentArea
@@ -217,7 +229,17 @@ const NoteContent = ({ annotation }) => {
         </div>
       </div>
     ),
-    [annotation, contents, handleContainerClick, header, isEditing, renderContents, textAreaValue],
+    [
+      t,
+      annotation,
+      annotationState,
+      contents,
+      handleContainerClick,
+      header,
+      isEditing,
+      renderContents,
+      textAreaValue,
+    ],
   );
 };
 

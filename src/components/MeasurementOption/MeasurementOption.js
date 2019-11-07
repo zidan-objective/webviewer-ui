@@ -31,7 +31,6 @@ class MeasurementOption extends React.Component {
       to: PropTypes.array,
     }).isRequired,
     onStyleChange: PropTypes.func.isRequired,
-    openMeasurementDropdown: PropTypes.number,
   };
 
   constructor(props) {
@@ -47,18 +46,20 @@ class MeasurementOption extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { scale, precision } = this.props;
+
     if (this.props.scale !== prevProps.scale) {
-      this.setState((state, props) => ({
-        currScaleFrom: props.scale[0][0],
-        currUnitFrom: props.scale[0][1],
-        currScaleTo: props.scale[1][0],
-        currUnitTo: props.scale[1][1],
-      }));
+      this.setState({
+        currScaleFrom: scale[0][0],
+        currUnitFrom: scale[0][1],
+        currScaleTo: scale[1][0],
+        currUnitTo: scale[1][1],
+      });
     }
     if (this.props.precision !== prevProps.precision) {
-      this.setState((state, props) => ({
-        currPrecision: props.precision,
-      }));
+      this.setState({
+        currPrecision: precision,
+      });
     }
   }
 
@@ -117,7 +118,7 @@ class MeasurementOption extends React.Component {
   renderScaleInput = (type, val) => {
     /**
      * There is a bug with Firefox 69 where after onFocus, it calls onBlur right away. Remove after the issue resolved.
-     */
+     */ 
     if (isFirefox) {
       return (
         <input
@@ -125,32 +126,38 @@ class MeasurementOption extends React.Component {
           type="number"
           step="any"
           value={val}
-          onChange={e => this.onScaleChange(e.target.value, type)}
+          onChange={e =>
+            this.onScaleChange(e.target.value, type)
+          }
         />
       );
-    }
-    if (this.state.isEditing) {
-      return (
-        <input
-          className="ScaleInput"
-          type="number"
-          step="any"
-          value={val}
-          onChange={e => this.onScaleChange(e.target.value, type)}
-          onBlur={this.toggleEditing}
-        />
-      );
-    }
-    return (
-      <input
-        className="ScaleInput"
-        type="text"
-        value={this.formatValue(val)}
-        onFocus={this.toggleEditing}
-        readOnly
-      />
-    );
-  };
+    } 
+      if (this.state.isEditing) {
+        return (
+          <input
+            className="ScaleInput"
+            type="number"
+            step="any"
+            value={val}
+            onChange={e =>
+              this.onScaleChange(e.target.value, type)
+            }
+            onBlur={this.toggleEditing}
+          />
+        );
+      } else {
+        return (
+          <input
+            className="ScaleInput"
+            type="text"
+            value={this.formatValue(val)}
+            onFocus={this.toggleEditing}
+            readOnly
+          />
+        );
+      }
+    
+  }
 
   render() {
     const { measurementUnits, t } = this.props;

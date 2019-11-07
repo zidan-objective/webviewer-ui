@@ -73,7 +73,9 @@ import getSelectedTextQuads from './getSelectedTextQuads';
 import getDisplayModeObject from './getDisplayModeObject';
 import getScrollViewElement from './getScrollViewElement';
 import getAnnotationById from './getAnnotationById';
+import getAnnotationByMouseEvent from './getAnnotationByMouseEvent';
 import isFullPDFEnabled from './isFullPDFEnabled';
+import isBlendModeSupported from './isBlendModeSupported';
 import isAnnotationSelected from './isAnnotationSelected';
 import setAnnotationStyles from './setAnnotationStyles';
 import deselectAnnotation from './deselectAnnotation';
@@ -91,6 +93,16 @@ import hideAnnotations from './hideAnnotations';
 import goToOutline from './goToOutline';
 import getViewerElement from './getViewerElement';
 import { addEventListener, removeEventListener } from './eventListener';
+import setAnnotationCanvasTransform from './setAnnotationCanvasTransform';
+import getAnnotationCopy from './getAnnotationCopy';
+import setWatermark from './setWatermark';
+import getWatermark from './getWatermark';
+import groupAnnotations from './groupAnnotations';
+import ungroupAnnotations from './ungroupAnnotations';
+import getNumberOfGroups from './getNumberOfGroups';
+import undo from './undo';
+import redo from './redo';
+import updateAnnotationState from './updateAnnotationState';
 
 export default {
   setToolMode,
@@ -169,6 +181,7 @@ export default {
   getScrollViewElement,
   getAnnotationById,
   isFullPDFEnabled,
+  isBlendModeSupported,
   isAnnotationSelected,
   setAnnotationStyles,
   deselectAnnotation,
@@ -187,4 +200,15 @@ export default {
   hideAnnotations,
   goToOutline,
   getViewerElement,
+  setAnnotationCanvasTransform,
+  getAnnotationCopy,
+  setWatermark,
+  getWatermark,
+  getAnnotationByMouseEvent,
+  groupAnnotations,
+  ungroupAnnotations,
+  getNumberOfGroups,
+  undo,
+  redo,
+  updateAnnotationState,
 };

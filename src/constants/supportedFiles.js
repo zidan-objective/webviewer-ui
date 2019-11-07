@@ -36,6 +36,10 @@ export const supportedBlackboxExtensions = [
   'dwg',
   'dgn',
   'dxf',
+  'gif',
+  'rvt',
+  'rfa',
+  'dwf',
 ];
 export const supportedExtensions = [
   ...supportedClientOnlyExtensions,

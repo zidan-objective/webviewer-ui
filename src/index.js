@@ -1,4 +1,3 @@
-// import { hot } from 'react-hot-loader';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
@@ -43,28 +42,22 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
     const updatedReducer = require('reducers/rootReducer').default;
     store.replaceReducer(updatedReducer);
   });
+
+  module.hot.accept();
 }
 
 if (window.CanvasRenderingContext2D) {
   let fullAPIReady = Promise.resolve();
   const state = store.getState();
 
-  $.ajaxSetup({ cache: true });
-
   if (state.advanced.fullAPI) {
     window.CoreControls.enableFullPDF(true);
-    if (process.env.NODE_ENV === 'production') {
-      fullAPIReady = loadScript('../../core/pdf/PDFNet.js');
-    } else {
-      fullAPIReady = loadScript('../core/pdf/PDFNet.js');
-    }
+    fullAPIReady = loadScript('../core/pdf/PDFNet.js');
   }
 
   window.CoreControls.enableSubzero(state.advanced.subzero);
-  if (process.env.NODE_ENV === 'production') {
-    window.CoreControls.setWorkerPath('../../core');
-    window.CoreControls.setResourcesPath('../../core/assets');
-  }
+  window.CoreControls.setWorkerPath('../core');
+  window.CoreControls.setResourcesPath('../core/assets');
 
   try {
     if (state.advanced.useSharedWorker && window.parent.WebViewer) {
@@ -123,9 +116,9 @@ if (window.CanvasRenderingContext2D) {
     setupMIMETypeTest(store);
     setUserPermission(state);
     setAutoSwitch();
+    addEventHandlers();
     setDefaultDisabledElements(store);
     setupLoadAnnotationsFromServer(store);
-    addEventHandlers();
     setDefaultToolStyles();
     core.setToolMode(defaultTool);
 

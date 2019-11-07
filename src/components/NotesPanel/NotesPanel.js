@@ -11,8 +11,8 @@ import NoteContext from 'components/Note/Context';
 import ListSeparator from 'components/ListSeparator';
 
 import core from 'core';
-import selectors from 'selectors';
 import { getSortStrategies } from 'constants/sortStrategies';
+import selectors from 'selectors';
 
 import './NotesPanel.scss';
 
@@ -49,7 +49,6 @@ const NotesPanel = ({ display }) => {
       setSelectedNoteIds({});
       setSearchInput('');
     };
-
     core.addEventListener('documentUnloaded', onDocumentUnloaded);
     return () =>
       core.removeEventListener('documentUnloaded', onDocumentUnloaded);
@@ -74,7 +73,7 @@ const NotesPanel = ({ display }) => {
     core.addEventListener('annotationHidden', _setNotes);
 
     return () => {
-      core.addEventListener('annotationChanged', _setNotes);
+      core.removeEventListener('annotationChanged', _setNotes);
       core.removeEventListener('annotationHidden', _setNotes);
     };
   }, []);
@@ -208,12 +207,12 @@ const NotesPanel = ({ display }) => {
     };
 
     return (
-      <>
+      <React.Fragment>
         {listSeparator}
         <NoteContext.Provider value={contextValue}>
           <Note annotation={currNote} />
         </NoteContext.Provider>
-      </>
+      </React.Fragment>
     );
   };
 
@@ -246,7 +245,7 @@ const NotesPanel = ({ display }) => {
       {notes.length === 0 ? (
         <div className="no-annotations">{t('message.noAnnotations')}</div>
       ) : (
-        <>
+        <React.Fragment>
           <div className="header">
             <input
               type="text"
@@ -276,7 +275,7 @@ const NotesPanel = ({ display }) => {
               {renderChild}
             </VirtualizedList>
           )}
-        </>
+        </React.Fragment>
       )}
     </div>
   );

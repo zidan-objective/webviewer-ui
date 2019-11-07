@@ -13,6 +13,7 @@ import getClassName from 'helpers/getClassName';
 import defaultTool from 'constants/defaultTool';
 import actions from 'actions';
 import selectors from 'selectors';
+import debounce from 'lodash/debounce';
 
 import './SearchOverlay.scss';
 
@@ -58,8 +59,11 @@ class SearchOverlay extends React.PureComponent {
     this.searchTextInput = React.createRef();
     this.wholeWordInput = React.createRef();
     this.caseSensitiveInput = React.createRef();
-    this.executeDebouncedSingleSearch = _.debounce(this.executeSingleSearch, 300);
-    this.executeDebouncedFullSearch = _.debounce(this.executeFullSearch, 300);
+    this.executeDebouncedSingleSearch = debounce(this.executeSingleSearch, 300);
+    this.executeDebouncedFullSearch = debounce(this.executeFullSearch, 300);
+    this.state = {
+      noResultSingleSearch: false,
+    };
   }
 
   componentDidUpdate(prevProps) {
@@ -191,11 +195,13 @@ class SearchOverlay extends React.PureComponent {
       const isSearchDone = result.resultCode === window.XODText.ResultCode.e_done;
 
       if (foundResult) {
+        this.setState({ noResultSingleSearch: false });
         addResult(result);
         core.displaySearchResult(result);
         setActiveResult(result);
         this.runSearchListeners();
       } else {
+        this.setState({ noResultSingleSearch: true });
         core.clearSearchResults();
       }
 
@@ -351,6 +357,11 @@ class SearchOverlay extends React.PureComponent {
             <Input id="case-sensitive-option" type="checkbox" ref={this.caseSensitiveInput} onChange={this.onChangeCaseSensitive} label={t('option.searchPanel.caseSensitive')} />
             <Input id="whole-word-option" type="checkbox" ref={this.wholeWordInput} onChange={this.onChangeWholeWord} label={t('option.searchPanel.wholeWordOnly')} />
           </div>
+          {!isSearchPanelOpen &&
+            this.state.noResultSingleSearch &&
+            searchValue !== '' && (
+            <div className="no-result">{t('message.noResults')}</div>
+          )}
         </div>
       </div>
     );
