@@ -113,36 +113,6 @@ const TouchEventManager = {
     e.preventDefault();
 
     switch (e.touches.length) {
-      case 1: {
-        const t = e.touches[0];
-        this.touch.horizontalDistance = this.touch.clientX - t.clientX;
-        this.touch.verticalDistance = this.touch.clientY - t.clientY;
-        if (this.canLockScrolling()) {
-          this.verticalLock = this.isScrollingVertically();
-          this.horziontalLock = this.isScrollingHorziontally();
-        }
-
-        if (this.getDistance(this.touch, t) > 10) {
-          this.touch.type = 'swipe';
-        }
-
-        if (this.enableTouchScrollLock) {
-          if (this.verticalLock) {
-            // undo horizontal scrolling caused by native touch when scrolling is disabled
-            this.container.scrollTo(this.startingScrollLeft, this.container.scrollTop);
-            // set 'horizontalDistance' to '0' to get rid of horiztonal momentum in 'handleTouchEnd'
-            this.touch.horizontalDistance = 0;
-          }
-
-          if (this.horziontalLock) {
-            this.container.scrollTo(this.container.scrollLeft, this.startingScrollTop);
-            this.touch.verticalDistance = 0;
-          }
-        }
-
-        this.touch.touchMoveCount++;
-        break;
-      }
       case 2: {
         const t1 = e.touches[0];
         const t2 = e.touches[1];
