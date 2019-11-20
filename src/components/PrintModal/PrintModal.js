@@ -12,6 +12,7 @@ import getClassName from 'helpers/getClassName';
 import { getSortStrategies } from 'constants/sortStrategies';
 import actions from 'actions';
 import selectors from 'selectors';
+import { isSafari, isChromeOniOS } from 'helpers/device';
 
 import './PrintModal.scss';
 import { mapAnnotationToKey, getDataWithKey } from '../../constants/map';
@@ -338,7 +339,13 @@ class PrintModal extends React.PureComponent {
     });
 
     printHandler.appendChild(fragment);
-    window.print();
+    if (isSafari && !isChromeOniOS) {
+      // Print for Safari browser. Makes Safari 11 consistently work.
+      document.execCommand('print');
+    } else {
+      window.print();
+    }
+
     this.closePrintModal();
   }
 

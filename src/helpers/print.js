@@ -26,11 +26,23 @@ const printPdf = () => {
   const xfdfString = core.exportAnnotations();
   const printDocument = true;
   return new Promise(resolve => {
-    core.getDocument().getFileData({ xfdfString, printDocument }).then(data => {
+    core
+    .getDocument()
+    .getFileData({ xfdfString, printDocument })
+    .then(data => {
       const arr = new Uint8Array(data);
       const blob = new Blob([arr], { type: 'application/pdf' });
-      document.getElementById('print-handler').src = URL.createObjectURL(blob);
-      resolve();
+
+      const printHandler = document.getElementById('print-handler');
+      printHandler.src = URL.createObjectURL(blob);
+
+      const loadListener = function() {
+        printHandler.contentWindow.print();
+        printHandler.removeEventListener('load', loadListener);
+        resolve();
+      };
+
+      printHandler.addEventListener('load', loadListener);
     });
   });
 };
