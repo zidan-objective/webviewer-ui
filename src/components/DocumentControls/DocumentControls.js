@@ -32,6 +32,7 @@ const DocumentControls = props => {
     selectedPageIndexes,
     pageLabels,
     updateSelectedPage,
+    toggleDocumentControl,
   } = props;
 
   const initalPagesString = getPageString(selectedPageIndexes, pageLabels);
@@ -39,6 +40,7 @@ const DocumentControls = props => {
   // TODO figure out why the inital values is incorrect
   const [pageString, setPageString] = useState(initalPagesString);
   const [previousPageString, setPreviousPageString] = useState(initalPagesString);
+  const [isDocumentControlHidden, setDocumentControlHidden] = useState(true);
 
   useEffect(() => {
     setPageString(getPageString(selectedPageIndexes, pageLabels));
@@ -93,32 +95,50 @@ const DocumentControls = props => {
     setPageString(e.target.value);
   };
 
+  const onToggleDocumentControl = () => {
+    updateSelectedPage([]);
+    setDocumentControlHidden(!isDocumentControlHidden);
+    toggleDocumentControl();
+  };
+
+  const icon = isDocumentControlHidden ? 'ic_arrow_up_black_24px' : 'ic_arrow_down_black_24px';
+
   // ${!selectedPageCount ? 'hidden' : ''}
   return (
-    <div className={`documentControls `}>
-      <div>
-        <input
-          onBlur={onBlur}
-          onChange={pageStringUpdate}
-          value={pageString}
-          placeholder={'Enter pages to select i.e. 2, 5-9'}
-          className="pagesInput" type="text" />
-      </div>
-      <div className="documentControlsButton">
-        <Button
-          img="ic_delete_black_24px"
-          onClick={deletePages}
-          title="option.thumbnailPanel.delete"
-        />
-        <Button
-          img="ic_extract_black_24px"
-          title="action.extract"
-          onClick={extractPages}
-        />
-      </div>
+      <div className={`documentControlsContainer`}>
+      <Button
+        className={`documentControlToggle ${isDocumentControlHidden ? '' : 'showing'}`}
+        img={icon}
+        onClick={onToggleDocumentControl}
+      />
+
+      {!isDocumentControlHidden || selectedPageIndexes.length > 0 ?
+        <div className={`documentControls `}>
+          <div>
+            <input
+              onBlur={onBlur}
+              onChange={pageStringUpdate}
+              value={pageString}
+              placeholder={'Enter pages to select i.e. 2, 5-9'}
+              className="pagesInput" type="text" />
+          </div>
+          <div className="documentControlsButton">
+            <Button
+              img="ic_delete_black_24px"
+              onClick={deletePages}
+              title="option.thumbnailPanel.delete"
+            />
+            <Button
+              img="ic_extract_black_24px"
+              title="action.extract"
+              onClick={extractPages}
+            />
+          </div>
+        </div>
+        : null}
     </div>
   );
-}
+};
 
 DocumentControls.propTypes = {
   deletePagesCallBack: PropTypes.func.isRequired,
@@ -126,6 +146,9 @@ DocumentControls.propTypes = {
   selectedPageIndexes: PropTypes.arrayOf(PropTypes.number),
   pageLabels: PropTypes.arrayOf(PropTypes.string),
   updateSelectedPage: PropTypes.func,
+
+  toggleDocumentControl: PropTypes.func,
+  isDocumentControlHidden: PropTypes.bool,
 };
 
 export default DocumentControls;

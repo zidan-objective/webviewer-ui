@@ -3,7 +3,6 @@ import i18next from 'i18next';
 import LayoutMode from 'constants/layoutMode';
 import FitMode from 'constants/fitMode';
 import Feature from 'constants/feature';
-import getHashParams from 'helpers/getHashParams';
 import addSearchListener from './addSearchListener';
 import addSortStrategy from './addSortStrategy';
 import annotationPopup from './annotationPopup';
@@ -88,6 +87,8 @@ import setColorPalette from './setColorPalette';
 import setCurrentPageNumber from './setCurrentPageNumber';
 import setCustomNoteFilter from './setCustomNoteFilter';
 import setCustomPanel from './setCustomPanel';
+import exportBookmarks from './exportBookmarks';
+import importBookmarks from './importBookmarks';
 import setEngineType from './setEngineType';
 import setFitMode from './setFitMode';
 import setHeaderItems from './setHeaderItems';
@@ -122,8 +123,9 @@ import useEmbeddedPrint from './useEmbeddedPrint';
 import setMeasurementUnits from './setMeasurementUnits';
 import setMaxSignaturesCount from './setMaxSignaturesCount';
 import disableReplyForAnnotations from './disableReplyForAnnotations';
+import getCustomData from './getCustomData';
 
-export default store => {
+export default store => {  
   window.readerControl = {
     docViewer: window.docViewer,
     FitMode,
@@ -164,6 +166,8 @@ export default store => {
     setActiveLeftPanel: setActiveLeftPanel(store),
     setCustomNoteFilter: setCustomNoteFilter(store),
     setCustomPanel: setCustomPanel(store),
+    exportBookmarks: exportBookmarks(store),
+    importBookmarks: importBookmarks(store),
     setFitMode,
     setHeaderItems: setHeaderItems(store),
     setIconColor: setIconColor(store),
@@ -242,6 +246,7 @@ export default store => {
     setCurrentPageNumber,
     setReadOnly,
     setSortNotesBy: setSortNotesBy(store),
+    getCustomData,
 
     // undocumented
     loadedFromServer: false,
@@ -252,7 +257,6 @@ export default store => {
     setEngineType: setEngineType(store),
     showWarningMessage: showWarningMessage(store),
     updateOutlines: updateOutlines(store),
-    getCustomData: () => getHashParams('custom', null),
     getBBAnnotManager: getBBAnnotManager(store),
     selectors: getSelectors(store),
   };

@@ -1,8 +1,8 @@
 /**
  * An instance of Popup that can be used to edit items in the context menu popup component
  * @name WebViewer#contextMenuPopup
- * @see WebViewer.Popup
- * @example // 6.0 and after
+ * @implements {WebViewer.Popup}
+ * @example
 WebViewer(...)
   .then(function (instance) {
     instance.contextMenuPopup.someAPI();

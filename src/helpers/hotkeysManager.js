@@ -13,12 +13,51 @@ import actions from 'actions';
 import selectors from 'selectors';
 
 const NOOP = () => {};
+
+/**
+ * Available hotkeys that can be passed to {@link WebViewer.Hotkeys#on instance.hotkeys.on} or {@link WebViewer.Hotkeys#off instance.hotkeys.off} as lowercase. Hotkeys that use the Ctrl key can also be activated by pressing the Command key. <br/><br/>
+ * <span style="color: red; font-size: 1.2em; font-weight: bold">⚠</span> These strings are not static properties of this class. They are listed here only for the documentation purpose.
+ * @name WebViewer.Hotkeys.AvailableHotkeys
+ * @enum {string}
+ * @property {string} Ctrl_Shift_Equals Rotate the document clockwise (Ctrl+Shift+=).
+ * @property {string} Ctrl_Shift_Minus Rotate the document counterclockwise (Ctrl+Shift+-)
+ * @property {string} Ctrl_C Copy selected text or annotations
+ * @property {string} Ctrl_V Paste text or annotations
+ * @property {string} Ctrl_Z Undo an annotation change
+ * @property {string} Ctrl_Y Redo an annotation change
+ * @property {string} Ctrl_O Open the file picker
+ * @property {string} Ctrl_F Open the search overlay
+ * @property {string} Ctrl_Equals Zoom in (Ctrl+=)
+ * @property {string} Ctrl_Minus Zoom out (Ctrl+-)
+ * @property {string} Ctrl_0 Fit the document to the screen width in a small screen(< 640px), otherwise fit it to its original size
+ * @property {string} Ctrl_P Print
+ * @property {string} PageUp Go to the previous page
+ * @property {string} PageDown Go to the next page
+ * @property {string} Space Hold to switch to Pan mode and release to return to previous tool
+ * @property {string} Escape Select the AnnotationEdit tool
+ * @property {string} P Select the Pan tool
+ * @property {string} A Select the AnnotationCreateArrow tool
+ * @property {string} C Select the AnnotationCreateCallout tool
+ * @property {string} E Select the AnnotationEraserTool tool
+ * @property {string} F Select the AnnotationCreateFreeHand tool
+ * @property {string} I Select the AnnotationCreateStamp tool
+ * @property {string} L Select the AnnotationCreateLine tool
+ * @property {string} N Select the AnnotationCreateSticky tool
+ * @property {string} O Select the AnnotationCreateEllipse tool
+ * @property {string} R Select the AnnotationCreateRectangle tool
+ * @property {string} T Select the AnnotationCreateFreeText tool
+ * @property {string} S Open the signature modal or the overlay
+ * @property {string} G Select the AnnotationCreateTextSquiggly tool
+ * @property {string} H Select the AnnotationCreateTextHighlight tool
+ * @property {string} K Select the AnnotationCreateTextStrikeout tool
+ * @property {string} U Select the AnnotationCreateTextUnderline tool
+ */
+
 /**
  * A class which contains hotkeys APIs.<br/><br/>
- * <span style="color: red; font-size: 1.2em; font-weight: bold">⚠</span> Hotkeys are listed in the <i>Members</i> section. They should be passed to {@link WebViewer.Hotkeys#on instance.hotkeys.on} or {@link WebViewer.Hotkeys#off instance.hotkeys.off} as lowercase. Hotkeys that use the Ctrl key can also be activated by pressing the Command key. <br />
  * <span style="color: red; font-size: 1.2em; font-weight: bold">⚠</span> You must NOT instantiate this yourself. Access instances of this class using {@link WebViewer#hotkeys instance.hotkeys}
- * @name WebViewer.Hotkeys
- * @class
+ * @namespace Hotkeys
+ * @memberof WebViewer
  */
 const HotkeysManager = {
   initialize(store) {
@@ -33,14 +72,28 @@ const HotkeysManager = {
   /**
    * Add an event handler for the given hotkey
    * @method WebViewer.Hotkeys#on
-   * @param {string} key a keyboard key or a tool name
-   * @param {function} [handler] an optional function. If not passed, the default handler of the given key will be registered
-   * @example // 6.0 and after
+   * @param {string} key A keyboard key or a tool name. <br/>
+   * If a hotkey is consisted of more than one key. Those keys should be connected using '+'.
+   * @param {function|object} [handler] An optional argument <br/>
+   * If it is undefined, the default handler of the given key will be registered <br/>
+   * If it is an function, it will be called on key down <br/>
+   * If it is an object, it should have the shape of { keydown: func1, keyup: func2 }. Func1 will be called on keydown while func2 will be called on keyup
+   * @example
 WebViewer(...)
   .then(function(instance) {
+      // this will be called on keydown
       instance.hotkeys.on('ctrl+d, command+d', e => {
         e.preventDefault();
         instance.closeDocument();
+      });
+
+      instance.hotkeys.on('ctrl+g', {
+        keydown: e => {
+          console.log('ctrl+g is pressed!');
+        },
+        keyup: e => {
+          console.log('ctrl+g is released!')
+        },
       });
 
       // this will register the default zoom in handler
@@ -78,9 +131,9 @@ WebViewer(...)
   /**
    * Remove an event handler for the given hotkey
    * @method WebViewer.Hotkeys#off
-   * @param {string} [key] an optional keyboard key or a tool name. If not passed, all handlers will be removed
-   * @param {function} [handler] an optional function. If not passed, all handlers of the given key will be removed
-   * @example // 6.0 and after
+   * @param {string} [key] An optional keyboard key or a tool name. If not passed, all handlers will be removed
+   * @param {function} [handler] An optional function. If not passed, all handlers of the given key will be removed
+   * @example
 WebViewer(...)
   .then(function(instance) {
       // this will remove all handlers for ctrl = and command =
@@ -109,26 +162,14 @@ WebViewer(...)
     const { dispatch, getState } = store;
 
     return {
-      /**
-       * Rotate the document clockwise
-       * @name WebViewer.Hotkeys#Ctrl+Shift+=
-       */
       'ctrl+shift+=, command+shift+=': e => {
         e.preventDefault();
         core.rotateClockwise();
       },
-      /**
-       * Rotate the document counterclockwise
-       * @name WebViewer.Hotkeys#Ctrl+Shift+-
-       */
       'ctrl+shift+-, command+shift+-': e => {
         e.preventDefault();
         core.rotateCounterClockwise();
       },
-      /**
-       * Copy selected text or annotations
-       * @name WebViewer.Hotkeys#Ctrl+C
-       */
       'ctrl+c, command+c': () => {
         if (core.getSelectedText()) {
           copyText();
@@ -137,68 +178,36 @@ WebViewer(...)
           core.updateCopiedAnnotations();
         }
       },
-      /**
-       * Paste text or annotations
-       * @name WebViewer.Hotkeys#Ctrl+V
-       */
       'ctrl+v, command+v': e => {
         if (!isFocusingElement()) {
           e.preventDefault();
           core.pasteCopiedAnnotations();
         }
       },
-      /**
-       * Undo an annotation change
-       * @name WebViewer.Hotkeys#Ctrl+Z
-       */
       'ctrl+z, command+z': e => {
         e.preventDefault();
         core.undo();
       },
-      /**
-       * Redo an annotation change
-       * @name WebViewer.Hotkeys#Ctrl+Y
-       */
       'ctrl+y, command+shift+z': e => {
         e.preventDefault();
         core.redo();
       },
-      /**
-       * Open the file picker
-       * @name WebViewer.Hotkeys#Ctrl+O
-       */
       'ctrl+o, command+o': e => {
         e.preventDefault();
         openFilePicker();
       },
-      /**
-       * Open the search overlay
-       * @name WebViewer.Hotkeys#Ctrl+F
-       */
       'ctrl+f, command+f': e => {
         e.preventDefault();
         dispatch(actions.openElement('searchOverlay'));
       },
-      /**
-       * Zoom in
-       * @name WebViewer.Hotkeys#Ctrl+=
-       */
       'ctrl+=, command+=': e => {
         e.preventDefault();
         zoomIn();
       },
-      /**
-       * Zoom out
-       * @name WebViewer.Hotkeys#Ctrl+-
-       */
       'ctrl+-, command+-': e => {
         e.preventDefault();
         zoomOut();
       },
-      /**
-       * Fit the document to the screen width in a small screen(< 640px), otherwise fit it to its original size
-       * @name WebViewer.Hotkeys#Ctrl+0
-       */
       'ctrl+0, command+0': e => {
         e.preventDefault();
 
@@ -208,10 +217,6 @@ WebViewer(...)
           core.fitToPage();
         }
       },
-      /**
-       * Print
-       * @name WebViewer.Hotkeys#Ctrl+P
-       */
       'ctrl+p, command+p': e => {
         e.preventDefault();
 
@@ -230,10 +235,6 @@ WebViewer(...)
           }
         }
       },
-      /**
-       * Go to the previous page
-       * @name WebViewer.Hotkeys#PageUp
-       */
       pageup: e => {
         e.preventDefault();
 
@@ -242,10 +243,6 @@ WebViewer(...)
           core.setCurrentPage(currPageNumber - 1);
         }
       },
-      /**
-       * Go to the next page
-       * @name WebViewer.Hotkeys#PageDown
-       */
       pagedown: e => {
         e.preventDefault();
 
@@ -254,10 +251,6 @@ WebViewer(...)
           core.setCurrentPage(currPageNumber + 1);
         }
       },
-      /**
-       * Hold to switch to Pan mode and release to return to previous tool
-       * @name WebViewer.Hotkeys#Space
-       */
       space: {
         keyup: this.createToolHotkeyHandler(e => {
           e.preventDefault();
@@ -274,10 +267,6 @@ WebViewer(...)
           }
         }),
       },
-      /**
-       * Select the AnnotationEdit tool
-       * @name WebViewer.Hotkeys#Escape
-       */
       escape: e => {
         e.preventDefault();
         setToolModeAndGroup(store, 'AnnotationEdit', '');
@@ -304,87 +293,39 @@ WebViewer(...)
           ]),
         );
       },
-      /**
-       * Select the Pan tool
-       * @name WebViewer.Hotkeys#P
-       */
       p: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'Pan');
       }),
-      /**
-       * Select the AnnotationCreateArrow tool
-       * @name WebViewer.Hotkeys#A
-       */
       a: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationCreateArrow');
       }),
-      /**
-       * Select the AnnotationCreateCallout tool
-       * @name WebViewer.Hotkeys#C
-       */
       c: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationCreateCallout');
       }),
-      /**
-       * Select the AnnotationEraserTool tool
-       * @name WebViewer.Hotkeys#E
-       */
       e: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationEraserTool');
       }),
-      /**
-       * Select the AnnotationCreateFreeHand tool
-       * @name WebViewer.Hotkeys#F
-       */
       f: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationCreateFreeHand');
       }),
-      /**
-       * Select the AnnotationCreateStamp tool
-       * @name WebViewer.Hotkeys#I
-       */
       i: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationCreateStamp');
       }),
-      /**
-       * Select the AnnotationCreateLine tool
-       * @name WebViewer.Hotkeys#L
-       */
       l: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationCreateLine');
       }),
-      /**
-       * Select the AnnotationCreateSticky tool
-       * @name WebViewer.Hotkeys#N
-       */
       n: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationCreateSticky');
       }),
-      /**
-       * Select the AnnotationCreateEllipse tool
-       * @name WebViewer.Hotkeys#O
-       */
       o: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationCreateEllipse');
       }),
-      /**
-       * Select the AnnotationCreateRectangle tool
-       * @name WebViewer.Hotkeys#R
-       */
       r: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationCreateRectangle');
       }),
-      /**
-       * Select the AnnotationCreateFreeText tool
-       * @name WebViewer.Hotkeys#T
-       */
       t: this.createToolHotkeyHandler(() => {
         setToolModeAndGroup(store, 'AnnotationCreateFreeText');
       }),
-      /**
-       * Open the signature modal or the overlay
-       * @name WebViewer.Hotkeys#S
-       */
       s: this.createToolHotkeyHandler(() => {
         const sigToolButton = document.querySelector(
           '[data-element="signatureToolButton"]',
@@ -392,10 +333,6 @@ WebViewer(...)
 
         sigToolButton?.click();
       }),
-      /**
-       * Select the AnnotationCreateTextSquiggly tool
-       * @name WebViewer.Hotkeys#G
-       */
       g: this.createToolHotkeyHandler(() => {
         if (core.getSelectedText()) {
           createTextAnnotationAndSelect(
@@ -406,10 +343,6 @@ WebViewer(...)
           setToolModeAndGroup(store, 'AnnotationCreateTextSquiggly');
         }
       }),
-      /**
-       * Select the AnnotationCreateTextHighlight tool
-       * @name WebViewer.Hotkeys#H
-       */
       h: this.createToolHotkeyHandler(() => {
         if (core.getSelectedText()) {
           createTextAnnotationAndSelect(
@@ -420,10 +353,6 @@ WebViewer(...)
           setToolModeAndGroup(store, 'AnnotationCreateTextHighlight');
         }
       }),
-      /**
-       * Select the AnnotationCreateTextStrikeout tool
-       * @name WebViewer.Hotkeys#K
-       */
       k: this.createToolHotkeyHandler(() => {
         if (core.getSelectedText()) {
           createTextAnnotationAndSelect(
@@ -434,10 +363,6 @@ WebViewer(...)
           setToolModeAndGroup(store, 'AnnotationCreateTextStrikeout');
         }
       }),
-      /**
-       * Select the AnnotationCreateTextUnderline tool
-       * @name WebViewer.Hotkeys#U
-       */
       u: this.createToolHotkeyHandler(() => {
         if (core.getSelectedText()) {
           createTextAnnotationAndSelect(
