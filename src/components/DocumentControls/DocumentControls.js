@@ -8,10 +8,10 @@ import i18next from 'i18next';
 
 function getPageString(selectedPageArray, pageLabels) {
   let pagesToPrint = '';
-  const sortedPages = selectedPageArray.sort((a, b) =>  a - b );
+  const sortedPages = selectedPageArray.sort((a, b) => a - b);
   let prevIndex = null;
 
-  for (let i=0; sortedPages.length > i; i++) {
+  for (let i = 0; sortedPages.length > i; i++) {
     if (sortedPages[i + 1] === sortedPages[i] + 1) {
       prevIndex = prevIndex !== null ? prevIndex : sortedPages[i];
     } else if (prevIndex !== null) {
@@ -28,11 +28,11 @@ function getPageString(selectedPageArray, pageLabels) {
 const DocumentControls = props => {
   const {
     deletePagesCallBack,
-    selectedPageCount,
     selectedPageIndexes,
     pageLabels,
     updateSelectedPage,
     toggleDocumentControl,
+    shouldShowControls,
   } = props;
 
   const initalPagesString = getPageString(selectedPageIndexes, pageLabels);
@@ -40,20 +40,15 @@ const DocumentControls = props => {
   // TODO figure out why the inital values is incorrect
   const [pageString, setPageString] = useState(initalPagesString);
   const [previousPageString, setPreviousPageString] = useState(initalPagesString);
-  const [isDocumentControlHidden, setDocumentControlHidden] = useState(true);
 
   useEffect(() => {
     setPageString(getPageString(selectedPageIndexes, pageLabels));
-  }, [selectedPageCount]);
-
-
+  }, [setPageString, selectedPageIndexes, shouldShowControls]);
   const deletePages = () => {
     deletePagesCallBack();
   };
 
   const extractPages = () => {
-
-
     if (selectedPageIndexes.length === 0) {
       const warning = {
         message: i18next.t('option.thumbnailPanel.extractZeroPageError'),
@@ -67,7 +62,7 @@ const DocumentControls = props => {
       return;
     }
 
-    window.readerControl.extractPages(selectedPageIndexes.map(index => index + 1 )).then(file => {
+    window.readerControl.extractPages(selectedPageIndexes.map(index => index + 1)).then(file => {
       saveAs(file, 'extractedDocument.pdf');
     });
   };
@@ -87,7 +82,7 @@ const DocumentControls = props => {
       setPageString(updatedString);
       setPreviousPageString(updatedString);
     } else {
-      setPageString(previousPageString);   
+      setPageString(previousPageString);
     }
   };
 
@@ -97,22 +92,20 @@ const DocumentControls = props => {
 
   const onToggleDocumentControl = () => {
     updateSelectedPage([]);
-    setDocumentControlHidden(!isDocumentControlHidden);
-    toggleDocumentControl();
+    toggleDocumentControl(!shouldShowControls);
   };
 
-  const icon = isDocumentControlHidden ? 'ic_arrow_up_black_24px' : 'ic_arrow_down_black_24px';
+  const icon = shouldShowControls ? 'ic_arrow_down_black_24px' : 'ic_arrow_up_black_24px';
 
-  // ${!selectedPageCount ? 'hidden' : ''}
   return (
-      <div className={`documentControlsContainer`}>
+    <div className={`documentControlsContainer`}>
       <Button
-        className={`documentControlToggle ${isDocumentControlHidden ? '' : 'showing'}`}
+        className={`documentControlToggle ${shouldShowControls ? 'showing' : ''}`}
         img={icon}
         onClick={onToggleDocumentControl}
       />
 
-      {!isDocumentControlHidden || selectedPageIndexes.length > 0 ?
+      {shouldShowControls ?
         <div className={`documentControls `}>
           <div>
             <input
@@ -120,7 +113,8 @@ const DocumentControls = props => {
               onChange={pageStringUpdate}
               value={pageString}
               placeholder={'Enter pages to select i.e. 2, 5-9'}
-              className="pagesInput" type="text" />
+              className="pagesInput" type="text"
+            />
           </div>
           <div className="documentControlsButton">
             <Button
@@ -142,13 +136,11 @@ const DocumentControls = props => {
 
 DocumentControls.propTypes = {
   deletePagesCallBack: PropTypes.func.isRequired,
-  selectedPageCount: PropTypes.number,
   selectedPageIndexes: PropTypes.arrayOf(PropTypes.number),
   pageLabels: PropTypes.arrayOf(PropTypes.string),
   updateSelectedPage: PropTypes.func,
-
   toggleDocumentControl: PropTypes.func,
-  isDocumentControlHidden: PropTypes.bool,
+  shouldShowControls: PropTypes.bool,
 };
 
 export default DocumentControls;

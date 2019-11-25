@@ -12,14 +12,14 @@ WebViewer(...)
  */
 import { isIE } from 'helpers/device';
 
-export default () => async pagesToExtract => {
+export default store => async pagesToExtract => {
   const doc = window.readerControl.docViewer.getDocument();
   const annotManager = window.readerControl.docViewer.getAnnotationManager();
 
   const pageCount = doc.getPageCount();
   const pageOutOfRange = pagesToExtract.some(page => page < 1 || page > pageCount);
-  
-  if(pageOutOfRange) {
+
+  if (pageOutOfRange) {
     return Promise.reject(`Page out of range, please enter an array of numbers between 1 and ${pageCount}`);
   }
 
@@ -32,20 +32,26 @@ export default () => async pagesToExtract => {
       annotManager.exportAnnotations({ annotList }).then(xfdfString => {
         doc.extractPages(pagesToExtract, xfdfString).then(data => {
           const arr = new Uint8Array(data);
-          const downloadName = 'extractedDocument.pdf';
+          const documentStore = store.getState().document;
+          let fileName = documentStore.fileName;
+
+          if (!fileName && documentStore.initialDoc) {
+            fileName = documentStore.initialDoc.split('/').pop();
+          } else {
+            fileName = 'extractedDocument.pdf';
+          }
 
           let file = null;
           if (isIE) {
             file = new Blob([arr], { type: 'application/pdf' });
           } else {
-            file = new File([arr], downloadName, { type: 'application/pdf' });
+            file = new File([arr], fileName, { type: 'application/pdf' });
           }
 
           resolve(file);
         }).catch(function(ex) {
           reject(ex);
         });
-
       });
     } catch (ex) {
       reject(ex);

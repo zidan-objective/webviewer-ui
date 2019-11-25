@@ -9,15 +9,12 @@ import Thumbnail from 'components/Thumbnail';
 import DocumentControls from 'components/DocumentControls';
 import ThumbnailOverlay from 'components/ThumbnailOverlay';
 
-import Button from 'components/Button';
-
 import actions from 'actions';
 
 import core from 'core';
 import selectors from 'selectors';
 
 import './ThumbnailsPanel.scss';
-
 
 class ThumbnailsPanel extends React.PureComponent {
   static propTypes = {
@@ -272,7 +269,6 @@ class ThumbnailsPanel extends React.PureComponent {
     this.thumbs[pageIndex] = null;
   }
 
-
   onDragEnd = () => {
     const { currentPage, selectedPageIndexes, setSelectedPageThumbnails } = this.props;
     const { draggingOverPageIndex, isDraggingOverTopHalf } = this.state;
@@ -289,7 +285,7 @@ class ThumbnailsPanel extends React.PureComponent {
 
       core.movePages([currentPage], targetPageNumber).then(() => {
         const currentPageIndex = currentPage - 1;
-        const targetPageIndex = this.afterMovePageNumber - 1;       
+        const targetPageIndex = this.afterMovePageNumber - 1;
 
         const isSelected = selectedPageIndexes.includes(currentPageIndex);
         let updateSelectedPageIndexes = selectedPageIndexes;
@@ -309,11 +305,6 @@ class ThumbnailsPanel extends React.PureComponent {
         }
 
         setSelectedPageThumbnails(updateSelectedPageIndexes);
-
-        
-
-
-        
       });
     }
 
@@ -323,7 +314,7 @@ class ThumbnailsPanel extends React.PureComponent {
   onPageComplete = () => {
     if (this.afterMovePageNumber) {
       core.setCurrentPage(this.afterMovePageNumber);
-    } 
+    }
 
     this.afterMovePageNumber = null;
   }
@@ -372,7 +363,6 @@ class ThumbnailsPanel extends React.PureComponent {
 
   updateSelectedPage = selectedPageIndexes => {
     this.props.setSelectedPageThumbnails(selectedPageIndexes);
-
     this.setState({ selectedPageIndexes });
   }
 
@@ -383,11 +373,9 @@ class ThumbnailsPanel extends React.PureComponent {
       message: i18next.t('option.thumbnailPanel.deleteWarningMessage'),
       title: i18next.t('option.thumbnailPanel.deleteWarningTitle'),
       confirmBtnText: i18next.t('option.thumbnailPanel.deleteWarningConfirmText'),
-      onConfirm: () => {
-        return core.removePages(selectedPageIndexes.map(pageIndex => pageIndex + 1)).then(() => {
-          setSelectedPageThumbnails([]);
-        });
-      },
+      onConfirm: () => core.removePages(selectedPageIndexes.map(pageIndex => pageIndex + 1)).then(() => {
+        setSelectedPageThumbnails([]);
+      }),
       keepOpen: ['leftPanel'],
     };
 
@@ -406,7 +394,7 @@ class ThumbnailsPanel extends React.PureComponent {
 
     if (files.length) {
       const file = files[0];
-      let insertTo = isDraggingOverTopHalf ? draggingOverPageIndex + 1: draggingOverPageIndex + 2;
+      const insertTo = isDraggingOverTopHalf ? draggingOverPageIndex + 1 : draggingOverPageIndex + 2;
 
       window.readerControl.mergeDocument(file, insertTo).then(() => {
         core.setCurrentPage(insertTo);
@@ -415,8 +403,6 @@ class ThumbnailsPanel extends React.PureComponent {
       this.setState({ draggingOverPageIndex: null });
     }
   }
-
-
 
   renderThumbnails = ({ index, key, style }) => {
     const {
@@ -441,23 +427,23 @@ class ThumbnailsPanel extends React.PureComponent {
             const updateHandler = thumbs && thumbs[thumbIndex] ? thumbs[thumbIndex].updateAnnotationHandler : null;
 
             return (
-              index < this.props.totalPages 
-              ? <div key={index} onDragEnd={this.onDragEnd}>
-                {isDraggingOverTopHalf && draggingOverPageIndex === index && <hr className="thumbnailPlaceholder" />}
+              index < this.props.totalPages
+                ? <div key={index} onDragEnd={this.onDragEnd}>
+                  {isDraggingOverTopHalf && draggingOverPageIndex === index && <hr className="thumbnailPlaceholder" />}
 
-                <Thumbnail key={index} index={index} currentPage={currentPage} isSelected={selectedPagesHash[index]}
-                  canLoad={canLoad}
-                  onLoad={this.onLoad} 
-                  onCancel={this.onCancel} 
-                  onRemove={this.onRemove}
-                  onDragStartCallback={this.onDragStart}
-                  onDragOverCallback={this.onDragOver}
-                  onClickCallback={this.onThumbnailClick}
-                  updateAnnotations={updateHandler} 
-                />
+                  <Thumbnail key={index} index={index} currentPage={currentPage} isSelected={selectedPagesHash[index]}
+                    canLoad={canLoad}
+                    onLoad={this.onLoad}
+                    onCancel={this.onCancel}
+                    onRemove={this.onRemove}
+                    onDragStartCallback={this.onDragStart}
+                    onDragOverCallback={this.onDragOver}
+                    onClickCallback={this.onThumbnailClick}
+                    updateAnnotations={updateHandler}
+                  />
 
-                {!isDraggingOverTopHalf && draggingOverPageIndex === index && <hr className="thumbnailPlaceholder" />}
-              </div>
+                  {!isDraggingOverTopHalf && draggingOverPageIndex === index && <hr className="thumbnailPlaceholder" />}
+                </div>
                 : null
             );
           })
@@ -466,12 +452,10 @@ class ThumbnailsPanel extends React.PureComponent {
     );
   }
 
-  toggleDocumentControl = () => {
-    const { isDocumentControlHidden } = this.state;
-
+  toggleDocumentControl = shouldShowControls => {
     this.props.setSelectedPageThumbnails([]);
     this.setState({
-      isDocumentControlHidden: !isDocumentControlHidden,
+      isDocumentControlHidden: !shouldShowControls,
     });
   }
 
@@ -483,6 +467,7 @@ class ThumbnailsPanel extends React.PureComponent {
       return null;
     }
 
+    const shouldShowControls = !isDocumentControlHidden || selectedPageIndexes.length > 0;
     return (
       <div
         className="Panel ThumbnailsPanel"
@@ -502,30 +487,27 @@ class ThumbnailsPanel extends React.PureComponent {
             <div ref={measureRef} className="virtualized-thumbnails-container" >
               <List
                 ref={this.listRef}
-                height={isDocumentControlHidden ? height : height - 50}
+                height={!shouldShowControls ? height : height - 50}
                 width={width}
                 rowHeight={this.thumbnailHeight}
                 rowCount={totalPages / numberOfColumns}
                 rowRenderer={this.renderThumbnails}
                 overscanRowCount={10}
+                className={'thumbnailsList '}
                 style={{ outline: 'none',
-                  paddingBottom: isDocumentControlHidden ? '0px' : '20px',
+                  paddingBottom: !shouldShowControls ? '0px' : '50px',
                 }}
               />
 
               <DocumentControls
-
                 toggleDocumentControl={this.toggleDocumentControl}
-                isDocumentControlHidden={isDocumentControlHidden}
+                shouldShowControls={shouldShowControls}
                 pageLabels={pageLabels}
                 selectedPageIndexes={selectedPageIndexes}
                 selectedPageCount={selectedPageIndexes.length}
                 deletePagesCallBack={this.onDeletePages}
                 updateSelectedPage={this.updateSelectedPage}
               />
-
-
-
             </div>
           )}
         </Measure>

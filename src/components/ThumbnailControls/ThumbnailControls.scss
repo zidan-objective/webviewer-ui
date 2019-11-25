@@ -2,6 +2,8 @@
 
 .thumbnailControls {
     text-align: center;
+    z-index: 2;
+
     .Button{
         display: inline-block;
         height: 24px;

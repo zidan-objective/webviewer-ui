@@ -4,7 +4,10 @@
   display: flex;
 
   .virtualized-thumbnails-container {
-    flex: 1;
+    flex: 1; 
+    .thumbnailsList > div{
+      overflow: visible !important;
+    }
   }
 
   .row {
