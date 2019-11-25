@@ -473,6 +473,8 @@ class ThumbnailsPanel extends React.PureComponent {
         className="Panel ThumbnailsPanel"
         style={{ display }}
         data-element="thumbnailsPanel"
+        ref={this.thumbnails}
+        onDragOver={this.dragOverHandler}
       >
         <Measure
           bounds
