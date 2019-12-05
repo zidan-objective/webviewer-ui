@@ -29,9 +29,11 @@
     transition: height 0.5s;
 
     $page-input-border: 2px;
+    $page-input-padding: 8px;
     .pagesInput{
         border-width: $page-input-border;
-        width: calc(100% - #{$page-input-border * 2});
+        width: calc(100% - #{($page-input-border + $page-input-padding) * 2});
+        padding: 2px $page-input-padding;
     }
 
     .documentControlsButton{

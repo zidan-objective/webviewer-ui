@@ -52,6 +52,7 @@ import getFitMode from './getFitMode';
 import getLayoutMode from './getLayoutMode';
 import getPageCount from './getPageCount';
 import getSelectors from './getSelectors';
+import getSelectedPageNumbers from './getSelectedPageNumbers';
 import getShowSideWindow from './getShowSideWindow';
 import getSideWindowVisibility from './getSideWindowVisibility';
 import getToolMode from './getToolMode';
@@ -148,6 +149,7 @@ export default store => {
     focusNote: focusNote(store),
     getFitMode: getFitMode(store),
     getLayoutMode: getLayoutMode(store),
+    getSelectedPageNumbers: getSelectedPageNumbers(store),
     getToolMode,
     getZoomLevel,
     hotkeys,

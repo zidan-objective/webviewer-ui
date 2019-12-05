@@ -24,11 +24,12 @@ class Thumbnail extends React.PureComponent {
     onRemove: PropTypes.func.isRequired,
     updateAnnotations: PropTypes.func,
     closeElement: PropTypes.func.isRequired,
-    onDragStartCallback: PropTypes.func,
-    onDragOverCallback: PropTypes.func,
     onClickCallback: PropTypes.func,
     removePage: PropTypes.func.isRequired,
     showWarningMessage: PropTypes.func.isRequired,
+    onDragStart: PropTypes.func,
+    onDragOver: PropTypes.func,
+    isDraggable: PropTypes.bool,
   }
 
   constructor(props) {
@@ -117,25 +118,25 @@ class Thumbnail extends React.PureComponent {
   }
 
   onDragStart = e => {
-    const { index } = this.props;
-    this.props.onDragStartCallback(e, index);
+    const { index, onDragStart } = this.props;
+    onDragStart(e, index);
   }
 
   onDragOver = e => {
-    const { index } = this.props;
-    this.props.onDragOverCallback(e, index);
+    const { index, onDragOver } = this.props;
+    onDragOver(e, index);
   }
 
   render() {
-    const { index, currentPage, pageLabels, isSelected } = this.props;
+    const { index, currentPage, pageLabels, isDraggable, isSelected } = this.props;
     const isActive = currentPage === index + 1;
     const pageLabel = pageLabels[index];
 
     return (
-      <div className={`Thumbnail ${isActive ? 'active' : ''} ${isSelected ? 'selected' : ''}`} onDragOver={this.onDragOverHandler} >
-        <div className="container" ref={this.thumbContainer} onClick={this.handleClick} onDragStart={this.onDragStartHandler} draggable></div>
+      <div className={`Thumbnail ${isActive ? 'active' : ''} ${isSelected ? 'selected' : ''}`} onDragOver={this.onDragOver} >
+        <div className="container" ref={this.thumbContainer} onClick={this.handleClick}onDragStart={this.onDragStart} draggable={isDraggable}></div>
         <div className="page-label">{pageLabel}</div>
-        {isActive && <ThumbnailControls index={index} handleDelete={this.onDeleteHandler} />}
+        {isActive && <ThumbnailControls index={index} handleDelete={this.handleDelete} />}
       </div>
     );
   }
