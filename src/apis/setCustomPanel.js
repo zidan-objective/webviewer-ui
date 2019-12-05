@@ -8,8 +8,8 @@
  * @param {string} options.tab.img Url for an image.
  * @param {object} options.panel Panel options.
  * @param {string} options.panel.dataElement data-element for panel.
- * @param {WebViewer~renderCustomPanel} options.panel.render Function that returns panel element.
- * @example // 5.1 and after
+ * @param {WebViewer.renderCustomPanel} options.panel.render Function that returns panel element.
+ * @example
 WebViewer(...)
   .then(function(instance) {
     var myCustomPanel = {
@@ -30,34 +30,10 @@ WebViewer(...)
 
     instance.setCustomPanel(myCustomPanel);
   });
- * @example // 4.0 ~ 5.0
-var viewerElement = document.getElementById('viewer');
-var viewer = new PDFTron.WebViewer(...);
-
-viewerElement.addEventListener('ready', function() {
-  var instance = viewer.getInstance();
-  var myCustomPanel = {
-    tab:{
-      dataElement: 'customPanelTab',
-      title: 'customPanelTab',
-      img: 'https://www.pdftron.com/favicon-32x32.png',
-    },
-    panel: {
-      dataElement: 'customPanel',
-      render: function() {
-        const div = document.createElement('div');
-        div.innerHTML = 'Hello World';
-        return div;
-      }
-    }
-  };
-
-  instance.setCustomPanel(myCustomPanel);
-});
  */
 /**
  * Callback that gets passed to `options.panel.render` in {@link CoreControls.ReaderControl#setCustomPanel setCustomPanel}.
- * @callback WebViewer~renderCustomPanel
+ * @callback WebViewer.renderCustomPanel
  * @returns {HTMLElement} Panel element.
  */
 
