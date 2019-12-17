@@ -31,6 +31,8 @@ class SignatureModal extends React.PureComponent {
       saveSignature: false,
       canClear: false,
     };
+    this.oldCanvasWidth;
+    this.oldCanvasHeight;
     this.state = this.initialState;
   }
 
@@ -49,18 +51,16 @@ class SignatureModal extends React.PureComponent {
       core.setToolMode('AnnotationCreateSignature');
       this.setState(this.initialState);
       this.signatureTool.clearSignatureCanvas();
-      this.props.closeElements([
-        'printModal',
-        'loadingModal',
-        'progressModal',
-        'errorModal',
-      ]);
+      this.props.closeElements(['printModal', 'loadingModal', 'progressModal', 'errorModal']);
     }
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.onResize);
-    window.removeEventListener('orientationchange', this.onRotate);
+    window.removeEventListener(
+      'orientationchange',
+      this.onRotate,
+    );
   }
 
   setUpSignatureCanvas = () => {
@@ -79,6 +79,19 @@ class SignatureModal extends React.PureComponent {
     this.isCanvasReady = true;
   };
 
+  onRotate = () => {
+    const canvas = this.canvas.current;
+    const { width, height } = canvas.getBoundingClientRect();
+    if (width !== height) {
+      return;
+    }
+    this.setSignatureCanvasSize();
+  };
+
+  onResize = () => {
+    this.setSignatureCanvasSize();
+  };
+
   setSignatureCanvasSize = () => {
     if (!this.canvas.current) {
       return;
@@ -88,33 +101,17 @@ class SignatureModal extends React.PureComponent {
     const { width, height } = canvas.getBoundingClientRect();
     canvas.width = width;
     canvas.height = height;
-  };
 
-  onRotate = () => {
-    if (this.canvas.current) {
-      const imageData = this.canvas.current.toDataURL();
-      this.setSignatureCanvasSize();
-      this.redrawSignatureCanvas(imageData);
+    if (this.signatureTool && !this.signatureTool.isEmptySignature()) {
+      const hScale = width / this.oldCanvasWidth;
+      const vScale = height / this.oldCanvasHeight;
+
+      this.signatureTool.resize(hScale, vScale);
+      this.signatureTool.drawSignatureCanvas();
     }
-  };
 
-  onResize = () => {
-    if (this.canvas.current) {
-      const imageData = this.canvas.current.toDataURL();
-      this.setSignatureCanvasSize();
-      this.redrawSignatureCanvas(imageData);
-    }
-  };
-
-  redrawSignatureCanvas = signatureData => {
-    const canvas = this.canvas.current;
-    const ctx = canvas.getContext('2d');
-
-    const image = new Image();
-    image.onload = function() {
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    };
-    image.src = signatureData;
+    this.oldCanvasWidth = width;
+    this.oldCanvasHeight = height;
   };
 
   handleFinishDrawing = e => {
