@@ -30,7 +30,7 @@ const loadConfig = () =>
       resolve();
     } else {
       window.addEventListener('message', function loadConfig(e) {
-        if (e.data.type === 'responseConfig') {
+        if (e.data.type === 'responseConfig' && e.origin === getHashParams('origin')) {
           loadScript(e.data.value, 'Config script could not be loaded').then(
             () => {
               window.removeEventListener('message', loadConfig);
