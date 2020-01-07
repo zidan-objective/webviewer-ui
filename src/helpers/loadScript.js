@@ -29,14 +29,27 @@ const loadConfig = () =>
       // resolve immediately if we are developing the UI on its own
       resolve();
     } else {
-      window.addEventListener('message', function loadConfig(e) {
+      window.addEventListener('message', async function loadConfig(e) {
         if (e.data.type === 'responseConfig') {
-          loadScript(e.data.value, 'Config script could not be loaded').then(
-            () => {
-              window.removeEventListener('message', loadConfig);
-              resolve();
-            },
-          );
+          const { value } = e.data;
+
+          try {
+            if (value) {
+              const response = await fetch('configorigin.txt');
+
+              let data = null;
+              if (response.status === 200) {
+                data = await response.text();
+              }
+
+              if (data === null || data.split('\n').includes(e.origin)) {
+                await loadScript(e.data.value, 'Config script could not be loaded');
+                window.removeEventListener('message', loadConfig);
+              }
+            }
+          } finally {
+            resolve();
+          }
         }
       });
 
