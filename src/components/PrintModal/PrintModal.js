@@ -164,17 +164,19 @@ class PrintModal extends React.PureComponent {
     const creatingPages = [];
 
     this.pendingCanvases = [];
+
+    let printableAnnotations = [];
     this.state.pagesToPrint.forEach(pageNumber => {
       creatingPages.push(this.creatingImage(pageNumber));
-
-      const printableAnnotations = this.getPrintableAnnotations(pageNumber);
-      if (this.includeComments.current.checked && printableAnnotations.length) {
-        const sortedNotes = getSortStrategies()[
-          this.props.sortStrategy
-        ].getSortedNotes(printableAnnotations);
-        creatingPages.push(this.creatingNotesPage(sortedNotes, pageNumber));
-      }
+      printableAnnotations = printableAnnotations.concat(this.getPrintableAnnotations(pageNumber));
     });
+    // append page that contains all the comments/annotations at the end
+    if (this.includeComments.current.checked && printableAnnotations.length) {
+      const sortedNotes = getSortStrategies()[
+        this.props.sortStrategy
+      ].getSortedNotes(printableAnnotations);
+      creatingPages.push(this.creatingNotesPage(sortedNotes));
+    }
 
     return creatingPages;
   };
@@ -309,14 +311,14 @@ class PrintModal extends React.PureComponent {
           annotation.Printable,
       );
 
-  creatingNotesPage = (annotations, pageNumber) =>
+  creatingNotesPage = (annotations) =>
     new Promise(resolve => {
       const container = document.createElement('div');
       container.className = 'page__container';
 
       const header = document.createElement('div');
       header.className = 'page__header';
-      header.innerHTML = `Page ${pageNumber}`;
+      // header.innerHTML = `Page ${pageNumber}`;
 
       container.appendChild(header);
       annotations.forEach(annotation => {
