@@ -239,6 +239,7 @@ const NotesPanel = ({ display }) => {
         <div className="no-annotations">{t('message.noAnnotations')}</div>
       ) : (
         <React.Fragment>
+          <div>Number of comments: {notesToRender.length}</div>
           <div className="header">
             <input
               type="text"
