@@ -205,7 +205,10 @@ const NoteContentHeader = ({ annotation, setIsEditing }) => {
         )}
         <div className="time">
           {(sortStrategy !== 'time' || isSelected) &&
-            dayjs(annotation.DateCreated || new Date()).format(noteDateFormat)}
+            // dayjs(annotation.DateCreated || new Date()).format(noteDateFormat)
+            // https://github.com/iamkun/dayjs
+            dayjs(annotation.DateCreated || new Date()).format('YYYY-MM-DD HH:mm:ss')
+          }
           {numberOfReplies > 0 && ` (${numberOfReplies})`}
         </div>
         {isSelected && (
