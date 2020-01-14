@@ -35,17 +35,22 @@ const loadConfig = () =>
 
           try {
             if (value) {
-              const response = await fetch('configorigin.txt');
+              if (e.origin !== window.location.origin) {
+                const response = await fetch('configorigin.txt');
 
-              let data = null;
-              if (response.status === 200) {
-                data = await response.text();
+                let data = '';
+                if (response.status === 200) {
+                  data = await response.text();
+                }
+
+                if (!data.split('\n').includes(e.origin)) {
+                  console.warn(`Config file requested to be loaded by origin ${e.origin}. Please include this origin inside lib/ui/configorigin.txt to allow it to request config files.`)
+                  return;
+                }
               }
 
-              if (data === null || data.split('\n').includes(e.origin)) {
-                await loadScript(e.data.value, 'Config script could not be loaded');
-                window.removeEventListener('message', loadConfig);
-              }
+              await loadScript(e.data.value, 'Config script could not be loaded');
+              window.removeEventListener('message', loadConfig);
             }
           } finally {
             resolve();
