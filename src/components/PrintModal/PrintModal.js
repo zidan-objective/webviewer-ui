@@ -311,7 +311,7 @@ class PrintModal extends React.PureComponent {
           annotation.Printable,
       );
 
-  creatingNotesPage = (annotations) =>
+  creatingNotesPage = annotations =>
     new Promise(resolve => {
       const container = document.createElement('div');
       container.className = 'page__container';
