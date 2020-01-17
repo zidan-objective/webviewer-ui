@@ -91,6 +91,7 @@ export default (dispatch, options) => {
       dispatch(actions.closeElement('loadingModal'));
       fireEvent('finishedSavingPDF');
     } else {
+      downloadOptions.flags = 'office';
       return doc.getFileData(downloadOptions).then(async data => {
         const arr = new Uint8Array(data);
         if (isIE) {
@@ -103,7 +104,8 @@ export default (dispatch, options) => {
         await doc.removePages([doc.getPageCount()]);
         dispatch(actions.closeElement('loadingModal'));
         fireEvent('finishedSavingPDF');
-      }, error => {
+      }, async error => {
+        await doc.removePages([doc.getPageCount()]);
         dispatch(actions.closeElement('loadingModal'));
         throw new Error(error.message);
       });
