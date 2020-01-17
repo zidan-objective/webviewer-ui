@@ -187,10 +187,13 @@ const NoteContentHeader = ({ annotation, setIsEditing }) => {
   const icon = getDataWithKey(mapAnnotationToKey(annotation)).icon;
   const color = annotation[iconColor]?.toHexString?.();
   const numberOfReplies = annotation.getReplies().length;
+  
+  const numbering = annotation.getCustomData('commentNumber');
 
   return useMemo(
     () => (
       <div className="title">
+        <div style={ {marginRight: '7px', fontWeight: 'bold'}}> {numbering} </div>
         {isReply ? null : (
           <div className="type">
             {icon ? (

@@ -28,7 +28,7 @@ export default (dispatch, options) => {
     const downloadName = getDownloadFilename(name, '.pdf');
 
     const doc = core.getDocument();
-    let annotsToDraw = [];
+    const annotsToDraw = [];
     const insertPageAndAddAnnots = async doc => {
       // const annotsToDraw = [];
       // insert blank page at the end of the document
@@ -42,7 +42,7 @@ export default (dispatch, options) => {
       await doc.insertBlankPages([newPageCount], width, height);
 
       // get all annots and draw them on the last page
-      const annotList = await annotManager.getAnnotationsList(); 
+      const annotList = await annotManager.getAnnotationsList();
       let y = 10;
       let commentNumber = 1;
       let annotText = '';
