@@ -169,9 +169,7 @@ const NoteContentHeader = ({ annotation, setIsEditing }) => {
     annotation => {
       // https://www.pdftron.com/api/web/CoreControls.AnnotationManager.html#getDisplayAuthor__anchor
       // https://www.pdftron.com/api/web/CoreControls.AnnotationManager.html#setAnnotationDisplayAuthorMap__anchor
-      let name = core.getDisplayAuthor(annotation);
-      // added random number to customize author's name
-      name = `${name}-${Math.random()}`;
+      const name = core.getDisplayAuthor(annotation);
       return name ? (
         <span
           dangerouslySetInnerHTML={{
