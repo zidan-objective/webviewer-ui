@@ -401,8 +401,7 @@ class PrintModal extends React.PureComponent {
     info.innerHTML = `
       ${numbering} &nbsp;&nbsp;
       Author: ${core.getDisplayAuthor(annotation) || ''} &nbsp;&nbsp;
-      Subject: ${annotation.Subject} &nbsp;&nbsp;
-      Date: ${dayjs(annotation.DateCreated).format('D/MM/YYYY h:mm:ss A')}
+      Date: ${dayjs(annotation.DateCreated).format('MM/DD/YYYY')}
     `;
     return info;
   };
