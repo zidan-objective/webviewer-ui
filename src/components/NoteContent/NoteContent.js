@@ -231,6 +231,7 @@ const NoteContentHeader = ({ annotation, setIsEditing }) => {
       renderAuthorName,
       setIsEditing,
       sortStrategy,
+      numbering
     ],
   );
 };

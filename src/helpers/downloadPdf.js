@@ -47,10 +47,10 @@ export default (dispatch, options) => {
       let commentNumber = 1;
       let annotText = '';
       annotList.forEach(async annot => {
-        if (annot.Subject != null && annot.ToolName !== 'AnnotationCreateCallout' && annot.Author != null) {
+        if (annot.Subject !== null && annot.ToolName !== 'AnnotationCreateCallout' && annot.Author !== null) {
           y += 60;
 
-          if (annot.Subject === 'Comment') {
+          if (!annot.isReply()) {
             annotText = `${commentNumber} ${annot.Subject} created by ${annot.Author} on page number ${annot.PageNumber}: ${annot.getContents()}`;
             commentNumber++;
           } else {
