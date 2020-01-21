@@ -91,7 +91,7 @@ export default (dispatch, options) => {
       dispatch(actions.closeElement('loadingModal'));
       fireEvent('finishedSavingPDF');
     } else {
-      downloadOptions.flags = 'office';
+      downloadOptions.downloadType = 'office';
       return doc.getFileData(downloadOptions).then(async data => {
         const arr = new Uint8Array(data);
         if (isIE) {

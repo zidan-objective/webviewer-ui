@@ -48,6 +48,7 @@ const App = ({ removeEventHandlers }) => {
   const store = useStore();
 
   useEffect(() => {
+    Tools.TextAnnotationCreateTool['AUTO_SET_TEXT'] = false;
     defineReaderControlAPIs(store);
     fireEvent('viewerLoaded');
 
