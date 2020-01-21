@@ -6,6 +6,10 @@ export default () => {
   const Annotations = window.Annotations;
   let commentCount = 1;
 
+  docViewer.on('documentLoaded', () => {
+    commentCount = 1;
+  });
+
   annotManager.on('annotationChanged', (annotations, action) => {
     if (annotations && action === 'add') {
       annotations.forEach(annot => {
