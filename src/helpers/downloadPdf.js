@@ -25,61 +25,10 @@ export default (dispatch, options) => {
     };
 
     const name = filename || documentPath.split('/').slice(-1)[0];
-    const downloadName = getDownloadFilename(name, '.pdf');
+    const extension = name.split('.');
+    const downloadName = getDownloadFilename(name, `.${extension[extension.length - 1]}`);
 
     const doc = core.getDocument();
-    const annotsToDraw = [];
-    const insertPageAndAddAnnots = async doc => {
-      // const annotsToDraw = [];
-      // insert blank page at the end of the document
-      const docViewer = window.docViewer;
-      const annotManager = docViewer.getAnnotationManager();
-      const Annotations = window.Annotations;
-      var info = await doc.getPageInfo(0);
-      var width = info.width;
-      var height = info.height;
-      var newPageCount = await doc.getPageCount() + 1;
-      await doc.insertBlankPages([newPageCount], width, height);
-
-      // get all annots and draw them on the last page
-      const annotList = await annotManager.getAnnotationsList();
-      let y = 10;
-      let commentNumber = 1;
-      let annotText = '';
-      annotList.forEach(async annot => {
-        if (annot.Subject !== null && annot.ToolName !== 'AnnotationCreateCallout' && annot.Author !== null) {
-          y += 60;
-
-          if (!annot.isReply()) {
-            annotText = `${commentNumber} ${annot.Subject} created by ${annot.Author} on page number ${annot.PageNumber}: ${annot.getContents()}`;
-            commentNumber++;
-          } else {
-            annotText = `${annot.Subject} created by ${annot.Author} on page number ${annot.PageNumber}: ${annot.getContents()}`;
-          }
-
-          const freeText = new Annotations.FreeTextAnnotation();
-          freeText.PageNumber = doc.getPageCount();
-          freeText.X = 50;
-          freeText.Y = y;
-          freeText.Width = 500;
-          freeText.Height = 50;
-          freeText.Listable = false;
-          freeText.TextColor = new Annotations.Color(0, 0, 0);
-          freeText.setPadding(new Annotations.Rect(0, 0, 0, 0));
-          freeText.setContents(annotText);
-          freeText.FontSize = '16pt';
-          freeText.StrokeThickness = 0;
-          annotsToDraw.push(freeText);
-        }
-      });
-      annotManager.addAnnotations(annotsToDraw);
-      await annotManager.drawAnnotationsFromList(annotsToDraw);
-    };
-
-    await insertPageAndAddAnnots(doc);
-    const xfdf = await window.docViewer.getAnnotationManager().exportAnnotations({ annotList: annotsToDraw });
-    downloadOptions.xfdfString = xfdf;
-
     if (externalURL) {
       const downloadIframe = document.getElementById('download-iframe') || document.createElement('iframe');
       downloadIframe.width = 0;
@@ -91,21 +40,22 @@ export default (dispatch, options) => {
       dispatch(actions.closeElement('loadingModal'));
       fireEvent('finishedSavingPDF');
     } else {
-      downloadOptions.downloadType = 'office';
+      // downloadOptions.downloadType = 'office';
       return doc.getFileData(downloadOptions).then(async data => {
         const arr = new Uint8Array(data);
+        const mimeType = { type: 'application/pdf' };
         if (isIE) {
-          file = new Blob([arr], { type: 'application/pdf' });
+          file = new Blob([arr], mimeType);
         } else {
-          file = new File([arr], downloadName, { type: 'application/pdf' });
+          file = new File([arr], downloadName, mimeType);
         }
 
         saveAs(file, downloadName);
-        await doc.removePages([doc.getPageCount()]);
+        // await doc.removePages([doc.getPageCount()]);
         dispatch(actions.closeElement('loadingModal'));
         fireEvent('finishedSavingPDF');
       }, async error => {
-        await doc.removePages([doc.getPageCount()]);
+        // await doc.removePages([doc.getPageCount()]);
         dispatch(actions.closeElement('loadingModal'));
         throw new Error(error.message);
       });
