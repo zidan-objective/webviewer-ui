@@ -16,18 +16,21 @@ export default () => {
         if (annot.Listable &&
           !annot.isReply() &&
           !annot.Hidden &&
-          !annot.isGrouped() && !annot.isReply() && annot.getCustomData('commentNumber') === '' && annot.getCustomData('isComment') === '') {
+          annot.getCustomData('commentNumber') === '' && annot.getCustomData('isComment') === '') {
           const freeText = new Annotations.FreeTextAnnotation();
           freeText.PageNumber = annot.PageNumber;
           freeText.X = annot.X + 50;
           freeText.Y = annot.Y;
           freeText.Width = 50;
           freeText.Height = 50;
+          freeText.Listable = false;
           freeText.setPadding(new Annotations.Rect(0, 0, 0, 0));
           freeText.setContents(`${commentCount}`);
           freeText.setCustomData('isComment', true);
           freeText.StrokeThickness = 0;
           freeText.FontSize = '16pt';
+          // bug for now b/c when exporting existing annots to xfdf, it can't serialize custom data unless we explicity trigger a change
+          annot.setX(annot.getX());
 
           annot.setCustomData('commentNumber', `${commentCount}`);
           annot.setCustomData('freeTextId', freeText.Id);
