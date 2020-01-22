@@ -64,7 +64,8 @@ const Note = ({ annotation }) => {
         {replies.map(reply => (
           <NoteContent key={reply.Id} annotation={reply} />
         ))}
-        <ReplyArea annotation={annotation} />
+        {/* Customer does not want to have replies */}
+        {/* <ReplyArea annotation={annotation} /> */}
       </div>
     </div>
   );
