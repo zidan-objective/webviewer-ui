@@ -13,8 +13,12 @@ export default (dispatch, options) => {
   dispatch(actions.openElement('loadingModal'));
 
   return core.exportAnnotations().then(async xfdfString => {
+    const doc = core.getDocument();
     if (includeAnnotations) {
       downloadOptions.xfdfString = xfdfData || xfdfString;
+    }
+    if (doc.getType() === 'office') {
+      downloadOptions.downloadType = 'office';
     }
 
     const getDownloadFilename = (name, extension) => {
@@ -26,9 +30,7 @@ export default (dispatch, options) => {
 
     const name = filename || documentPath.split('/').slice(-1)[0];
     const extension = name.split('.');
-    const downloadName = getDownloadFilename(name, `.${extension[extension.length - 1]}`);
-
-    const doc = core.getDocument();
+    const downloadName = getDownloadFilename(name, `.${extension[extension.length - 1]}`); 
     if (externalURL) {
       const downloadIframe = document.getElementById('download-iframe') || document.createElement('iframe');
       downloadIframe.width = 0;
@@ -40,7 +42,6 @@ export default (dispatch, options) => {
       dispatch(actions.closeElement('loadingModal'));
       fireEvent('finishedSavingPDF');
     } else {
-      // downloadOptions.downloadType = 'office';
       return doc.getFileData(downloadOptions).then(async data => {
         const arr = new Uint8Array(data);
         const mimeType = { type: 'application/pdf' };
@@ -51,11 +52,9 @@ export default (dispatch, options) => {
         }
 
         saveAs(file, downloadName);
-        // await doc.removePages([doc.getPageCount()]);
         dispatch(actions.closeElement('loadingModal'));
         fireEvent('finishedSavingPDF');
       }, async error => {
-        // await doc.removePages([doc.getPageCount()]);
         dispatch(actions.closeElement('loadingModal'));
         throw new Error(error.message);
       });
