@@ -343,7 +343,12 @@ class PrintModal extends React.PureComponent {
     noteRootInfo.className = 'note__info--with-icon';
 
     const noteIcon = this.getNoteIcon(annotation);
+    const commentNumber = annotation.getCustomData('commentNumber');
 
+    const commentNumberDiv = document.createElement('div');
+    commentNumberDiv.className = 'note__info';
+    commentNumberDiv.innerHTML = `${commentNumber} &nbsp;&nbsp;`;
+    noteRootInfo.appendChild(commentNumberDiv);
     noteRootInfo.appendChild(noteIcon);
     noteRootInfo.appendChild(this.getNoteInfo(annotation));
     noteRoot.appendChild(noteRootInfo);
@@ -394,12 +399,8 @@ class PrintModal extends React.PureComponent {
 
   getNoteInfo = annotation => {
     const info = document.createElement('div');
-
-    const numbering = annotation.getCustomData('commentNumber');
-
     info.className = 'note__info';
     info.innerHTML = `
-      ${numbering} &nbsp;&nbsp;
       Author: ${core.getDisplayAuthor(annotation) || ''} &nbsp;&nbsp;
       Date: ${dayjs(annotation.DateCreated).format('MM/DD/YYYY')}
     `;
