@@ -6,8 +6,20 @@ export default () => {
   const Annotations = window.Annotations;
   let commentCount = 1;
 
-  docViewer.on('documentLoaded', () => {
+  docViewer.on('beforeDocumentLoaded', () => {
     commentCount = 1;
+  });
+
+  docViewer.on('documentLoaded', () => {
+
+  });
+
+  docViewer.on('documentUnloaded', () => {
+
+  });
+
+  docViewer.on('annotationsLoaded', () => {
+
   });
 
   annotManager.on('annotationChanged', (annotations, action) => {
@@ -16,7 +28,8 @@ export default () => {
         if (annot.Listable &&
           !annot.isReply() &&
           !annot.Hidden &&
-          annot.getCustomData('commentNumber') === '' && annot.getCustomData('isComment') === '') {
+          annot.getCustomData('commentNumber') === '' &&
+          annot.getCustomData('isComment') === '') {
           const freeText = new Annotations.FreeTextAnnotation();
           freeText.PageNumber = annot.PageNumber;
           freeText.X = annot.X + 50;
@@ -40,49 +53,10 @@ export default () => {
           annotManager.groupAnnotations(annot, [freeText]);
 
           commentCount++;
+        } else if (annot.getCustomData('commentNumber') !== '') {
+          commentCount++;
         }
       });
     }
   });
 };
-
-// export default () => {
-//   let count = 1;
-//   const setNumbering = (annot) => {
-//     annot.setContents(count);
-//     annot.setCustomData('Numbering', count);
-//     count++;
-//   };
-//   core.addEventListener('annotationsLoaded', () => {
-//     const annotManager = window.docViewer.getAnnotationManager();
-//     const annots = annotManager.getAnnotationsList();
-
-//     if (annots) {
-//       const filteredAnnots = annots.filter(annot => annot._listable && !annot.isReply());
-
-//       if (filteredAnnots && filteredAnnots.length > 0) {
-//         setNumbering(filteredAnnots[0]);
-//         let replies = filteredAnnots[0].getReplies();
-//         for (let i = 0; i < replies.length; i++) {
-//           const reply = replies[i];
-//           setNumbering(reply);
-//         }
-//         for (let j = 1; j < filteredAnnots.length; j++) {
-
-//           const annot = filteredAnnots[j];
-//           setNumbering(annot);
-
-//           replies = annot.getReplies();
-//           for (let k = 0; k < replies.length; k++) {
-//             const reply = replies[k];
-//             setNumbering(reply);
-//           }
-//         }
-
-//         annotManager.drawAnnotationsFromList(filteredAnnots);
-//       }
-
-
-//     }
-//   });
-// };

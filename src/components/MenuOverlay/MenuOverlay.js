@@ -69,7 +69,7 @@ class MenuOverlay extends React.PureComponent {
     downloadPdf(dispatch, {
       documentPath,
       filename: documentFilename,
-      includeAnnotations: false,
+      includeAnnotations: true,
     });
   }
 
