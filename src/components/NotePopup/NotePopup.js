@@ -110,7 +110,8 @@ const NotePopup = ({ annotation, setIsEditing }) => {
               {t('action.delete')}
             </div>
           )}
-          {!isStateDisabled && !isReply && (
+          {/* Disable it because LPL wants it disabled */}
+          {/* {!isStateDisabled && !isReply && (
             <div data-element="notePopupState">
               <p data-element="notePopupSetStatus">{t('option.state.set')}</p>
               <div
@@ -144,7 +145,7 @@ const NotePopup = ({ annotation, setIsEditing }) => {
                 {t('option.state.none')}
               </div>
             </div>
-          )}
+          )} */}
         </div>
       )}
     </div>
