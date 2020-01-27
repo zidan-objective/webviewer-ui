@@ -50,11 +50,12 @@ const sortStrategies = {
     },
   },
   commentNumberAsc: {
-    getSortedNotes: notes => notes.sort((a, b) => {
-      const commentNumberA = +a.getCustomData('commentNumber');
-      const commentNumberB = +b.getCustomData('commentNumber');
-      return commentNumberA - commentNumberB;
-    }),
+    // getSortedNotes: notes => notes.sort((a, b) => {
+    //   const commentNumberA = +a.getCustomData('commentNumber');
+    //   const commentNumberB = +b.getCustomData('commentNumber');
+    //   return commentNumberA - commentNumberB;
+    // }),
+    getSortedNotes: notes => notes.sort((a, b) => getLatestActivityDate(a) - getLatestActivityDate(b)),
     shouldRenderSeparator: (prevNote, currNote) => true,
     getSeparatorContent: (prevNote, currNote, { pageLabels }) => undefined,
   },
