@@ -49,13 +49,31 @@ export default () => {
       });
     }
     else if (annotations && action === 'delete' && !options.imported) {
-      annotations.forEach(annot => {
-        if (annot.getCustomData('freeTextId')) {
+      let commentNumberToBeDeleted;
+      const doesAnnotHaveCommentNumber = annotations.some(annot => annot.getCustomData('freeTextId'));
+      if (doesAnnotHaveCommentNumber) {       
+        annotations.forEach(annot => {
           // delete associated free text annot
           const associatedFreeTextAnnot = annotManager.getAnnotationById(annot.getCustomData('freeTextId'));
           annotManager.deleteAnnotation(associatedFreeTextAnnot, false, true);
+
+          commentNumberToBeDeleted = +annot.getCustomData('commentNumber');
+          commentCount--;
+        });
+
+        const currAnnotList = annotManager.getAnnotationsList().filter(annot => annot.getCustomData('freeTextId'));
+        for (let i = commentNumberToBeDeleted + 1; i <= commentCount; i++) {
+          // correct numbering for remaing annots after deletion
+          // need to do it this way as annot list is not ordered by comment number
+          const annot = currAnnotList.find(element => +element.getCustomData('commentNumber') === i);
+          if (annot && annot.getCustomData('freeTextId')) {
+            annot.setCustomData('commentNumber', `${commentNumberToBeDeleted}`);
+            const associatedFreeTextAnnot = annotManager.getAnnotationById(annot.getCustomData('freeTextId'));
+            associatedFreeTextAnnot.setContents(`${commentNumberToBeDeleted}`);
+            commentNumberToBeDeleted++;
+          }
         }
-      });
+      }
     }
   });
 };

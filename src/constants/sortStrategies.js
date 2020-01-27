@@ -55,8 +55,8 @@ const sortStrategies = {
       const commentNumberB = +b.getCustomData('commentNumber');
       return commentNumberA - commentNumberB;
     }),
-    shouldRenderSeparator: (prevNote, currNote) => currNote.PageNumber !== prevNote.PageNumber,
-    getSeparatorContent: (prevNote, currNote, { pageLabels }) => `${i18next.t('option.shared.page')} ${pageLabels[currNote.PageNumber - 1]}`,
+    shouldRenderSeparator: (prevNote, currNote) => true,
+    getSeparatorContent: (prevNote, currNote, { pageLabels }) => undefined,
   },
 };
 
