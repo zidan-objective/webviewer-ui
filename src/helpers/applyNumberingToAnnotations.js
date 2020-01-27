@@ -10,7 +10,7 @@ export default () => {
     commentCount = 1;
   });
 
-  annotManager.on('annotationChanged', (annotations, action) => {
+  annotManager.on('annotationChanged', (annotations, action, options) => {
     if (annotations && action === 'add') {
       annotations.forEach(annot => {
         if (annot.Listable &&
@@ -25,11 +25,13 @@ export default () => {
           freeText.Width = 50;
           freeText.Height = 50;
           freeText.Listable = false;
+          freeText.ReadOnly = true;
           freeText.setPadding(new Annotations.Rect(0, 0, 0, 0));
           freeText.setContents(`${commentCount}`);
           freeText.setCustomData('isComment', true);
           freeText.StrokeThickness = 0;
           freeText.FontSize = '16pt';
+
           // bug for now b/c when exporting existing annots to xfdf, it can't serialize custom data unless we explicity trigger a change
           annot.setX(annot.getX());
 
@@ -45,6 +47,9 @@ export default () => {
           commentCount++;
         }
       });
+    }
+    else if (annotations && action === 'delete' && !options.imported) {
+      console.log(annotations);
     }
   });
 };
