@@ -11,7 +11,7 @@ export default () => {
   });
 
   annotManager.on('annotationChanged', (annotations, action, options) => {
-    if (annotations && action === 'add') {
+    if (action === 'add' && !options.isUndoRedo) {
       annotations.forEach(annot => {
         if (annot.Listable &&
           !annot.isReply() &&
@@ -44,6 +44,17 @@ export default () => {
 
           commentCount++;
         } else if (annot.getCustomData('commentNumber') !== '') {
+          commentCount++;
+        }
+      });
+    }
+    else if (annotations && action === 'add' && options.isUndoRedo) {
+      annotations.forEach(annot => {
+        if (annot.getCustomData('freeTextId')) {
+          annot.setCustomData('commentNumber', `${commentCount}`);
+          const associatedFreeTextAnnot = annotManager.getAnnotationById(annot.getCustomData('freeTextId'));
+          associatedFreeTextAnnot.setContents(`${commentCount}`);
+          annotManager.groupAnnotations(annot, [associatedFreeTextAnnot]);
           commentCount++;
         }
       });
