@@ -32,6 +32,7 @@ const sortStrategies = {
     getSeparatorContent: (prevNote, currNote, { pageLabels }) => `${i18next.t('option.shared.page')} ${pageLabels[currNote.PageNumber - 1]}`,
   },
   time: {
+    // most recent is on top
     getSortedNotes: notes => notes.sort((a, b) => getLatestActivityDate(b) - getLatestActivityDate(a)),
     shouldRenderSeparator: (prevNote, currNote) => dayjs(getLatestActivityDate(prevNote)).format('MMM D, YYYY') !== dayjs(getLatestActivityDate(currNote)).format('MMM D, YYYY'),
     getSeparatorContent: (prevNote, currNote) => {
@@ -47,6 +48,15 @@ const sortStrategies = {
       }
       return latestActivityDate;
     },
+  },
+  commentNumberAsc: {
+    getSortedNotes: notes => notes.sort((a, b) => {
+      const commentNumberA = +a.getCustomData('commentNumber');
+      const commentNumberB = +b.getCustomData('commentNumber');
+      return commentNumberA - commentNumberB;
+    }),
+    shouldRenderSeparator: (prevNote, currNote) => currNote.PageNumber !== prevNote.PageNumber,
+    getSeparatorContent: (prevNote, currNote, { pageLabels }) => `${i18next.t('option.shared.page')} ${pageLabels[currNote.PageNumber - 1]}`,
   },
 };
 

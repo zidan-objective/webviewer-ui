@@ -175,7 +175,7 @@ export default {
     rotation: 0,
     displayMode: 'Single',
     currentPage: 1,
-    sortStrategy: 'position',
+    sortStrategy: 'commentNumberAsc',
     isFullScreen: false,
     isThumbnailMerging: false,
     isThumbnailReordering: false,

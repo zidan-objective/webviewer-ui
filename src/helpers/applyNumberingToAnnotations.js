@@ -10,18 +10,6 @@ export default () => {
     commentCount = 1;
   });
 
-  docViewer.on('documentLoaded', () => {
-
-  });
-
-  docViewer.on('documentUnloaded', () => {
-
-  });
-
-  docViewer.on('annotationsLoaded', () => {
-
-  });
-
   annotManager.on('annotationChanged', (annotations, action) => {
     if (annotations && action === 'add') {
       annotations.forEach(annot => {
