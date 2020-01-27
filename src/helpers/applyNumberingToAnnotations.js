@@ -49,7 +49,13 @@ export default () => {
       });
     }
     else if (annotations && action === 'delete' && !options.imported) {
-      console.log(annotations);
+      annotations.forEach(annot => {
+        if (annot.getCustomData('freeTextId')) {
+          // delete associated free text annot
+          const associatedFreeTextAnnot = annotManager.getAnnotationById(annot.getCustomData('freeTextId'));
+          annotManager.deleteAnnotation(associatedFreeTextAnnot, false, true);
+        }
+      });
     }
   });
 };
