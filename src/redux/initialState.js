@@ -226,7 +226,7 @@ export default {
     outlines: [],
     bookmarks: {},
     layers: [],
-    printQuality: 1,
+    printQuality: 2,
     passwordAttempts: -1,
     loadingProgress: 0,
   },
