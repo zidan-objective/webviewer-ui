@@ -164,7 +164,7 @@
     "notesPanel": {
       "orderPosition": "Position",
       "orderTime": "Time",
-      "commentNumberAsc": "Comment Number (Asc)",
+      "creationTimeAsc": "Creation Time (Asc)",
       "separator": {
         "today": "Today",
         "yesterday": "Yesterday"

@@ -49,7 +49,7 @@ const sortStrategies = {
       return latestActivityDate;
     },
   },
-  commentNumberAsc: {
+  creationTimeAsc: {
     // getSortedNotes: notes => notes.sort((a, b) => {
     //   const commentNumberA = +a.getCustomData('commentNumber');
     //   const commentNumberB = +b.getCustomData('commentNumber');

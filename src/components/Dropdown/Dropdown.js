@@ -23,7 +23,7 @@ class Dropdown extends React.PureComponent {
     this.sortStrategyToTranslationMap = {
       position: 'option.notesPanel.orderPosition',
       time: 'option.notesPanel.orderTime',
-      commentNumberAsc: 'option.notesPanel.commentNumberAsc',
+      creationTimeAsc: 'option.notesPanel.creationTimeAsc',
     };
   }
 
