@@ -15,15 +15,12 @@ export default () => {
     freeText.Width = 50;
     freeText.Height = 50;
     freeText.LockedContents = true;
-    // freeText.Locked = true;
-    // freeText.Listable = false;
-    // freeText.ReadOnly = true;
+    freeText.NoResize = true;
     freeText.setPadding(new Annotations.Rect(0, 0, 0, 0));
     freeText.setContents(`${content}`);
     freeText.setCustomData('isComment', true);
     freeText.StrokeThickness = 0;
     freeText.FontSize = '16pt';
-
     return freeText;
   };
 
@@ -33,8 +30,7 @@ export default () => {
     commentCount = 1;
   });
 
-  eraserTool.on('erasingAnnotation', (args) => {
-    // Make eraser tool skip deleting rectangle annotations
+  eraserTool.on('erasingAnnotation', args => {
     if (args.annotation.getCustomData('isComment')) {
       args.skipAnnotation();
     }
