@@ -74,6 +74,7 @@ export default () => {
             annot.setCustomData('commentNumber', `${commentCount}`);
             annotManager.groupAnnotations(annot, [freeText]);
             annotManager.addAnnotation(freeText);
+            annotManager.redrawAnnotation(freeText);
           }
 
           commentCount++;
@@ -91,7 +92,7 @@ export default () => {
           annotManager.deleteAnnotation(associatedFreeTextAnnot, false, true);
 
           commentNumberToBeDeleted = +annot.getCustomData('commentNumber');
-          commentCount--;
+          commentCount = Math.max(commentCount - 1, 1);
         });
 
         const currAnnotList = annotManager.getAnnotationsList().filter(annot => annot.getCustomData('freeTextId'));
@@ -104,12 +105,14 @@ export default () => {
             const associatedFreeTextAnnot = annotManager.getAnnotationById(annot.getCustomData('freeTextId'));
             if (associatedFreeTextAnnot) {
               associatedFreeTextAnnot.setContents(`${commentNumberToBeDeleted}`);
+              annotManager.redrawAnnotation(associatedFreeTextAnnot);
             } else {
               const freeText = createFreeTextComment(annot.PageNumber, annot.X + 50, annot.Y, commentNumberToBeDeleted);
               annot.setCustomData('freeTextId', freeText.Id);
               annot.setCustomData('commentNumber', `${commentCount}`);
               annotManager.groupAnnotations(annot, [freeText]);
               annotManager.addAnnotation(freeText);
+              annotManager.redrawAnnotation(freeText);
             }
             commentNumberToBeDeleted++;
           }
