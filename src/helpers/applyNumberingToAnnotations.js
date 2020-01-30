@@ -5,6 +5,8 @@ export default () => {
   const annotManager = docViewer.getAnnotationManager();
   const Annotations = window.Annotations;
 
+  const eraserTool = docViewer.getTool('AnnotationEraserTool');
+
   const createFreeTextComment = (pageNum, x, y, content) => {
     const freeText = new Annotations.FreeTextAnnotation();
     freeText.PageNumber = pageNum;
@@ -12,8 +14,10 @@ export default () => {
     freeText.Y = y;
     freeText.Width = 50;
     freeText.Height = 50;
-    freeText.Listable = false;
-    freeText.ReadOnly = true;
+    freeText.LockedContents = true;
+    // freeText.Locked = true;
+    // freeText.Listable = false;
+    // freeText.ReadOnly = true;
     freeText.setPadding(new Annotations.Rect(0, 0, 0, 0));
     freeText.setContents(`${content}`);
     freeText.setCustomData('isComment', true);
@@ -27,6 +31,13 @@ export default () => {
 
   docViewer.on('beforeDocumentLoaded', () => {
     commentCount = 1;
+  });
+
+  eraserTool.on('erasingAnnotation', (args) => {
+    // Make eraser tool skip deleting rectangle annotations
+    if (args.annotation.getCustomData('isComment')) {
+      args.skipAnnotation();
+    }
   });
 
   annotManager.on('annotationChanged', (annotations, action, options) => {
@@ -45,7 +56,7 @@ export default () => {
           annot.setCustomData('commentNumber', `${commentCount}`);
           annot.setCustomData('freeTextId', freeText.Id);
           annotManager.groupAnnotations(annot, [freeText]);
-          annotManager.addAnnotation(freeText);
+          annotManager.addAnnotation(freeText, true);
           annotManager.redrawAnnotation(freeText);
           commentCount++;
         } else if (annot.getCustomData('commentNumber') !== '') {
