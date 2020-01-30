@@ -1,4 +1,5 @@
 import core from 'core';
+import disableElement from '../apis/disableElement';
 
 export default () => {
   const docViewer = window.docViewer;

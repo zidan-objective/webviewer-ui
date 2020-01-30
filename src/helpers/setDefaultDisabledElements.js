@@ -75,6 +75,8 @@ export default store => {
         'bookmarksPanelButton',
         'thumbnailControl',
         'documentControl',
+        'annotationGroupButton',
+        'annotationUngroupButton',
       ],
       PRIORITY_ONE,
     ),
