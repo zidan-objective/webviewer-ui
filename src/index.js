@@ -25,12 +25,16 @@ import setDefaultToolStyles from 'helpers/setDefaultToolStyles';
 import setUserPermission from 'helpers/setUserPermission';
 import logDebugInfo from 'helpers/logDebugInfo';
 import rootReducer from 'reducers/rootReducer';
+import getHashParams from 'helpers/getHashParams';
 
 const middleware = [thunk];
 
 if (process.env.NODE_ENV === 'development') {
-  const { createLogger } = require('redux-logger');
-  middleware.push(createLogger({ collapsed: true }));
+  const isSpamDisabled = localStorage.getItem('spamDisabled') === 'true';
+  if (!isSpamDisabled) {
+    const { createLogger } = require('redux-logger');
+    middleware.push(createLogger({ collapsed: true }));
+  }
 }
 
 const store = createStore(rootReducer, applyMiddleware(...middleware));
@@ -45,6 +49,18 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   module.hot.accept();
 }
 
+if (process.env.NODE_ENV === 'development') {
+  window.disableSpam = () => {
+    localStorage.setItem('spamDisabled', 'true');
+    location.reload();
+  }
+
+  window.enableSpam = () => {
+    localStorage.setItem('spamDisabled', 'false');
+    location.reload();
+  }
+}
+
 if (window.CanvasRenderingContext2D) {
   let fullAPIReady = Promise.resolve();
   const state = store.getState();
@@ -54,7 +70,7 @@ if (window.CanvasRenderingContext2D) {
     fullAPIReady = loadScript('../core/pdf/PDFNet.js');
   }
 
-  window.CoreControls.enableSubzero(state.advanced.subzero);
+  window.CoreControls.enableSubzero(getHashParams('subzero', false));
   window.CoreControls.setWorkerPath('../core');
   window.CoreControls.setResourcesPath('../core/assets');
 
@@ -84,7 +100,7 @@ if (window.CanvasRenderingContext2D) {
       getBackendPromise(state.document.pdfType).then(pdfType => {
         window.CoreControls.initPDFWorkerTransports(pdfType, {
           workerLoadingProgress: percent => {
-            store.dispatch(actions.setWorkerLoadingProgress(percent));
+            store.dispatch(actions.setLoadingProgress(percent));
           },
         }, window.sampleL);
       });
@@ -94,7 +110,7 @@ if (window.CanvasRenderingContext2D) {
       getBackendPromise(state.document.officeType).then(officeType => {
         window.CoreControls.initOfficeWorkerTransports(officeType, {
           workerLoadingProgress: percent => {
-            store.dispatch(actions.setWorkerLoadingProgress(percent));
+            store.dispatch(actions.setLoadingProgress(percent));
           },
         }, window.sampleL);
       });

@@ -11,9 +11,10 @@ export default (dispatch, src, options = {}) => {
   options.onProgress = percent => dispatch(actions.setLoadingProgress(percent));
   options.password = transformPasswordOption(options.password, dispatch);
   options.xodOptions = extractXodOptions(options);
+  options.onError = fireError;
 
   dispatch(actions.closeElement('passwordModal'));
-  core.loadDocument(src, options).catch(fireError);
+  core.loadDocument(src, options);
   dispatch(actions.openElement('progressModal'));
 };
 
@@ -33,7 +34,6 @@ const getDefaultOptions = () => ({
   disableWebsockets: getHashParams('disableWebsockets', false),
   cacheKey: JSON.parse(getHashParams('cacheKey', null)),
   streaming: getHashParams('streaming', false),
-  subzero: getHashParams('subzero', false),
   useDownloader: getHashParams('useDownloader', true),
 });
 
