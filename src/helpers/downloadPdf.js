@@ -8,7 +8,7 @@ import actions from 'actions';
 export default (dispatch, options = {}) => {
   const {
     filename = core.getDocument()?.getFilename() || 'document',
-    includeAnnotations = true,
+    includeAnnotations = includeAnnotations.includeAnnotations !== undefined ? includeAnnotations.includeAnnotations : true,
     xfdfData,
     externalURL,
   } = options;
@@ -23,6 +23,14 @@ export default (dispatch, options = {}) => {
       const doc = core.getDocument();
       if (includeAnnotations) {
         downloadOptions.xfdfString = xfdfData || xfdfString;
+      }
+      else {
+        downloadOptions.xfdfString = `<?xml version="1.0" encoding="UTF-8" ?>
+        <xfdf
+            xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">
+                <fields />
+                <annots />
+            </xfdf>`;
       }
       if (doc.getType() === 'office') {
         downloadOptions.downloadType = 'office';
