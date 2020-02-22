@@ -58,7 +58,7 @@ const getViewCenterAfterScale = scale => {
   const clientX = window.innerWidth / 2;
   const clientY = window.innerHeight / 2;
 
-  const x = (clientX + documentContainer.scrollLeft - documentWrapper.offsetLeft) * scale - clientX + documentContainer.offsetLeft;
+  const x = (clientX + window.utils.getScrollLeft(documentContainer) - documentWrapper.offsetLeft) * scale - clientX + documentContainer.offsetLeft;
   const y = (clientY + documentContainer.scrollTop - documentWrapper.offsetTop) * scale - clientY + documentContainer.offsetTop;
 
   return { x, y };

@@ -148,7 +148,7 @@ const calcTextPopupPosition = (selectedTextPosition, popupDimension) => {
 };
 
 const calcPopupLeft = ({ topLeft, bottomRight }, { width }) => {
-  const { scrollLeft } = core.getScrollViewElement();
+  const scrollLeft = window.utils.getScrollLeft(core.getScrollViewElement());
   const center = (topLeft.x + bottomRight.x) / 2 - scrollLeft;
   let left = center - width / 2;
 
