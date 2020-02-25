@@ -142,7 +142,7 @@ if (window.CanvasRenderingContext2D) {
     setDefaultDisabledElements(store);
     setupLoadAnnotationsFromServer(store);
     setDefaultToolStyles();
-    applyNumberingToAnnotations();
+    applyNumberingToAnnotations(store);
     core.setToolMode(defaultTool);
 
     ReactDOM.render(
