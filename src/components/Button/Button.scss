@@ -1,6 +1,12 @@
 @import '../../constants/styles';
 
 .Button {
+  // Override button styles
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 0;
+
   position: relative;
   display: flex;
   justify-content: center;
@@ -12,11 +18,11 @@
   height: 32px;
 
   // &[data-element="sitckyToolButton"], &[data-element="highlightToolButton"]  {
-    // hack for svgs
-    path:nth-child(4) {
-      color: #c3c6d4 !important;
-    }
-  // }    
+  // hack for svgs
+  path:nth-child(4) {
+    color: #c3c6d4 !important;
+  }
+  // }
 
   // hack for svgs
   &.active {
@@ -29,7 +35,8 @@
     width: 24px;
   }
 
-  &:hover {
+  &:hover,
+  &:focus {
     background: var(--button-hover-color);
 
     // https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover
