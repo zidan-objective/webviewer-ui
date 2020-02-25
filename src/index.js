@@ -53,12 +53,12 @@ if (process.env.NODE_ENV === 'development') {
   window.disableSpam = () => {
     localStorage.setItem('spamDisabled', 'true');
     location.reload();
-  }
+  };
 
   window.enableSpam = () => {
     localStorage.setItem('spamDisabled', 'false');
     location.reload();
-  }
+  };
 }
 
 if (window.CanvasRenderingContext2D) {
@@ -68,6 +68,10 @@ if (window.CanvasRenderingContext2D) {
   if (state.advanced.fullAPI) {
     window.CoreControls.enableFullPDF(true);
     fullAPIReady = loadScript('../core/pdf/PDFNet.js');
+  }
+
+  if (getHashParams('disableLogs', false)) {
+    window.CoreControls.disableLogs(true);
   }
 
   window.CoreControls.enableSubzero(getHashParams('subzero', false));
@@ -120,7 +124,7 @@ if (window.CanvasRenderingContext2D) {
 
   loadCustomCSS(state.advanced.customCSS);
 
-  logDebugInfo(state.advanced);
+  logDebugInfo();
 
   fullAPIReady.then(() => loadConfig()).then(() => {
     if (preloadWorker) {

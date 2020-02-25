@@ -12,8 +12,10 @@ export default (dispatch, options = {}) => {
     xfdfData,
     externalURL,
   } = options;
-  const downloadOptions = { downloadType: 'pdf' };
-  let file;
+
+  if (!options.downloadType) {
+    options.downloadType = 'pdf';
+  }
 
   dispatch(actions.openElement('loadingModal'));
 
@@ -22,7 +24,7 @@ export default (dispatch, options = {}) => {
     .then(xfdfString => {
       const doc = core.getDocument();
       if (includeAnnotations) {
-        downloadOptions.xfdfString = xfdfData || xfdfString;
+        options.xfdfString = options.xfdfString || xfdfString;
       }
       else {
         downloadOptions.xfdfString = `<?xml version="1.0" encoding="UTF-8" ?>
@@ -59,9 +61,11 @@ export default (dispatch, options = {}) => {
         dispatch(actions.closeElement('loadingModal'));
         fireEvent('finishedSavingPDF');
       } else {
-        return doc.getFileData(downloadOptions).then(
+        return doc.getFileData(options).then(
           data => {
             const arr = new Uint8Array(data);
+            let file;
+
             if (isIE) {
               file = new Blob([arr], { type: 'application/pdf' });
             } else {
@@ -75,7 +79,7 @@ export default (dispatch, options = {}) => {
           error => {
             dispatch(actions.closeElement('loadingModal'));
             throw new Error(error.message);
-          }
+          },
         );
       }
     })
