@@ -27,7 +27,7 @@ export default (dispatch, options = {}) => {
         options.xfdfString = options.xfdfString || xfdfString;
       }
       else {
-        downloadOptions.xfdfString = `<?xml version="1.0" encoding="UTF-8" ?>
+        options.xfdfString = `<?xml version="1.0" encoding="UTF-8" ?>
         <xfdf
             xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">
                 <fields />

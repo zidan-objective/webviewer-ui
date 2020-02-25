@@ -1,6 +1,6 @@
 import core from 'core';
-import disableElement from '../apis/disableElement';
 
+import { getSortStrategies } from 'constants/sortStrategies';
 export default () => {
   const docViewer = window.docViewer;
   const annotManager = docViewer.getAnnotationManager();
@@ -25,10 +25,30 @@ export default () => {
     return freeText;
   };
 
-  let commentCount = 1;
+  let numberingForInitialAnnotsDrawn = false;
 
-  docViewer.on('beforeDocumentLoaded', () => {
-    commentCount = 1;
+  docViewer.on('annotationsLoaded', () => {
+    const annots = annotManager.getAnnotationsList().filter(annot => annot.Listable &&
+      !annot.isReply() &&
+      !annot.Hidden &&
+      annot.getCustomData('commentNumber') === '' &&
+      annot.getCustomData('isComment') === '');
+
+      const sortedAnnots = getSortStrategies()['position'].getSortedNotes(annots);
+
+      sortedAnnots.forEach((annot, index) => {
+        const freeText = createFreeTextComment(annot.PageNumber, annot.X + 50, annot.Y, index + 1);
+
+          // bug for now b/c when exporting existing annots to xfdf, it can't serialize custom data unless we explicity trigger a change
+          annot.setX(annot.getX());
+
+          annot.setCustomData('commentNumber', `${index + 1}`);
+          annot.setCustomData('freeTextId', freeText.Id);
+          annotManager.groupAnnotations(annot, [freeText]);
+          annotManager.addAnnotation(freeText, true);
+          annotManager.redrawAnnotation(freeText);
+      });
+      numberingForInitialAnnotsDrawn = true;
   });
 
   eraserTool.on('erasingAnnotation', args => {
@@ -38,86 +58,41 @@ export default () => {
   });
 
   annotManager.on('annotationChanged', (annotations, action, options) => {
-    if (action === 'add' && !options.isUndoRedo) {
-      annotations.forEach(annot => {
-        if (annot.Listable &&
-          !annot.isReply() &&
-          !annot.Hidden &&
-          annot.getCustomData('commentNumber') === '' &&
-          annot.getCustomData('isComment') === '') {
-          const freeText = createFreeTextComment(annot.PageNumber, annot.X + 50, annot.Y, commentCount);
+    if (numberingForInitialAnnotsDrawn) {
+      if (action === 'delete') {
+        annotations.forEach((annot) => {
+          if (annot.getCustomData('freeTextId') !== '') {
+            const freeText = annotManager.getAnnotationById(annot.getCustomData('freeTextId'));
+            annotManager.deleteAnnotation(freeText, false, true);
+          }
+        });
+      }
+      const annots = annotManager.getAnnotationsList().filter(annot => annot.Listable &&
+        !annot.isReply() &&
+        !annot.Hidden &&
+        annot.getCustomData('isComment') === '');
+        const sortedAnnots = getSortStrategies()['position'].getSortedNotes(annots);
 
+        sortedAnnots.forEach((annot, index) => {
           // bug for now b/c when exporting existing annots to xfdf, it can't serialize custom data unless we explicity trigger a change
           annot.setX(annot.getX());
-
-          annot.setCustomData('commentNumber', `${commentCount}`);
-          annot.setCustomData('freeTextId', freeText.Id);
-          annotManager.groupAnnotations(annot, [freeText]);
-          annotManager.addAnnotation(freeText, true);
-          annotManager.redrawAnnotation(freeText);
-          commentCount++;
-        } else if (annot.getCustomData('commentNumber') !== '') {
-          commentCount++;
-        }
-      });
-    } else if (annotations && action === 'add' && options.isUndoRedo) {
-      annotations.forEach(annot => {
-        if (annot.getCustomData('freeTextId')) {
-          annot.setCustomData('commentNumber', `${commentCount}`);
-          const associatedFreeTextAnnot = annotManager.getAnnotationById(annot.getCustomData('freeTextId'));
-          if (associatedFreeTextAnnot) {
-            associatedFreeTextAnnot.setContents(`${commentCount}`);
-            annotManager.groupAnnotations(annot, [associatedFreeTextAnnot]);
-          } else {
-            const freeText = createFreeTextComment(annot.PageNumber, annot.X + 50, annot.Y, commentCount);
+          annot.setCustomData('commentNumber', `${index + 1}`);
+          let freeText;
+          if (annot.getCustomData('freeTextId') === '') {
+            freeText = createFreeTextComment(annot.PageNumber, annot.X + 50, annot.Y, index + 1);
             annot.setCustomData('freeTextId', freeText.Id);
-            annot.setCustomData('commentNumber', `${commentCount}`);
             annotManager.groupAnnotations(annot, [freeText]);
-            annotManager.addAnnotation(freeText);
+            annotManager.addAnnotation(freeText, true);
             annotManager.redrawAnnotation(freeText);
-          }
-
-          commentCount++;
-        } else if (annot.getCustomData('isComment')) {
-          annotManager.deleteAnnotation(annot, false, true);
-        }
-      });
-    } else if (annotations && action === 'delete' && !options.imported) {
-      let commentNumberToBeDeleted;
-      const doesAnnotHaveCommentNumber = annotations.some(annot => annot.getCustomData('freeTextId'));
-      if (doesAnnotHaveCommentNumber) {
-        annotations.forEach(annot => {
-          // delete associated free text annot
-          const associatedFreeTextAnnot = annotManager.getAnnotationById(annot.getCustomData('freeTextId'));
-          annotManager.deleteAnnotation(associatedFreeTextAnnot, false, true);
-
-          commentNumberToBeDeleted = +annot.getCustomData('commentNumber');
-          commentCount = Math.max(commentCount - 1, 1);
-        });
-
-        const currAnnotList = annotManager.getAnnotationsList().filter(annot => annot.getCustomData('freeTextId'));
-        for (let i = commentNumberToBeDeleted; i <= commentCount; i++) {
-          // correct numbering for remaing annots after deletion
-          // need to do it this way as annot list is not ordered by comment number
-          const annot = currAnnotList.find(element => +element.getCustomData('commentNumber') === i);
-          if (annot && annot.getCustomData('freeTextId')) {
-            annot.setCustomData('commentNumber', `${commentNumberToBeDeleted}`);
-            const associatedFreeTextAnnot = annotManager.getAnnotationById(annot.getCustomData('freeTextId'));
-            if (associatedFreeTextAnnot) {
-              associatedFreeTextAnnot.setContents(`${commentNumberToBeDeleted}`);
-              annotManager.redrawAnnotation(associatedFreeTextAnnot);
-            } else {
-              const freeText = createFreeTextComment(annot.PageNumber, annot.X + 50, annot.Y, commentNumberToBeDeleted);
-              annot.setCustomData('freeTextId', freeText.Id);
-              annot.setCustomData('commentNumber', `${commentCount}`);
-              annotManager.groupAnnotations(annot, [freeText]);
-              annotManager.addAnnotation(freeText);
+          } else {  
+            freeText = annot.getGroupedChildren()[0];
+            if (freeText) {
+              freeText.setContents(`${index + 1}`);
               annotManager.redrawAnnotation(freeText);
             }
-            commentNumberToBeDeleted++;
           }
-        }
-      }
+
+        });
     }
   });
 };
