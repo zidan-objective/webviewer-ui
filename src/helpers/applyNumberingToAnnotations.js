@@ -58,7 +58,7 @@ export default (store) => {
           annotManager.groupAnnotations(annot, [freeText]);
           annotManager.addAnnotation(freeText, true);
           annotManager.redrawAnnotation(freeText);
-        } else {  
+        } else {
           freeText = annot.getGroupedChildren()[0];
           if (freeText) {
             freeText.setContents(`${index + 1}`);
