@@ -2,10 +2,7 @@
 
 .Button {
   // Override button styles
-  background-color: transparent;
-  border: none;
-  outline: none;
-  padding: 0;
+  @include button-reset;
 
   position: relative;
   display: flex;

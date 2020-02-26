@@ -19,7 +19,7 @@ const propTypes = {
   color: PropTypes.string,
   dataElement: PropTypes.string,
   className: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
 };
 
 const Button = props => {
