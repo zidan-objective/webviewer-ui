@@ -19,28 +19,43 @@
   @include mobile {
     position: fixed;
     left: 50%;
-    bottom: 24px;  
-    top: auto;  
+    bottom: 24px;
+    top: auto;
     transform: translateX(-50%);
     margin-left: auto;
     margin-right: auto;
     background: var(--light-background);
     border-radius: 4px;
-    box-shadow: 0px 0px 3px 0px rgb(195, 198, 212);    
+    box-shadow: 0px 0px 3px 0px rgb(195, 198, 212);
     font-size: 16px;
     z-index: 55;
   }
 
   .down-arrow-container {
+    @include button-reset;
     height: 100%;
     border-radius: 4px;
     display: flex;
     align-items: center;
-    margin-right: 8px;
-    margin-left: 8px;
+    cursor: pointer;
 
-    &:hover {
-      background: #767f9b33;
+    &:disabled {
+      cursor: default;
+    }
+
+    &--left {
+      margin-left: 8px;
+    }
+
+    &--right {
+      margin-right: 8px;
+    }
+
+    &:hover,
+    &:focus {
+      &:not(:disabled) {
+        background: #767f9b33;
+      }
     }
 
     .down-arrow {
@@ -50,13 +65,21 @@
       @include mobile {
         width: 20px;
         height: 20px;
-      }      
+      }
     }
   }
 
   .formContainer {
-    top: -1px;
+    @include button-reset;
+    padding: 8px 4px;
+    border-radius: 4px;
+    height: 100%;
     position: relative;
+
+    &:hover,
+    &:focus {
+      background: #767f9b33;
+    }
 
     input {
       min-width: 8px;
@@ -75,8 +98,6 @@
       @include mobile {
         font-size: 16px;
       }
-    }    
+    }
   }
-
-
 }
