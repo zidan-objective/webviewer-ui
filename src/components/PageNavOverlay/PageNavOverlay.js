@@ -40,19 +40,6 @@ function PageNavOverlay(props) {
     setInput(props.pageLabels[props.currentPage - 1]);
   }, [props.currentPage, props.pageLabels]);
 
-  const [disabled, setDisabled] = useState({ prev: true, next: false });
-  useEffect(() => {
-    setDisabled(old => {
-      const prev = Number(input) === 1;
-      const next = Number(input) === window.docViewer.getPageCount();
-
-      if (old.prev === prev && old.next === next) {
-        return old;
-      }
-      return { prev, next };
-    });
-  }, [input]);
-
   const onSelectText = () => {
     if (isIOS) {
       setTimeout(() => {
@@ -97,7 +84,7 @@ function PageNavOverlay(props) {
       <button
         type="button"
         className="down-arrow-container down-arrow-container--left"
-        disabled={disabled.prev}
+        disabled={props.currentPage <= 1}
         onClick={() =>
           window.docViewer.setCurrentPage(
             Math.max(window.docViewer.getCurrentPage() - 1, 1),
@@ -129,7 +116,7 @@ function PageNavOverlay(props) {
       <button
         type="button"
         className="down-arrow-container down-arrow-container--right"
-        disabled={disabled.next}
+        disabled={props.currentPage >= props.totalPages}
         onClick={() =>
           window.docViewer.setCurrentPage(
             Math.min(
