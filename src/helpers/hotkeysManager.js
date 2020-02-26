@@ -277,12 +277,25 @@ WebViewer(...)
       },
       space: {
         keyup: this.createToolHotkeyHandler(e => {
+          // Return early if space is pressed on button.
+          if (e.target && e.target.type === 'button') {
+            return;
+          }
+
           e.preventDefault();
 
-          setToolModeAndGroup(store, this.prevToolName);
-          this.prevToolName = null;
+          if (this.prevToolName) {
+            setToolModeAndGroup(store, this.prevToolName);
+            this.prevToolName = null;
+          }
         }),
         keydown: this.createToolHotkeyHandler(e => {
+          // Return early if space is pressed on button.
+          console.log(e);
+          if (e.target && e.target.type === 'button') {
+            return;
+          }
+
           e.preventDefault();
 
           if (core.getToolMode().name !== 'Pan') {
