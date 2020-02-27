@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
-
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import defaultTool from 'constants/defaultTool';
@@ -32,7 +31,9 @@ class ToolGroupButton extends React.PureComponent {
     closeElement: PropTypes.func.isRequired,
     setActiveToolGroup: PropTypes.func.isRequired,
     isActive: PropTypes.bool.isRequired,
+    isToolsOverlayOpen: PropTypes.bool.isRequired,
     iconColor: PropTypes.oneOf(['TextColor', 'StrokeColor', 'FillColor']),
+    showDownArrow: PropTypes.bool,
   };
 
   constructor(props) {
@@ -47,12 +48,12 @@ class ToolGroupButton extends React.PureComponent {
       prevProps.activeToolName !== this.props.activeToolName;
     const wasAcitveToolNameInGroup =
       prevProps.toolNames.indexOf(prevProps.activeToolName) > -1;
-    const isAcitveToolNameInGroup =
+    const isActiveToolNameInGroup =
       this.props.toolNames.indexOf(this.props.activeToolName) > -1;
     const toolNamesLengthChanged =
       prevProps.toolNames.length !== this.props.toolNames.length;
 
-    if (activeToolNameChanged && isAcitveToolNameInGroup) {
+    if (activeToolNameChanged && isActiveToolNameInGroup) {
       this.setState({ toolName: this.props.activeToolName });
     }
 
@@ -65,20 +66,19 @@ class ToolGroupButton extends React.PureComponent {
     if (
       toolNamesLengthChanged &&
       !wasAcitveToolNameInGroup &&
-      isAcitveToolNameInGroup
+      isActiveToolNameInGroup
     ) {
       this.setState({ toolName: this.props.activeToolName });
       this.props.setActiveToolGroup(this.props.toolGroup);
     }
   }
 
-  onClick = () => {
+  // Fired when tool button clicked.
+  onSelect = () => {
     const {
       setActiveToolGroup,
       isActive,
       closeElement,
-      toggleElement,
-      openElement,
       toolGroup,
     } = this.props;
     const { toolName } = this.state;
@@ -90,7 +90,27 @@ class ToolGroupButton extends React.PureComponent {
     } else {
       core.setToolMode(toolName);
       setActiveToolGroup(toolGroup);
+    }
+  };
+
+  // Fired when expand button clicked.
+  onExpand = () => {
+    const {
+      isActive,
+      closeElement,
+      openElement,
+      isToolsOverlayOpen,
+    } = this.props;
+
+    if (isActive) {
+      if (isToolsOverlayOpen) {
+        closeElement('toolsOverlay');
+      } else {
+        openElement('toolsOverlay');
+      }
+    } else {
       openElement('toolsOverlay');
+      this.onSelect();
     }
   };
 
@@ -103,6 +123,7 @@ class ToolGroupButton extends React.PureComponent {
       allButtonsInGroupDisabled,
       iconColor,
       title,
+      isToolsOverlayOpen,
       showDownArrow = true,
     } = this.props;
 
@@ -123,22 +144,24 @@ class ToolGroupButton extends React.PureComponent {
           active: isActive,
         })}
         data-element={dataElement}
-        onClick={this.onClick}
       >
-        <div>
-          <Button
-            title={title}
-            mediaQueryClassName={mediaQueryClassName}
-            isActive={isActive}
-            img={img}
-            color={color}
-          />
-          <div className="arrow-up" />
-        </div>
+        <Button
+          title={title}
+          mediaQueryClassName={mediaQueryClassName}
+          isActive={isActive}
+          img={img}
+          color={color}
+          onClick={this.onSelect}
+        />
         {showDownArrow && (
-          <div className="down-arrow-container">
+          <button
+            className={classNames('down-arrow-container', {
+              'down-arrow-container--expanded': isActive && isToolsOverlayOpen,
+            })}
+            onClick={this.onExpand}
+          >
             <Icon className="down-arrow" glyph="icon-chevron-down" />
-          </div>
+          </button>
         )}
       </div>
     );
@@ -147,6 +170,7 @@ class ToolGroupButton extends React.PureComponent {
 
 const mapStateToProps = (state, ownProps) => ({
   isActive: selectors.getActiveToolGroup(state) === ownProps.toolGroup,
+  isToolsOverlayOpen: selectors.isElementOpen(state, 'toolsOverlay'),
   activeToolName: selectors.getActiveToolName(state),
   toolNames: selectors.getToolNamesByGroup(state, ownProps.toolGroup),
   toolButtonObjects: selectors.getToolButtonObjects(state),

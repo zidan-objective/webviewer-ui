@@ -7,17 +7,35 @@
   height: 32px;
   border-radius: 4px;
   cursor: pointer;
+  width: auto;
+  padding-right: 4px;
 
   @include tablet {
     margin: 0 12px;
   }
 
+  .Button {
+    padding-left: 4px;
+    border-radius: 4px 0 0 4px;
+  }
+
   .down-arrow-container {
-    margin-left: -4px;
+    @include button-reset;
+    cursor: pointer;
+    margin-right: -4px;
     height: 100%;
-    border-radius: 4px;
+    border-radius: 0 4px 4px 0;
     display: flex;
     align-items: center;
+
+    &:hover,
+    &:focus {
+      background: var(--button-hover-color);
+    }
+
+    &--expanded {
+      background: #767f9b33;
+    }
 
     .down-arrow {
       width: 12px;
@@ -26,21 +44,7 @@
     }
   }
 
-  &.active{
-    // @include mobile {
-    //   .arrow-up {
-    //     width: 0;
-    //     height: 0;
-    //     border-left: 8px solid transparent;
-    //     border-right: 8px solid transparent;
-
-    //     border-bottom: 10px solid #dfe2ed;
-    //     position: absolute;
-
-    //     transform: translateX(50%);
-    //   }
-    // }
-
+  &.active {
     // hack
     &.signature {
       svg {
@@ -48,9 +52,6 @@
       }
     }
 
-    .down-arrow-container {
-      background: #767f9b33
-    }
     .down-arrow {
       color: var(--icon-active-color);
     }
@@ -62,11 +63,7 @@
     }
   }
 
-  &:hover {
-    background: var(--button-hover-color);
-  }
-
-  .Button:hover {
-    background: none;
-  }
+  // .Button:hover {
+  //   background: none;
+  // }
 }
