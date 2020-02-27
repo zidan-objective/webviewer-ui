@@ -278,7 +278,7 @@ WebViewer(...)
       space: {
         keyup: this.createToolHotkeyHandler(e => {
           // Return early if space is pressed on button.
-          if (e.target && e.target.type === 'button') {
+          if (e.target && e.target.nodeName === 'BUTTON') {
             return;
           }
 
@@ -291,8 +291,7 @@ WebViewer(...)
         }),
         keydown: this.createToolHotkeyHandler(e => {
           // Return early if space is pressed on button.
-          console.log(e);
-          if (e.target && e.target.type === 'button') {
+          if (e.target && e.target.nodeName === 'BUTTON') {
             return;
           }
 
