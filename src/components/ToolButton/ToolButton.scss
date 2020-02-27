@@ -10,11 +10,11 @@
 
   @include tablet-and-mobile {
     margin: 0 12px;
-  }     
+  }
 
   &.active {
     background: #767f9b33;
-    .styling-down-arrow-container{
+    .styling-down-arrow-container {
       svg {
         color: #767f9b;
       }
@@ -29,25 +29,31 @@
     }
   }
 
+  .tool-button {
+    border-radius: 4px 4px 0 0;
+  }
+
   .styling-down-arrow-container {
+    @include button-reset;
+    border-radius: 0 0 4px 4px;
     display: flex;
     justify-content: center;
     width: 32px;
     padding-bottom: 8px;
-    border-radius: 4px;
     cursor: pointer;
 
     @include mobile {
       margin-top: -2px;
       padding-bottom: 5px;
-    }         
+    }
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: var(--button-hover-color);
 
       @media (hover: none) {
         background: transparent;
-      }      
+      }
     }
 
     .styling-down-arrow {

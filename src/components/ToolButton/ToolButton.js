@@ -1,24 +1,24 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 
-import Button from "components/Button";
-import Icon from "components/Icon";
+import Button from 'components/Button';
+import Icon from 'components/Icon';
 
-import core from "core";
-import toolStylesExist from "helpers/toolStylesExist";
-import getToolStyles from "helpers/getToolStyles";
-import hotkeysManager from "helpers/hotkeysManager";
-import { mapToolNameToKey } from "constants/map";
-import actions from "actions";
-import selectors from "selectors";
+import core from 'core';
+import toolStylesExist from 'helpers/toolStylesExist';
+import getToolStyles from 'helpers/getToolStyles';
+import hotkeysManager from 'helpers/hotkeysManager';
+import { mapToolNameToKey } from 'constants/map';
+import actions from 'actions';
+import selectors from 'selectors';
 
-import "./ToolButton.scss";
+import './ToolButton.scss';
 
 const propTypes = {
   toolName: PropTypes.string.isRequired,
-  group: PropTypes.string
+  group: PropTypes.string,
 };
 
 const ToolButton = ({
@@ -30,29 +30,24 @@ const ToolButton = ({
   const [
     isActive,
     iconColor,
-    // use this to trigger rerender so the color will be right
-    // TODO: fix the issue properly. Can listen to toolUpdated
-    // eslint-disable-next-line
-    activeToolStyles,
-    { group = "", showColor, ...restObjectData },
-    customOverrides
+    { group = '', showColor, ...restObjectData },
+    customOverrides,
   ] = useSelector(
     state => [
       selectors.getActiveToolName(state) === toolName,
       selectors.getIconColor(state, mapToolNameToKey(toolName)),
-      selectors.getActiveToolStyles(state),
       selectors.getToolButtonObject(state, toolName),
       selectors.getCustomElementOverrides(
         state,
-        selectors.getToolButtonDataElement(state, toolName)
-      )
+        selectors.getToolButtonDataElement(state, toolName),
+      ),
     ],
-    shallowEqual
+    shallowEqual,
   );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (typeof customOverrides?.disable === "undefined") {
+    if (typeof customOverrides?.disable === 'undefined') {
       return;
     }
 
@@ -66,26 +61,26 @@ const ToolButton = ({
   const handleClick = () => {
     if (isActive) {
       if (toolStylesExist(toolName)) {
-        dispatch(actions.toggleElement("toolStylePopup"));
+        dispatch(actions.toggleElement('toolStylePopup'));
       }
     } else {
       core.setToolMode(toolName);
       dispatch(actions.setActiveToolGroup(group));
-      dispatch(actions.closeElement("toolStylePopup"));
+      dispatch(actions.closeElement('toolStylePopup'));
     }
   };
 
   const toolStyles = getToolStyles(toolName);
-  let color = "";
+  let color = '';
 
-  if (showColor === "always" || (showColor === "active" && isActive)) {
+  if (showColor === 'always' || (showColor === 'active' && isActive)) {
     color = toolStyles[iconColor]?.toHexString?.();
   }
 
   const ButtonComponent = (
     <Button
       className={classNames({
-        "tool-button": true,
+        'tool-button': true,
         hasStyles: toolStylesExist(toolName),
       })}
       onClick={handleClick}
@@ -100,24 +95,25 @@ const ToolButton = ({
     return (
       <div
         className={classNames({
-          "tool-button-container": true,
+          'tool-button-container': true,
           active: isStylingOpen && isActive,
         })}
       >
         {ButtonComponent}
         {toolStylesExist(toolName) && (
-          <div
+          <button
             className="styling-down-arrow-container"
             onClick={() => {
               handleClick();
               handleStyleClick(toolName);
             }}
+            type="button"
           >
             <Icon
               className="styling-down-arrow"
               glyph="icon-chevron-down-bold"
             />
-          </div>
+          </button>
         )}
       </div>
     );
