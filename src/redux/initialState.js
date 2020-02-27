@@ -8,16 +8,17 @@ import getHashParams from 'helpers/getHashParams';
 import { copyMapWithDataProperties } from 'constants/map';
 import actions from 'actions';
 import PageNavOverlay from '../components/PageNavOverlay/PageNavOverlay';
-import { getTools, getToolButtonObjects } from './getToolsState';
+import { getToolsState } from './getToolsState';
+
+const { tools, toolButtonObjects } = getToolsState();
 
 export default {
   viewer: {
     disabledElements: {},
     openElements: {
       header: true,
-      toolsHeader: window.matchMedia('(min-width: 641px)').matches,
-      // toolsHeader: true,
-      // toolsHeader: false,
+      // toolsHeader: window.matchMedia('(min-width: 641px)').matches,
+      toolsHeader: false,
     },
     headers: {
       default: [
@@ -41,7 +42,7 @@ export default {
         { type: 'toolButton', toolName: 'AnnotationEdit', hidden: ['tablet', 'mobile'] },
         { type: 'spacer' },
         { type: 'toggleElementButton', dataElement: 'toggleToolsButton', element: 'toolsHeader', img: 'icon-header-annotations-line', title: 'component.toolsHeader' },
-        { type: 'toggleElementButton', dataElement: 'searchButton', element: 'searchPanel', img: 'ic_search_black_24px', title: 'component.searchPanel' },
+        { type: 'toggleElementButton', dataElement: 'searchButton', element: 'searchPanel', img: 'icon-header-search', title: 'component.searchPanel' },
         { type: 'toggleElementButton', dataElement: 'toggleNotesButton', element: 'notesPanel', img: 'icon-header-chat-line', title: 'component.notesPanel' },
         { type: 'toggleElementButton', dataElement: 'menuButton', element: 'menuOverlay', img: 'icon-header-settings-line', title: 'component.menuOverlay' },
         {
@@ -51,7 +52,7 @@ export default {
         },
       ],
       // second header
-      tools: getTools(),
+      tools,
     },
     annotationPopup: [
       { dataElement: 'annotationCommentButton' },
@@ -80,7 +81,7 @@ export default {
       { dataElement: 'freeHandToolButton' },
       { dataElement: 'freeTextToolButton' },
     ],
-    toolButtonObjects: getToolButtonObjects(),
+    toolButtonObjects,
     tab: {
       signatureModal: 'inkSignaturePanelButton',
       linkModal: 'URLPanelButton',

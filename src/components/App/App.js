@@ -1,6 +1,6 @@
 import { hot } from 'react-hot-loader/root';
 import React, { useEffect } from 'react';
-import { useStore, useSelector } from 'react-redux';
+import { useStore, useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import selectors from 'selectors';
 
@@ -42,15 +42,23 @@ import ZoomOverlay from 'components/ZoomOverlay';
 import defineReaderControlAPIs from 'src/apis';
 import fireEvent from 'helpers/fireEvent';
 
+import actions from 'actions';
+
 import './App.scss';
 
 const propTypes = {
   removeEventHandlers: PropTypes.func.isRequired,
 };
 
+const mobileListener = window.matchMedia('(max-width: 640px)');
+const tabletListener = window.matchMedia('(min-width: 641px) and (max-width: 900px)');
+const desktopListener = window.matchMedia('(min-width: 902px)');
+
 const App = ({ removeEventHandlers }) => {
-  const [isToolsOverlayOpen, isToolsOverlayDisabled, isNotesOpen, isNotesDisabled, isLeftPanelOpen, isLeftPanelDisabled, isSearchPanelOpen, isSearchPanelDisabled, isSignatureModalOpen, isSignatureModalDisabled] = useSelector(
+  const [isToolsHeaderOpen, isToolsHeaderDisabled, isToolsOverlayOpen, isToolsOverlayDisabled, isNotesOpen, isNotesDisabled, isLeftPanelOpen, isLeftPanelDisabled, isSearchPanelOpen, isSearchPanelDisabled, isSignatureModalOpen, isSignatureModalDisabled] = useSelector(
     state => [
+      selectors.isElementOpen(state, 'toolsHeader'),
+      selectors.isElementDisabled(state, 'toolsHeader'),
       selectors.isElementOpen(state, 'toolsOverlay'),
       selectors.isElementDisabled(state, 'toolsOverlay'),
       selectors.isElementOpen(state, 'notesPanel'),
@@ -65,10 +73,23 @@ const App = ({ removeEventHandlers }) => {
   );
 
   const store = useStore();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     defineReaderControlAPIs(store);
     fireEvent('viewerLoaded');
+
+    mobileListener.addListener(() => {
+      dispatch(actions.setMobileToolsHeader());
+    });
+
+    tabletListener.addListener(() => {
+      dispatch(actions.setTabletToolsHeader());
+    });
+
+    desktopListener.addListener(() => {
+      dispatch(actions.setDesktopToolsHeader());
+    });
 
     return removeEventHandlers;
     // eslint-disable-next-line
@@ -80,7 +101,7 @@ const App = ({ removeEventHandlers }) => {
         <Accessibility />
 
         <Header />
-        <ToolsHeader />
+        {isToolsHeaderOpen && !isToolsHeaderDisabled && <ToolsHeader />}
         <div className="content">
           {isLeftPanelOpen && !isLeftPanelDisabled && <LeftPanel />}
           <DocumentContainer />
