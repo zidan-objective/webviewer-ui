@@ -14,7 +14,7 @@ const propTypes = {
   isActive: PropTypes.bool,
   mediaQueryClassName: PropTypes.string,
   img: PropTypes.string,
-  label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  label: PropTypes.node,
   title: PropTypes.string,
   color: PropTypes.string,
   dataElement: PropTypes.string,
@@ -60,13 +60,14 @@ const Button = props => {
         [mediaQueryClassName]: mediaQueryClassName,
         [className]: className,
       })}
+      type="button"
       style={style}
       data-element={dataElement}
       onClick={disable ? undefined : onClick}
     >
       {isGlyph && <Icon glyph={img} color={color} />}
       {img && !isGlyph && <img src={img} alt="" />}
-      {label && <p>{label}</p>}
+      {label}
     </button>
   );
 
