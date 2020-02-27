@@ -65,7 +65,9 @@ class ZoomOverlay extends React.PureComponent {
   }
 
   handleClickOutside = e => {
-    const ToggleZoomButton = document.querySelector('[data-element="zoomOverlayButton"]');
+    const ToggleZoomButton = document.querySelector(
+      '[data-element="zoomOverlayButton"]',
+    );
     const clickedToggleZoomButton = ToggleZoomButton?.contains(e.target);
 
     if (!clickedToggleZoomButton) {
@@ -103,29 +105,21 @@ class ZoomOverlay extends React.PureComponent {
         style={{ left, right, top }}
         ref={this.dropdown}
       >
-        <div
-          className="ZoomContainer"
-        >
-          <div
+        <div className="ZoomContainer">
+          <button
             className="ZoomItem"
             onClick={core.fitToWidth}
+            onFocus={() =>
+              console.warn('pidsjfpweifhipwehfipwehfpiwhefiphwpefhpwehfip')
+            }
           >
-            <Icon
-              className="ZoomIcon"
-              glyph="icon-header-zoom-fit-to-width"
-            />
+            <Icon className="ZoomIcon" glyph="icon-header-zoom-fit-to-width" />
             <div className="ZoomLabel">{t('action.fitToWidth')}</div>
-          </div>
-          <div
-            className="ZoomItem"
-            onClick={core.fitToPage}
-          >
-            <Icon
-              className="ZoomIcon"
-              glyph="icon-header-zoom-fit-to-page"
-            />
+          </button>
+          <button className="ZoomItem" onClick={core.fitToPage}>
+            <Icon className="ZoomIcon" glyph="icon-header-zoom-fit-to-page" />
             <div className="ZoomLabel">{t('action.fitToPage')}</div>
-          </div>
+          </button>
           <div className="spacer extraMarginTop" />
           {zoomList.map((zoomValue, i) => (
             <OverlayItem
@@ -135,13 +129,16 @@ class ZoomOverlay extends React.PureComponent {
             />
           ))}
           <div className="spacer" />
-          <div className="ZoomItem">
-            <Icon
-              className="ZoomIcon"
-              glyph="icon-header-zoom-marquee"
-            />
-            <ToolButton toolName="MarqueeZoomTool" label={t('tool.Marquee')} />
-          </div>
+          <ToolButton
+            toolName="MarqueeZoomTool"
+            className="ZoomItem"
+            label={
+              <>
+                <Icon className="ZoomIcon" glyph="icon-header-zoom-marquee" />
+                <div className="ZoomLabel">{t('tool.Marquee')}</div>
+              </>
+            }
+          />
           {/* <div
             className="ZoomItem"
             onClick={core.fitToPage}
