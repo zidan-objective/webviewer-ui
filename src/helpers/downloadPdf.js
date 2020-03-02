@@ -35,7 +35,7 @@ export default (dispatch, options = {}) => {
             </xfdf>`;
       }
       if (doc.getType() === 'office') {
-        downloadOptions.downloadType = 'office';
+        options.downloadType = 'office';
       }
 
       const getDownloadFilename = (name, extension) => {
