@@ -45,8 +45,15 @@ export default (dispatch, options = {}) => {
         return name;
       };
 
-      const extension = filename.split('.');
-      const downloadName = getDownloadFilename(filename, `.${extension[extension.length - 1]}`);
+      const fileNameParts = filename.split('.');
+      /**
+       * According to https://www.pdftron.com/api/web/CoreControls.Document.html
+       * We can't download image files / other files as their own extension, must convert it to PDF
+       */
+      if (!fileNameParts[fileNameParts.length - 1] !== 'pdf' && options.downloadType !== 'office') {
+        fileNameParts[fileNameParts.length - 1] = 'pdf';
+      }
+      const downloadName = getDownloadFilename(filename, `.${fileNameParts[fileNameParts.length - 1]}`);
 
       if (externalURL) {
         const downloadIframe =
@@ -65,7 +72,6 @@ export default (dispatch, options = {}) => {
           data => {
             const arr = new Uint8Array(data);
             let file;
-
             if (isIE) {
               file = new Blob([arr], { type: 'application/pdf' });
             } else {
