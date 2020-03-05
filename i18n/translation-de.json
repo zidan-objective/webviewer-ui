@@ -31,7 +31,7 @@
     "showMoreResults": "Mehr Ergebnisse anzeigen",
     "sign": "Unterschrift",
     "style": "Stil",
-    "submit": "Abgeben",
+    "submit": "OK",
     "zoom": "Zoom",
     "zoomIn": "Heranzoomen",
     "zoomOut": "Rauszoomen",
@@ -69,7 +69,8 @@
     "strikeout": "Durchstreichen",
     "underline": "Unterstreichen",
     "custom": "Angepasst",
-    "rubberStamp": "Stempel"
+    "rubberStamp": "Stempel",
+    "fileattachment": "Dateianhang"
   },
   "rubberStamp": {
     "Approved": "Genehmigt",
@@ -78,11 +79,11 @@
     "Confidential": "Geheim",
     "Departmental": "Abteilung",
     "Draft": "Entwurf",
-    "Experimental": "Experimental",
+    "Experimental": "Experimentell",
     "Expired": "Abgelaufen",
     "Final": "Finale",
     "ForComment": "Für Kommentar",
-    "ForPublicRelease": "Zur öffentlichen Veröffentlichung",
+    "ForPublicRelease": "Zur Veröffentlichung",
     "InformationOnly": "Nur Informationen",
     "NotApproved": "Nicht bestätigt",
     "NotForPublicRelease": "Nicht zur Veröffentlichung",
@@ -120,17 +121,17 @@
   "message": {
     "badDocument": "Fehler beim Laden des Dokuments. Das Dokument ist entweder defekt oder ungültig.",
     "customPrintPlaceholder": "z.B. 3, 4-10",
-    "encryptedAttemptsExceeded": "Fehler beim Laden des verlüsselten Dokuments. Zu viele Versuche.",
-    "encryptedUserCancelled": "Fehler beim Laden des verlüsselten Dokuments. Passworteingabe wurde abgebrochen.",
+    "encryptedAttemptsExceeded": "Fehler beim Laden des verschlüsselten Dokuments. Zu viele Versuche.",
+    "encryptedUserCancelled": "Fehler beim Laden des verschlüsselten Dokuments. Passworteingabe wurde abgebrochen.",
     "enterPassword": "Dieses Dokument ist durch ein Passwort geschützt. Bitte geben Sie ein Passwort ein",
-    "incorrectPassword": "Falsches Passwort, Verbleibende Versuche: {{ remainingAttempts }}",
+    "incorrectPassword": "Falsches Passwort, verbleibende Versuche: {{ remainingAttempts }}",
     "noAnnotations": "Dieses Dokument hat keine Annotationen.",
     "noOutlines": "Dieses Dokument enthält keine Gliederung.",
     "noResults": "Keine Ergebnisse gefunden.",
     "notSupported": "Dieser Dateityp ist nicht unterstützt.",
     "passwordRequired": "Passwort erforderlich",
     "preparingToPrint": "Druckvorbereitung...",
-    "annotationReplyCount": "{{count}} Antworten",
+    "annotationReplyCount": "{{count}} Antwort",
     "annotationReplyCount_plural": "{{count}} Antworten",
     "printTotalPageCount": "{{count}} Seite",
     "printTotalPageCount_plural": "{{count}} Seiten",
@@ -184,7 +185,7 @@
       "markForRedaction": "Zum Schwärzen markieren"
     },
     "searchPanel": {
-      "caseSensitive": "Groß-/Klein- schreibung beachten",
+      "caseSensitive": "Groß-/Kleinschreibung beachten",
       "wholeWordOnly": "Ganzes Wort",
       "wildcard": "Platzhalter"
     },
@@ -217,7 +218,8 @@
       "area": "Fläche",
       "distanceMeasurement": "Abstandsmessung",
       "perimeterMeasurement": "Umfangsmessung",
-      "areaMeasurement": "Flächenmessung"
+      "areaMeasurement": "Flächenmessung",
+      "radius": "Radius"
     },
     "measurementOption": {
       "scale": "Maßstab"
@@ -257,8 +259,8 @@
       "deleteLastPageMessage": "Dies würde dazu führen, dass keine Seiten verbleiben. Bitte hinterlassen Sie mindestens eine Seite"
     },
     "redaction": {
-      "applyTile": "Redaktion anwenden",
-      "applyMessage": "Durch diese Aktion werden alle zur Bearbeitung ausgewählten Elemente dauerhaft entfernt. Es kann nicht ungeschehen gemacht werden."
+      "applyTile": "Schwärzung anwenden",
+      "applyMessage": "Durch diese Aktion werden alle zur Bearbeitung ausgewählten Elemente dauerhaft entfernt. Es kann nicht rückgängig gemacht werden."
     }
   },
   "shortcut": {
