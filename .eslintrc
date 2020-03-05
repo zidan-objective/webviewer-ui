@@ -1,6 +1,6 @@
 {
   "parser": "babel-eslint",
-  "plugins": ["babel", "react", "react-hooks", "import", "cypress"],
+  "plugins": ["babel", "react", "react-hooks", "import", "cypress", "jsx-a11y"],
   "env": {
     "browser": true,
     "node": true,
@@ -15,7 +15,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:cypress/recommended"
+    "plugin:cypress/recommended",
+    "plugin:jsx-a11y/recommended"
   ],
   "rules": {
     "quotes": [
@@ -68,7 +69,7 @@
     "react/jsx-curly-spacing": 2,
     "react/jsx-boolean-value": 2,
     "react/prop-types": 2,
-    "react-hooks/rules-of-hooks": 2, 
+    "react-hooks/rules-of-hooks": 2,
     "react-hooks/exhaustive-deps": 1,
     "react/sort-comp": 0,
     "react/no-find-dom-node": 0,
