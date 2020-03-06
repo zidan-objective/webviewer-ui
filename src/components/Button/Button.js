@@ -2,9 +2,12 @@ import React from "react";
 import { useSelector, shallowEqual } from "react-redux";
 import classNames from "classnames";
 import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 
 import Tooltip from "components/Tooltip";
 import Icon from "components/Icon";
+
+import { getAriaKeyshortcuts } from "helpers/a11y";
 
 import { useTabbing } from "hooks/useTabbing";
 
@@ -37,6 +40,8 @@ const Button = props => {
 
   const tabbing = useTabbing();
 
+  const [t] = useTranslation();
+
   const {
     disable,
     isActive,
@@ -66,6 +71,9 @@ const Button = props => {
     (!imgToShow.includes(".") || imgToShow.startsWith("<svg"));
   const shouldRenderTooltip = title && !disable;
 
+  const translatedTitle = title ? t(title) : undefined;
+  const shortcut = title ? getAriaKeyshortcuts(title.split(".")[1]) : undefined;
+
   const children = (
     <button
       className={classNames({
@@ -79,6 +87,8 @@ const Button = props => {
       style={style}
       data-element={dataElement}
       onClick={disable ? NOOP : onClick}
+      aria-label={translatedTitle}
+      aria-keyshortcuts={shortcut}
     >
       {isGlyph && <Icon glyph={imgToShow} color={color} />}
       {imgToShow && !isGlyph && <img src={imgToShow} />}

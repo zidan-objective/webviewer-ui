@@ -17,6 +17,12 @@
     background-color: var(--button-hover1);
   }
 
+  // Fix for nested p elements.
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+
   // color for svgs
   &.active {
     path:last-child:nth-child(4) {
