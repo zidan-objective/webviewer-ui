@@ -1,0 +1,25 @@
+@import '../../constants/styles';
+@import '../../constants/modal';
+
+.SignatureValidationModal {
+  @extend %modal;
+
+  .container {
+    @extend %modal-shared-container-style;
+    // width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 4px;
+    box-shadow: 0 2px 16px 0 $signature-modal-shared-color; 
+    padding: 10px;
+
+    .validation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      // background-color: $signature-modal-shared-color; 
+    }
+  }
+}

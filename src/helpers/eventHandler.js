@@ -26,6 +26,7 @@ export default store => {
   const onPageComplete = eventListeners.onPageComplete(store);
   const onFileAttachmentAnnotationAdded = eventListeners.onFileAttachmentAnnotationAdded(dispatch);
   const onFileAttachmentDataAvailable = eventListeners.onFileAttachmentDataAvailable(dispatch);
+  const onDigitalSignatureAvailable = eventListeners.onDigitalSignatureAvailable(dispatch);
 
   return {
     addEventHandlers: () => {
@@ -43,6 +44,7 @@ export default store => {
       core.addEventListener('updateAnnotationPermission', onUpdateAnnotationPermission);
       core.addEventListener('annotationChanged', onAnnotationChanged);
       core.addEventListener('pageComplete', onPageComplete);
+      core.addEventListener('digitalSignatureAvailable', onDigitalSignatureAvailable);
       core.addEventListener('fileAttachmentDataAvailable', onFileAttachmentDataAvailable);
       core.getTool('AnnotationCreateStamp').on('annotationAdded', onStampAnnotationAdded);
       core.getTool('AnnotationCreateSticky').on('annotationAdded', onStickyAnnotationAdded);
@@ -71,6 +73,7 @@ export default store => {
       core.removeEventListener('updateAnnotationPermission', onUpdateAnnotationPermission);
       core.removeEventListener('annotationChanged', onAnnotationChanged);
       core.removeEventListener('pageComplete', onPageComplete);
+      core.removeEventListener('digitalSignatureAvailable', onDigitalSignatureAvailable);
       core.removeEventListener('fileAttachmentDataAvailable', onFileAttachmentDataAvailable);
       core.getTool('AnnotationCreateStamp').off('annotationAdded', onStampAnnotationAdded);
       core.getTool('AnnotationCreateSticky').off('annotationAdded', onStickyAnnotationAdded);

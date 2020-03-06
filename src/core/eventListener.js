@@ -23,6 +23,7 @@ const getEventToObjectMap = () => {
     displayPageLocation: window.docViewer,
     keyDown: window.docViewer,
     keyUp: window.docViewer,
+    tap: window.docViewer,
     mouseEnter: window.docViewer,
     mouseLeave: window.docViewer,
     mouseLeftDown: window.docViewer,
@@ -61,5 +62,6 @@ const getEventToObjectMap = () => {
     notify: annotManager,
     setNoteText: annotManager,
     fileAttachmentDataAvailable: window.docViewer,
+    digitalSignatureAvailable: annotManager,
   };
 };

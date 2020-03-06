@@ -27,6 +27,7 @@ import PrintModal from 'components/PrintModal';
 import LoadingModal from 'components/LoadingModal';
 import ErrorModal from 'components/ErrorModal';
 import WarningModal from 'components/WarningModal';
+import SignatureValidationModal from 'components/SignatureValidationModal';
 import PasswordModal from 'components/PasswordModal';
 import ProgressModal from 'components/ProgressModal';
 import CalibrationModal from 'components/CalibrationModal';
@@ -95,6 +96,7 @@ const App = ({ removeEventHandlers }) => {
         <ProgressModal />
         <CalibrationModal />
         <LinkModal />
+        <SignatureValidationModal />
       </div>
 
       <PrintHandler />
