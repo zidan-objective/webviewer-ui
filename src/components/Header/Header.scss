@@ -49,8 +49,9 @@
     }
 
     .Button,.tool-group-button {
-      &:hover {
-        background: var(--tools-button-hover);     
+      // Display focus background same as hover.
+      &:hover, &.Button--focus:focus {
+        background: var(--tools-button-hover);
       }
 
       &.active {

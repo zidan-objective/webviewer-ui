@@ -21,13 +21,12 @@ const propTypes = {
   img: PropTypes.string,
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   title: PropTypes.string,
+  currentTool: PropTypes.string,
   color: PropTypes.string,
   dataElement: PropTypes.string,
   className: PropTypes.string,
   onClick: PropTypes.func.isRequired
 };
-
-const NOOP = () => {};
 
 const Button = props => {
   const [removeElement, customOverrides = {}] = useSelector(
@@ -51,10 +50,12 @@ const Button = props => {
     label,
     color,
     dataElement,
-    onClick = NOOP,
+    onClick,
     className,
     title,
-    style
+    currentTool,
+    style,
+    ...buttonProps
   } = { ...props, ...customOverrides };
 
   const isBase64 = img?.trim().startsWith("data:");
@@ -72,10 +73,14 @@ const Button = props => {
   const shouldRenderTooltip = title && !disable;
 
   const translatedTitle = title ? t(title) : undefined;
+  const translatedCurrentTool = currentTool ? t(currentTool) : undefined;
   const shortcut = title ? getAriaKeyshortcuts(title.split(".")[1]) : undefined;
+
+  const combinedTitle = [translatedCurrentTool, translatedTitle].filter(Boolean).join(', ');
 
   const children = (
     <button
+      {...buttonProps}
       className={classNames({
         Button: true,
         "Button--focus": tabbing,
@@ -86,12 +91,13 @@ const Button = props => {
       })}
       style={style}
       data-element={dataElement}
-      onClick={disable ? NOOP : onClick}
-      aria-label={translatedTitle}
+      onClick={onClick}
+      aria-label={combinedTitle}
       aria-keyshortcuts={shortcut}
+      disabled={disable}
     >
       {isGlyph && <Icon glyph={imgToShow} color={color} />}
-      {imgToShow && !isGlyph && <img src={imgToShow} />}
+      {imgToShow && !isGlyph && <img src={imgToShow} alt={combinedTitle} />}
       {label && <p>{label}</p>}
     </button>
   );

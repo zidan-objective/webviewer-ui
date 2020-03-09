@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 
-
 import Button from 'components/Button';
-import Icon from 'components/Icon';
-import defaultTool from 'constants/defaultTool';
 
 import core from 'core';
 import getToolStyles from 'helpers/getToolStyles';
@@ -29,10 +26,11 @@ class ToolGroupButton extends React.PureComponent {
     allButtonsInGroupDisabled: PropTypes.bool,
     openElement: PropTypes.func.isRequired,
     toggleElement: PropTypes.func.isRequired,
+    isToolsOverlayOpen: PropTypes.bool,
     closeElement: PropTypes.func.isRequired,
     setActiveToolGroup: PropTypes.func.isRequired,
     isActive: PropTypes.bool.isRequired,
-    iconColor: PropTypes.oneOf(['TextColor', 'StrokeColor', 'FillColor']),
+    iconColor: PropTypes.oneOf(["TextColor", "StrokeColor", "FillColor"])
   };
 
   constructor(props) {
@@ -77,7 +75,6 @@ class ToolGroupButton extends React.PureComponent {
       setActiveToolGroup,
       isActive,
       closeElement,
-      toggleElement,
       openElement,
       toolGroup,
       isToolsOverlayOpen,
@@ -107,13 +104,16 @@ class ToolGroupButton extends React.PureComponent {
       allButtonsInGroupDisabled,
       iconColor,
       title,
-      isToolsOverlayOpen,
     } = this.props;
 
     const { toolName } = this.state;
-    const img = this.props.img
-      ? this.props.img
-      : toolButtonObjects[toolName].img;
+
+    const toolButtonObject = toolButtonObjects[toolName];
+
+    const img = this.props.img ? this.props.img : toolButtonObject.img;
+
+    const currentToolTitle = toolButtonObject.title;
+
     const color =
       isActive && !this.props.img && iconColor
         ? getToolStyles(toolName)[iconColor] &&
@@ -121,22 +121,21 @@ class ToolGroupButton extends React.PureComponent {
         : '';
 
     return allButtonsInGroupDisabled ? null : (
-      <div
+      <Button
         className={classNames({
           'tool-group-button': true,
-          active: isActive,
+          active: isActive
         })}
-        data-element={dataElement}
+        dataElement={dataElement}
         onClick={this.onClick}
-      >
-        <Button
-          title={title}
-          mediaQueryClassName={mediaQueryClassName}
-          isActive={isActive}
-          img={img}
-          color={color}
-        />
-      </div>
+        title={title}
+        currentTool={currentToolTitle}
+        mediaQueryClassName={mediaQueryClassName}
+        isActive={isActive}
+        img={img}
+        color={color}
+        aria-haspopup
+      />
     );
   }
 }

@@ -1,4 +1,4 @@
-@import '../../constants/styles';
+@import "../../constants/styles";
 
 .tool-group-button {
   margin: 0 8px;
@@ -12,11 +12,8 @@
     margin: 0 12px;
   }
 
-  &.active{
-    .Button {
-      background: none;
-    }
-    // hack
+  &.active {
+    // hack for signature color change
     &.signature {
       svg {
         color: var(--selected-icon-color);
