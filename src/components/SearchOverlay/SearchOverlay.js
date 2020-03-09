@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 import onClickOutside from 'react-onclickoutside';
 
 import Icon from 'components/Icon';
-import Tooltip from 'components/Tooltip';
-import Input from 'components/Input';
+import Button from 'components/Button';
+import Choice from 'components/Choice';
 
 import core from 'core';
-import getClassName from 'helpers/getClassName';
 import defaultTool from 'constants/defaultTool';
 import actions from 'actions';
 import selectors from 'selectors';
@@ -71,7 +70,9 @@ class SearchOverlay extends React.PureComponent {
     };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
+    // TODO: confirm that this actually does anything, rest of content was moved
+    // into componentDidMount and componentWillUnmount.
     if (this.props.isProgrammaticSearch) {
       if (this.props.isSearchPanelOpen) {
         this.props.closeElement('searchPanel');
@@ -89,27 +90,25 @@ class SearchOverlay extends React.PureComponent {
       this.executeFullSearch();
       this.props.setIsProgrammaticSearchFull(false);
     }
+  }
 
-    const searchOverlayOpened = !prevProps.isOpen && this.props.isOpen;
-    if (searchOverlayOpened) {
-      this.props.closeElements([
-        'toolsOverlay',
-        'viewControlsOverlay',
-        'menuOverlay',
-        'toolStylePopup',
-        'signatureOverlay',
-        'zoomOverlay',
-        'redactionOverlay',
-      ]);
-      this.searchTextInput.current.focus();
-      core.setToolMode(defaultTool);
-    }
+  componentDidMount() {
+    this.searchTextInput.current.focus();
+    core.setToolMode(defaultTool);
+    this.props.closeElements([
+      'toolsOverlay',
+      'viewControlsOverlay',
+      'menuOverlay',
+      'toolStylePopup',
+      'signatureOverlay',
+      'zoomOverlay',
+      'redactionOverlay',
+    ]);
+  }
 
-    const searchOverlayClosed = prevProps.isOpen && !this.props.isOpen;
-    if (searchOverlayClosed) {
-      this.props.closeElement('searchPanel');
-      this.clearSearchResults();
-    }
+  componentWillUnmount() {
+    this.clearSearchResults();
+    this.props.setSearchValue('');
   }
 
   handleClickOutside = e => {
@@ -489,13 +488,14 @@ class SearchOverlay extends React.PureComponent {
             onKeyDown={this.onKeyDown}
             value={searchValue}
             placeholder={t('message.searchDocumentPlaceholder')}
+            aria-label={t('message.searchDocumentPlaceholder')}
           />
-          <div className="input-button" onClick={this.search}>
+          <Button className="input-button" onClick={this.search} title={t('component.searchPanel')} >
             <Icon glyph="icon-header-search" />
-          </div>
+          </Button>
         </div>
         <div className="options">
-          <Input
+          <Choice
             id="case-sensitive-option"
             type="checkbox"
             ref={this.caseSensitiveInput}
@@ -503,7 +503,7 @@ class SearchOverlay extends React.PureComponent {
             checked={isCaseSensitive}
             label={t('option.searchPanel.caseSensitive')}
           />
-          <Input
+          <Choice
             id="whole-word-option"
             type="checkbox"
             ref={this.wholeWordInput}
@@ -512,7 +512,7 @@ class SearchOverlay extends React.PureComponent {
             label={t('option.searchPanel.wholeWordOnly')}
           />
           {!isWildCardSearchDisabled &&
-            <Input
+            <Choice
               id="wild-card-option"
               type="checkbox"
               ref={this.wildcardInput}
@@ -524,18 +524,18 @@ class SearchOverlay extends React.PureComponent {
         <div className="footer">
           {<div>{results.length} results found</div>}
           <div className="buttons">
-            <div className="button" onClick={this.onClickPrevious}>
+            <Button className="button" onClick={this.onClickPrevious}>
               <Icon
                 className="arrow"
                 glyph="icon-chevron-left"
               />
-            </div>
-            <div className="button" onClick={this.onClickNext}>
+            </Button>
+            <Button className="button" onClick={this.onClickNext}>
               <Icon
                 className="arrow"
                 glyph="icon-chevron-right"
               />
-            </div>
+            </Button>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from 'components/Icon';
-import Input from 'components/Input';
+import Choice from 'components/Choice';
 
 import './Layer.scss';
 
@@ -71,7 +71,7 @@ class Layer extends React.PureComponent {
               </div>
             )}
           </div>
-          <Input
+          <Choice
             id={layer.name}
             type="checkbox"
             label={layer.name}

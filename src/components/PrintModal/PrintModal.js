@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 
-import Input from 'components/Input';
+import Choice from 'components/Choice';
 import ActionButton from 'components/ActionButton';
 import WatermarkModal from 'components/PrintModal/WatermarkModal';
 
@@ -518,7 +518,7 @@ class PrintModal extends React.PureComponent {
                 onChange={this.onChange}
                 onSubmit={this.createPagesAndPrint}
               >
-                <Input
+                <Choice
                   ref={this.allPages}
                   id="all-pages"
                   name="pages"
@@ -527,7 +527,7 @@ class PrintModal extends React.PureComponent {
                   defaultChecked
                   disabled={isPrinting}
                 />
-                <Input
+                <Choice
                   ref={this.currentPage}
                   id="current-page"
                   name="pages"
@@ -535,7 +535,7 @@ class PrintModal extends React.PureComponent {
                   label={t('option.print.current')}
                   disabled={isPrinting}
                 />
-                <Input
+                <Choice
                   ref={this.customPages}
                   id="custom-pages"
                   name="pages"
@@ -543,7 +543,7 @@ class PrintModal extends React.PureComponent {
                   label={customPagesLabelElement}
                   disabled={isPrinting}
                 />
-                <Input
+                <Choice
                   ref={this.includeComments}
                   id="include-comments"
                   name="comments"
