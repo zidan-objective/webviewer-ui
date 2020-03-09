@@ -154,7 +154,7 @@ class MenuOverlay extends React.PureComponent {
             <div className="MenuLabel">{t('action.print')}</div>
           </div>
         </div>
-        <div className="row" dataElement="filePickerButton">
+        <div className="row" data-element="filePickerButton">
           <div
             className="MenuItem"
             onClick={openFilePicker}
