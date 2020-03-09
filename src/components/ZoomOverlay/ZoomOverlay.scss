@@ -11,13 +11,11 @@
   border: 0px;
   border-radius: 0px;
   background: transparent;
-  font-size: 14px;
 
   .ZoomContainer {
     padding: 6px 0px;
     display: flex;
     flex-direction: column;
-    // border: 1px solid var(--tools-overlay-border);
     border-radius: 4px;
     background: var(--gray-0);
     box-shadow: 0px 0px 3px 0px var(--document-box-shadow);
@@ -60,12 +58,9 @@
 
   .tool-button {
     width: auto;
-    font-size: 13px;
   }
 
   .OverlayItem {
-    font-size: 14px;
-
     div:hover {
       background: none;
     }

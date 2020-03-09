@@ -2,7 +2,6 @@
 @import '../../constants/overlay';
 
 .SearchOverlay {
-  @extend %overlay;
   position: static;
   display: flex;
   flex-direction: column;
@@ -11,7 +10,6 @@
   border: 0px;
   border-radius: 0px;
   background: transparent;
-  font-size: 14px;
   visibility: visible !important;
   padding-right: 18px;
   flex-grow: 0;
@@ -22,7 +20,6 @@
     flex: 1;
 
     input {
-      font-size: 13px;
       width: 100%;
       padding-left: 8px;
       border: 1px solid var(--border);
@@ -81,7 +78,6 @@
     label.Input {
       display: flex;
       align-items: center;
-      font-size: 13px;
       margin-right: 10px;
     }
 
@@ -111,8 +107,8 @@
         width: 28px;
         height: 28px;
         margin-left: 8px;
-
         border: 1px solid var(--primary-button);
+
         svg {
           color: var(--primary-button);
         }

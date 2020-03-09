@@ -102,7 +102,7 @@ class SearchPanel extends React.PureComponent {
   }
 
   render() {
-    const { isDisabled, results, isMobile, isTabletAndMobile, closeElements } = this.props;
+    const { isDisabled, t, results, isSearching, noResult, isMobile, isTabletAndMobile, closeElements } = this.props;
 
     if (isDisabled) {
       return null;
@@ -150,6 +150,7 @@ class SearchPanel extends React.PureComponent {
             </div>}
           <SearchOverlay />
           <div className={`results`}>
+            {noResult && <div className="info">{t('message.noResults')}</div>}
             {results.map((result, i) => {
               const prevResult = i === 0 ? results[0] : results[i - 1];
 
