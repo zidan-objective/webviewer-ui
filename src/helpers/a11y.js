@@ -4,6 +4,12 @@
  */
 export function getAriaKeyshortcuts(tool) {
   switch (tool) {
+    /* --- Search Panel --- */
+    case "previous":
+      return "ArrowLeft";
+    case "next":
+      return "ArrowRight";
+    /* --- Tools --- */
     case "arrow":
       return "A";
     case "callout":

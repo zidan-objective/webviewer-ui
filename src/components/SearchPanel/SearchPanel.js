@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
+import Button from 'components/Button';
 import SearchResult from 'components/SearchResult';
 import ListSeparator from 'components/ListSeparator';
 import ResizeBar from 'components/ResizeBar';
@@ -28,6 +29,9 @@ class SearchPanel extends React.PureComponent {
     setActiveResultIndex: PropTypes.func.isRequired,
     closeElements: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
+    isMobile: PropTypes.bool,
+    isTabletAndMobile: PropTypes.bool,
+    activeResultIndex: PropTypes.number,
   };
 
   state = {
@@ -76,8 +80,29 @@ class SearchPanel extends React.PureComponent {
     return null;
   };
 
+  handleKeyDown = event => {
+    const { activeResultIndex, results, setActiveResultIndex } = this.props;
+
+    if (
+      results.length === 0 ||
+      (event.target.nodeName === 'INPUT' && event.target.type === 'text')
+    ) {
+      return;
+    }
+
+    if (event.key === 'ArrowLeft') {
+      const prevResultIndex = activeResultIndex === 0 ? results.length - 1 : activeResultIndex - 1;
+      setActiveResultIndex(prevResultIndex);
+      core.setActiveSearchResult(results[prevResultIndex]);
+    } else if (event.key === 'ArrowRight') {
+      const nextResultIndex = activeResultIndex === results.length - 1 ? 0 : activeResultIndex + 1;
+      setActiveResultIndex(nextResultIndex);
+      core.setActiveSearchResult(results[nextResultIndex]);
+    }
+  }
+
   render() {
-    const { isDisabled, t, results, isSearching, noResult, isMobile, isTabletAndMobile, closeElements } = this.props;
+    const { isDisabled, results, isMobile, isTabletAndMobile, closeElements } = this.props;
 
     if (isDisabled) {
       return null;
@@ -90,10 +115,13 @@ class SearchPanel extends React.PureComponent {
       style = { width: `${this.state.width}px` };
     }
 
+    /* eslint-disable jsx-a11y/no-static-element-interactions */
+
     return (
       <div
         className="search-panel-container"
         style={style}
+        onKeyDown={this.handleKeyDown}
       >
         {!isTabletAndMobile &&
           <ResizeBar
@@ -108,7 +136,7 @@ class SearchPanel extends React.PureComponent {
             <div
               className="close-container"
             >
-              <div
+              <Button
                 className="close-icon-container"
                 onClick={() => {
                   closeElements(['searchPanel']);
@@ -118,7 +146,7 @@ class SearchPanel extends React.PureComponent {
                   glyph="ic_close_black_24px"
                   className="close-icon"
                 />
-              </div>
+              </Button>
             </div>}
           <SearchOverlay />
           <div className={`results`}>
@@ -132,6 +160,7 @@ class SearchPanel extends React.PureComponent {
                     result={result}
                     index={i}
                     onClickResult={this.onClickResult}
+                    onKeyDown={this.handleKeyDown}
                   />
                 </React.Fragment>
               );
@@ -149,6 +178,7 @@ const mapStateToProps = state => ({
   results: selectors.getResults(state),
   isSearching: selectors.isSearching(state),
   noResult: selectors.isNoResult(state),
+  activeResultIndex: selectors.getActiveResultIndex(state),
 });
 
 const mapDispatchToProps = {

@@ -319,21 +319,10 @@ class SearchOverlay extends React.PureComponent {
   // }
 
   onChange = e => {
-    const { isSearchPanelOpen, setSearchValue } = this.props;
+    const { setSearchValue } = this.props;
     const searchValue = e.target.value;
 
     setSearchValue(searchValue);
-
-    // if (searchValue.trim()) {
-    //   if (isSearchPanelOpen) {
-    //     this.clearSearchResults();
-    //     this.executeDebouncedFullSearch();
-    //   } else {
-    //     this.executeDebouncedSingleSearch();
-    //   }
-    // } else {
-    //   this.clearSearchResults();
-    // }
   };
 
   search = () => {
@@ -490,7 +479,11 @@ class SearchOverlay extends React.PureComponent {
             placeholder={t('message.searchDocumentPlaceholder')}
             aria-label={t('message.searchDocumentPlaceholder')}
           />
-          <Button className="input-button" onClick={this.search} title={t('component.searchPanel')} >
+          <Button
+            className="input-button"
+            onClick={this.search}
+            title="component.searchPanel"
+          >
             <Icon glyph="icon-header-search" />
           </Button>
         </div>
@@ -511,30 +504,35 @@ class SearchOverlay extends React.PureComponent {
             checked={isWholeWord}
             label={t('option.searchPanel.wholeWordOnly')}
           />
-          {!isWildCardSearchDisabled &&
+          {!isWildCardSearchDisabled && (
             <Choice
               id="wild-card-option"
               type="checkbox"
               ref={this.wildcardInput}
               onChange={this.onChangeWildcard}
               label={t('option.searchPanel.wildcard')}
-            />}
+            />
+          )}
         </div>
         <div className="divider" />
         <div className="footer">
           {<div>{results.length} results found</div>}
           <div className="buttons">
-            <Button className="button" onClick={this.onClickPrevious}>
-              <Icon
-                className="arrow"
-                glyph="icon-chevron-left"
-              />
+            <Button
+              className="button"
+              disabled={!results.length}
+              onClick={this.onClickPrevious}
+              title="action.previous"
+            >
+              <Icon className="arrow" glyph="icon-chevron-left" />
             </Button>
-            <Button className="button" onClick={this.onClickNext}>
-              <Icon
-                className="arrow"
-                glyph="icon-chevron-right"
-              />
+            <Button
+              className="button"
+              disabled={!results.length}
+              onClick={this.onClickNext}
+              title="action.next"
+            >
+              <Icon className="arrow" glyph="icon-chevron-right" />
             </Button>
           </div>
         </div>

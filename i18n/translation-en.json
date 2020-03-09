@@ -19,6 +19,8 @@
     "fit": "Fit",
     "fitToPage": "Fit to page",
     "fitToWidth": "Fit to width",
+    "previous": "Previous result",
+    "next": "Next result",
     "openFile": "Open file",
     "print": "Print",
     "ok": "OK",
@@ -161,15 +163,6 @@
     "documentControls": {
       "placeholder": "Enter pages to select i.e. 2, 5-9"
     },
-    "documentControls": {
-      "placeholder": "Enter pages to select i.e. 2, 5-9"
-    },
-    "documentControls": {
-      "placeholder": "Enter pages to select i.e. 2, 5-9"
-    },
-    "documentControls": {
-      "placeholder": "Enter pages to select i.e. 2, 5-9"
-    },
     "layout": {
       "cover": "Cover Facing Page",
       "double": "Double Page",
@@ -298,7 +291,9 @@
     "strikeout": "(K)",
     "underline": "(U)",
     "zoomIn": "(Ctrl +)",
-    "zoomOut": "(Ctrl -)"
+    "zoomOut": "(Ctrl -)",
+    "previous": "(←)",
+    "next": "(→)"
   },
   "tool": {
     "pan": "Pan",

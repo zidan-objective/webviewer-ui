@@ -12,13 +12,14 @@ class SearchResult extends React.PureComponent {
     result: PropTypes.object.isRequired,
     activeResultIndex: PropTypes.number.isRequired,
     onClickResult: PropTypes.func.isRequired,
+    onKeyDown: PropTypes.func,
   };
 
   onClick = () => {
     const { onClickResult, index, result } = this.props;
 
     onClickResult(index, result);
-  }
+  };
 
   renderContent = () => {
     const { ambient_str, result_str_start, result_str_end } = this.props.result;
@@ -29,19 +30,25 @@ class SearchResult extends React.PureComponent {
     return (
       <React.Fragment>
         {textBeforeSearchValue}
-        <span className="search-value">
-          {searchValue}
-        </span>
+        <span className="search-value">{searchValue}</span>
         {textAfterSearchValue}
       </React.Fragment>
     );
-  }
+  };
 
   render() {
-    const { activeResultIndex, index } = this.props;
+    const { activeResultIndex, index, onKeyDown } = this.props;
 
     return (
-      <div className={`SearchResult ${index === activeResultIndex ? 'selected' : ''}`} onClick={this.onClick}>
+      <div
+        className={`SearchResult ${
+          index === activeResultIndex ? 'selected' : ''
+        }`}
+        onClick={this.onClick}
+        onKeyDown={onKeyDown}
+        role="button"
+        tabIndex={-1}
+      >
         {this.renderContent()}
       </div>
     );
