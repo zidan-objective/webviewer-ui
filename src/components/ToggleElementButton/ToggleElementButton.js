@@ -3,36 +3,22 @@ import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import Button from 'components/Button';
-import Icon from 'components/Icon';
 
 import selectors from 'selectors';
 import actions from 'actions';
-import useMedia from 'hooks/useMedia';
 
-import './ToggleElementButton.scss';
-
-const ToggleElementButton = ({
-  onClick,
-  dataElement,
-  isElementDisabled,
-  isActive,
-  ...restProps
-}) => {
+const ToggleElementButton = ({ isElementDisabled, ...restProps }) => {
   if (isElementDisabled) {
     return null;
   }
 
   return (
-    <div
+    <Button
       className={classNames({
         'toggle-element-button': true,
-        active: isActive,
       })}
-      data-element={dataElement}
-      onClick={onClick}
-    >
-      <Button isActive={isActive} {...restProps} />
-    </div>
+      {...restProps}
+    />
   );
 };
 
@@ -61,21 +47,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   },
 });
 
-const ConnectedToggleElementButton = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(ToggleElementButton);
-
-export default props => {
-  const isMobile = useMedia(
-    // Media queries
-    ['(max-width: 640px)'],
-    [true],
-    // Default value
-    false,
-  );
-
-  return (
-    <ConnectedToggleElementButton {...props} isMobile={isMobile} />
-  );
-};
