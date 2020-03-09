@@ -11,7 +11,7 @@ const propTypes = {
   name: PropTypes.string,
   defaultChecked: PropTypes.bool,
   onChange: PropTypes.func,
-  label: PropTypes.oneOfType([PropTypes.string]).isRequired,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   checked: PropTypes.bool,
   disabled: PropTypes.bool,
 };
