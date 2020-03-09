@@ -46,6 +46,8 @@
   --tools-overlay-button-active: var(--active-button1);
   // ---- swap ----
 
+  --popup-button-hover: var(--button-hover1);
+
   --primary-button: var(--blue-5); 
   --primary-button-text: var(--gray-1); 
   --primary-button-hover: var(--blue-6); 
@@ -124,10 +126,10 @@
 
 * {
   &::-webkit-scrollbar {
-    width: 2px;
+    width: 4px;
 
     &:horizontal {
-      height: 2px;
+      height: 4px;
     }
   }
 
@@ -138,29 +140,32 @@
 
   &::-webkit-scrollbar-thumb {
     background-color: var(--border);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    background-clip: padding-box;    
   }
 }
 
-// .DocumentContainer {
-//   border-right: 8px solid transparent;
+.DocumentContainer {
+  border-right: 2px solid transparent;
 
-//   &::-webkit-scrollbar {
-//     width: 5px;
+  // &::-webkit-scrollbar {
+  //   width: 5px;
 
-//     &:horizontal {
-//       height: 2px;
-//     }
-//   }
+  //   &:horizontal {
+  //     height: 2px;
+  //   }
+  // }
 
-//   &::-webkit-scrollbar-track {
-//     width: 10px;
-//     background: none;
-//   }
+  // &::-webkit-scrollbar-track {
+  //   width: 10px;
+  //   background: none;
+  // }
 
-//   &::-webkit-scrollbar-thumb {
-//     background-color: var(--border);
-//   }
-// }
+  // &::-webkit-scrollbar-thumb {
+  //   background-color: var(--border);
+  // }
+}
 
 html, body , #app {
   width: 100%;

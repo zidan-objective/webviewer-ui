@@ -44,6 +44,7 @@ const NoteContent = ({ annotation, isEditing, setIsEditing }) => {
     ],
     shallowEqual,
   );
+
   const { isSelected, searchInput, resize, isContentEditable } = useContext(
     NoteContext,
   );
@@ -137,7 +138,7 @@ const NoteContent = ({ annotation, isEditing, setIsEditing }) => {
       <div className="author-and-date">
         <div className="author-and-overflow">
           {renderAuthorName(annotation)}
-          {!isEditing &&
+          {!isEditing && isSelected &&
             <NotePopup
               annotation={annotation}
               setIsEditing={setIsEditing}
@@ -146,7 +147,7 @@ const NoteContent = ({ annotation, isEditing, setIsEditing }) => {
         <div className="date-and-time">
           {dayjs(annotation.DateCreated || new Date()).format(noteDateFormat)}
         </div>
-        {isEditing ? (
+        {isEditing && isSelected ? (
           <ContentArea
             textAreaValue={textAreaValue}
             onTextAreaValueChange={setTextAreaValue}

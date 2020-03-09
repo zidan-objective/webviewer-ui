@@ -57,6 +57,7 @@ const Note = ({ annotation }) => {
     .sort((a, b) => a['DateCreated'] - b['DateCreated']);
 
   const showReplyArea = !Object.values(isEditingMap).some(val => val);
+  console.log('showReplyArea', showReplyArea);
 
   return (
     <div ref={containerRef} className={noteClass} onClick={handleNoteClick}>
@@ -77,7 +78,6 @@ const Note = ({ annotation }) => {
               <NoteContent
                 key={reply.Id}
                 annotation={reply}
-                isSelected={isSelected}
                 setIsEditing={isEditing => setIsEditingMap(map => ({
                   ...map,
                   [i + 1]: isEditing,
