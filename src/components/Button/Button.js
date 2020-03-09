@@ -25,20 +25,11 @@ const propTypes = {
   color: PropTypes.string,
   dataElement: PropTypes.string,
   className: PropTypes.string,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func
 };
 
 const Button = props => {
-  const [removeElement, customOverrides = {}] = useSelector(
-    state => [
-      selectors.isElementDisabled(state, props.dataElement),
-      selectors.getCustomElementOverrides(state, props.dataElement)
-    ],
-    shallowEqual
-  );
-
   const tabbing = useTabbing();
-
   const [t] = useTranslation();
 
   const {
@@ -55,12 +46,22 @@ const Button = props => {
     title,
     currentTool,
     style,
+    isMobile,
+    children: childrenFromProps,
     ...buttonProps
   } = { ...props, ...customOverrides };
 
+  const [removeElement, customOverrides = {}] = useSelector(
+    state => [
+      selectors.isElementDisabled(state, dataElement),
+      selectors.getCustomElementOverrides(state, dataElement)
+    ],
+    shallowEqual
+  );
+
   const isBase64 = img?.trim().startsWith("data:");
 
-  let imgToShow = img;
+  const imgToShow = img;
   // if (isActive && activeImg) {
   //   imgToShow = activeImg;
   // }
@@ -98,7 +99,8 @@ const Button = props => {
     >
       {isGlyph && <Icon glyph={imgToShow} color={color} />}
       {imgToShow && !isGlyph && <img src={imgToShow} alt={combinedTitle} />}
-      {label && <p>{label}</p>}
+      {label}
+      {childrenFromProps}
     </button>
   );
 
