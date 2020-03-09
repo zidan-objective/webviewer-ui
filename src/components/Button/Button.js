@@ -33,7 +33,7 @@ const Button = props => {
   const [t] = useTranslation();
 
   const {
-    disable,
+    disabled,
     isActive,
     mediaQueryClassName,
     img,
@@ -46,7 +46,6 @@ const Button = props => {
     title,
     currentTool,
     style,
-    isMobile,
     children: childrenFromProps,
     ...buttonProps
   } = { ...props, ...customOverrides };
@@ -71,7 +70,7 @@ const Button = props => {
     imgToShow &&
     !isBase64 &&
     (!imgToShow.includes(".") || imgToShow.startsWith("<svg"));
-  const shouldRenderTooltip = title && !disable;
+  const shouldRenderTooltip = title && !disabled;
 
   const translatedTitle = title ? t(title) : undefined;
   const translatedCurrentTool = currentTool ? t(currentTool) : undefined;
@@ -86,7 +85,7 @@ const Button = props => {
         Button: true,
         "Button--focus": tabbing,
         active: isActive,
-        disable,
+        disabled,
         [mediaQueryClassName]: mediaQueryClassName,
         [className]: className
       })}
@@ -95,7 +94,7 @@ const Button = props => {
       onClick={onClick}
       aria-label={combinedTitle}
       aria-keyshortcuts={shortcut}
-      disabled={disable}
+      disabled={disabled}
     >
       {isGlyph && <Icon glyph={imgToShow} color={color} />}
       {imgToShow && !isGlyph && <img src={imgToShow} alt={combinedTitle} />}
