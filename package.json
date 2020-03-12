@@ -20,6 +20,7 @@
   "dependencies": {
     "autolinker": "^3.11.1",
     "classnames": "^2.2.6",
+    "css-variables-parser": "^1.0.0",
     "dayjs": "^1.8.19",
     "file-saver": "git+https://github.com/ZhijieZhang/FileSaver.js.git",
     "hotkeys-js": "^3.7.3",
@@ -79,6 +80,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.7.0",
     "prop-types": "^15.7.2",
+    "raw-loader": "^4.0.0",
     "redux-logger": "^3.0.6",
     "rimraf": "^3.0.0",
     "sass-loader": "^8.0.2",

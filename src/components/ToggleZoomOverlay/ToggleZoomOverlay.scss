@@ -3,7 +3,7 @@
 .zoom-overlay {
   display: flex;
   align-items: center;
-  background-color: var(--gray-2);
+  background-color: var(--toggle-zoom-overlay-background);
   border-radius: 4px;
   height: 28px;
   margin: 0 2px;
@@ -11,6 +11,14 @@
   .Button {
     margin: 0px 1px;
     height: 100%;
+
+    &:last-child {
+      margin-right: 0px;
+    }
+
+    &:first-child {
+      margin-left: 0px;
+    }    
   }
 
   .toggle-element-button {
@@ -20,7 +28,6 @@
 }
 
 .ToggleZoomOverlay {
-  // margin-right: -1px;
   height: 100%;
   color: var(--text-color);
   margin-right: 1px;
@@ -39,7 +46,6 @@
   .Icon {
     width: 12px;
     height: 16px;
-    color: var(--gray-6);
   }
 }
 
@@ -51,20 +57,23 @@
   position: relative;
 
   &:hover {
-    background-color: var(--button-hover1);
+    background-color: var(--view-header-button-hover);
   }
   &.active {
-    background-color: var(--active-button1);
-  } 
+    background-color: var(--view-header-button-active);
+  }
+  
+  // Avoids the child button chevron from overlapping the zoom text
+  .Button.active, .Button:hover {
+    background: none;
+  }
 
   .toggle-element-button {
     width: 26px;
-    margin-top: 4px;
     margin-left: 4px;
-
-    &:hover {
-      background: none;
-    }
+    margin-top: -2px;
+    font-size: 16px;
+    height: 26px;
   }  
 }
 
@@ -74,12 +83,10 @@
   display: flex;
   align-items: center;
   margin-right:-8px;
-  margin-bottom: -1px;
   font-weight: bold;
   height: 100%;
   text-align: center;
   display: flex;
-  z-index: 1;
   background-color: inherit;
   // &:hover + .OverlayButton {
   //   background-color:inherit;

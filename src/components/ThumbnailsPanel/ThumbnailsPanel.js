@@ -202,7 +202,8 @@ class ThumbnailsPanel extends React.PureComponent {
   }
 
   onPageNumberUpdated = pageNumber => {
-    this.listRef.current?.scrollToRow(pageNumber - 1);
+    const numberOfColumns = this.getNumberOfColumns();
+    this.listRef.current?.scrollToRow(Math.round((pageNumber) / numberOfColumns) - 1);
   }
 
   getNumberOfColumns = () => {
@@ -462,7 +463,7 @@ class ThumbnailsPanel extends React.PureComponent {
                 rowRenderer={this.renderThumbnails}
                 overscanRowCount={10}
                 className={'thumbnailsList'}
-                style={{ outline: 'none' }}
+                style={{ overflow: 'overlay', outline: 'none' }}
               />
               <Measure
                 bounds

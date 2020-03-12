@@ -88,7 +88,7 @@ class MenuOverlay extends React.PureComponent {
 
   render() {
     const { left, right, top, documentType } = this.state;
-    const { isDisabled, isFullScreen, t, isMobile, isOpen } = this.props;
+    const { isDisabled, isFullScreen, t, isMobile, isOpen, isFilePickerButtonDisabled, activeTheme, setActiveLightTheme, setActiveDarkTheme } = this.props;
 
     if (isDisabled) {
       return null;
@@ -98,8 +98,6 @@ class MenuOverlay extends React.PureComponent {
     if (!isMobile) {
       style = { left, right, top };
     }
-
-    // const className = getClassName('Overlay MenuOverlay', this.props);
 
     return (
       <div
@@ -114,6 +112,19 @@ class MenuOverlay extends React.PureComponent {
         ref={this.overlay}
       >
         {isMobile && <div className="swipe-indicator" />}
+        {!isFilePickerButtonDisabled &&
+          <div className="row" dataElement="filePickerButton">
+            <div
+              className="MenuItem"
+              onClick={openFilePicker}
+            >
+              <Icon
+                className="MenuIcon"
+                glyph="icon-header-file-picker-line"
+              />
+              <div className="MenuLabel">{t('action.openFile')}</div>
+            </div>
+          </div>}
         {!isIOS &&
           <div className="row">
             <div
@@ -154,16 +165,16 @@ class MenuOverlay extends React.PureComponent {
             <div className="MenuLabel">{t('action.print')}</div>
           </div>
         </div>
-        <div className="row" data-element="filePickerButton">
+        <div className="row">
           <div
             className="MenuItem"
-            onClick={openFilePicker}
+            onClick={activeTheme === 'dark' ? setActiveLightTheme : setActiveDarkTheme}
           >
             <Icon
               className="MenuIcon"
-              glyph="icon-header-file-picker-line"
+              glyph={activeTheme === 'dark' ? "icon - header - mode - day" : "icon - header - mode - night"}
             />
-            <div className="MenuLabel">{t('action.openFile')}</div>
+            <div className="MenuLabel">{t('action.viewMode')}</div>
           </div>
         </div>
       </div>
@@ -172,15 +183,19 @@ class MenuOverlay extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
+  activeTheme: selectors.getActiveTheme(state),
   isEmbedPrintSupported: selectors.isEmbedPrintSupported(state),
   isFullScreen: selectors.isFullScreen(state),
   isDisabled: selectors.isElementDisabled(state, 'menuOverlay'),
+  isFilePickerButtonDisabled: selectors.isElementDisabled(state, 'filePickerButton'),
   isOpen: selectors.isElementOpen(state, 'menuOverlay'),
 });
 
 const mapDispatchToProps = dispatch => ({
   dispatch,
   closeElements: dataElements => dispatch(actions.closeElements(dataElements)),
+  setActiveLightTheme: () => dispatch(actions.setActiveTheme('light')),
+  setActiveDarkTheme: () => dispatch(actions.setActiveTheme('dark')),
 });
 
 const ConnectedMenuOverlay = connect(

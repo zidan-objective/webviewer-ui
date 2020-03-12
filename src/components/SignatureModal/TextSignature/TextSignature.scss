@@ -26,7 +26,7 @@
   &-text {
     display: flex;
     align-items: center;
-    background: #f8f8f8;
+    background: var(--faded-component-background);
     white-space: nowrap;
     border-radius: 4px;
     padding: 0 8px;
@@ -39,9 +39,9 @@
       cursor: pointer;
     }
 
-    &.active {
-      border: 1px solid var(--focus-border);
-    }
+    // &.active {
+    //   border: 1px solid var(--focus-border);
+    // }
 
     .text-container {
       // background: green;

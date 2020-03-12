@@ -149,6 +149,7 @@
   }
 
   .normal-notes-container {
+    overflow: auto;
     overflow: overlay;
   }
 
@@ -180,8 +181,8 @@
       }
 
       * {
-        fill: #dfe2ed;
-        color: #dfe2ed;
+        fill: var(--border);
+        color: var(--border);
       }
     }
   }

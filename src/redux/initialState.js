@@ -14,12 +14,11 @@ const { tools, toolButtonObjects } = getToolsState();
 
 export default {
   viewer: {
+    activeTheme: 'light',
     disabledElements: {},
     openElements: {
       header: true,
-      // toolsHeader: window.matchMedia('(min-width: 641px)').matches,
       toolsHeader: false,
-      // toolsOverlay: false,
     },
     headers: {
       default: [
@@ -30,7 +29,6 @@ export default {
           type: 'customElement',
           render: () => <ToggleZoomOverlay />,
           dataElement: 'zoomOverlayButton',
-          hidden: ['mobile', 'tablet'],
           element: 'zoomOverlay',
           style: {
             height: '100%',

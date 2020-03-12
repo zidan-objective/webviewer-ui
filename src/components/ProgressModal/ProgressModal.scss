@@ -3,6 +3,7 @@
 
 .ProgressModal {
   @extend %modal;
+  background: var(--spinner-negative-space);
 
   &.open {
     opacity: 1;
@@ -30,5 +31,21 @@
     // axis compensation
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
+  }
+
+  svg {
+    circle {
+      fill: transparent;
+      stroke-width: 4;
+
+      &.progress-ring__fill {
+        stroke: var(--slider-background);
+      }
+
+      &.progress-ring__circle {
+        stroke: var(--slider-filled);
+      }
+
+    }
   }
 }

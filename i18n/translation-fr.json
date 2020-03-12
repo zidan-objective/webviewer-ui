@@ -38,7 +38,8 @@
     "draw": "Dessiner",
     "type": "Type",
     "upload": "Télécharger",
-    "link": "Lien"
+    "link": "Lien",
+    "post": "Publier"
   },
   "annotation": {
     "areaMeasurement": "Surface mesurée",
@@ -99,7 +100,9 @@
   "component": {
     "freehandToolsButton": "Outils de stylo",
     "leftPanel": "Panneau de gauche",
+    "toolsHeader": "Outils",
     "searchOverlay": "Recherche",
+    "searchPanel": "Chercher",
     "menuOverlay": "Menu",
     "miscToolsButton": "Outils divers",
     "notesPanel": "Remarques",
@@ -110,6 +113,8 @@
     "layersPanel": "Couches",
     "shapeToolsButton": "Outils de forme",
     "textToolsButton": "Outils de texte",
+    "freeTextToolsButton": "Outils de texte gratuit",
+    "stickyToolsButton": "Outils de commentaires",
     "thumbnailsPanel": "Vignettes",
     "toolsButton": "Outils",
     "redaction": "Biffure",
@@ -136,12 +141,14 @@
     "printTotalPageCount_plural": "{{count}} pages",
     "processing": "Traitement...",
     "searching": "Recherche...",
-    "searchPlaceholder": "Rechercher des commentaires ici...",
+    "searchCommentsPlaceholder": "Rechercher des commentaires",
+    "searchDocumentPlaceholder": "Rechercher un document",
     "signHere": "Signer ici",
     "insertTextHere": "Insérer du texte ici",
     "imageSignatureAcceptedFileTypes": "Seuls {{acceptedFileTypes}} sont acceptés",
     "enterMeasurement": "Entrez la mesure entre les deux points",
-    "linkURLorPage": "Lien URL ou une page"
+    "linkURLorPage": "Lien URL ou une page",
+    "numResultsFound": "résultats trouvés"
   },
   "option": {
     "annotationColor": {

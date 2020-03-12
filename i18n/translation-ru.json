@@ -38,7 +38,8 @@
     "draw": "Привлечь",
     "type": "Тип",
     "upload": "Загрузить",
-    "link": "Ссылка на сайт"
+    "link": "Ссылка на сайт",
+    "post": "Почта"
   },
   "annotation": {
     "areaMeasurement": "Площадь",
@@ -99,7 +100,9 @@
   "component": {
     "freehandToolsButton": "Инструменты",
     "leftPanel": "Панель",
+    "toolsHeader": "инструменты",
     "searchOverlay": "Поиск",
+    "searchPanel": "Поиск",
     "menuOverlay": "Меню",
     "miscToolsButton": "Другие инструменты",
     "notesPanel": "Заметки",
@@ -110,6 +113,8 @@
     "layersPanel": "Слои",
     "shapeToolsButton": "Фигуры",
     "textToolsButton": "Инструменты для работы с текстом",
+    "freeTextToolsButton": "Бесплатные текстовые инструменты",
+    "stickyToolsButton": "Инструменты комментариев",
     "thumbnailsPanel": "Эскизы",
     "toolsButton": "Инструменты",
     "redaction": "Редактировать",
@@ -136,12 +141,14 @@
     "printTotalPageCount_plural": "{{count}} страниц",
     "processing": "Обработка документа...",
     "searching": "Поиск...",
-    "searchPlaceholder": "Поиск комментарий...",
+    "searchCommentsPlaceholder": "Поиск комментариев",
+    "searchDocumentPlaceholder": "Искать документ",
     "signHere": "Распишетесь здесь",
     "insertTextHere": "Вставьте текст здесь",
     "imageSignatureAcceptedFileTypes": "Только {{acceptFileTypes}} принимаются",
     "enterMeasurement": "Введите измерение между двумя точками",
-    "linkURLorPage": "Ссылка URL или страница"
+    "linkURLorPage": "Ссылка URL или страница",
+    "numResultsFound": "найдены результаты"
   },
   "option": {
     "annotationColor": {

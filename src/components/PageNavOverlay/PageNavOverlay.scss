@@ -3,7 +3,7 @@
 
 .PageNavOverlay {
   height: 32px;
-  font-family: 'Carlito';
+  font-family: 'Lato';
   font-weight: bold;
   color: var(--text-color);
   display: flex;
@@ -23,7 +23,7 @@
     transform: translateX(-50%);
     margin-left: auto;
     margin-right: auto;
-    background: var(--gray-0);
+    background: var(--component-background);
     border-radius: 4px;
     box-shadow: 0px 0px 3px 0px var(--box-shadow);    
     font-size: 16px;
@@ -39,7 +39,7 @@
     margin-left: 8px;
 
     &:hover {
-      background: var(--button-hover1);
+      background: var(--view-header-button-hover);
     }
 
     .side-arrow {
@@ -57,18 +57,23 @@
     top: -1px;
     position: relative;
 
+    @include mobile {
+      font-size: 16px;
+    }    
+
     input {
       min-width: 8px;
       padding: 0;
       border: none;
       text-align: right;
-      font-family: 'Carlito';
+      font-family: 'Lato';
       font-weight: bold;
       background: transparent;
       color: var(--text-color);
       cursor: pointer;
       outline: none;
       border-bottom: 1px solid var(--text-color);
+      border-radius: 0px;
 
       @include mobile {
         font-size: 16px;

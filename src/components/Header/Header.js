@@ -6,6 +6,7 @@ import HeaderItems from 'components/HeaderItems';
 
 import getClassName from 'helpers/getClassName';
 import selectors from 'selectors';
+import classNames from 'classnames';
 
 import './Header.scss';
 
@@ -17,22 +18,31 @@ class Header extends React.PureComponent {
   }
 
   render() {
-    const { isDisabled, activeHeaderItems, isOpen } = this.props;
-    const className = getClassName('Header', this.props);
+    const { isDisabled, activeHeaderItems, isOpen, isToolsHeaderOpen } = this.props;
+    // const className = getClassName('Header', this.props);
 
     if (isDisabled || !isOpen) {
       return null;
     }
 
     return (
-      <div className={className} data-element="header">
-        <HeaderItems items={activeHeaderItems} />
+      <div>
+        <div
+          className={classNames({
+            Header: true,
+          })}
+          data-element="header"
+        >
+          <HeaderItems items={activeHeaderItems} />
+        </div>
+        {!isToolsHeaderOpen && <div className="view-header-border" />}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => ({
+  isToolsHeaderOpen: selectors.isElementOpen(state, 'toolsHeader'),
   isDisabled: selectors.isElementDisabled(state, 'header'),
   isOpen: selectors.isElementOpen(state, 'header'),
   activeHeaderItems: selectors.getActiveHeaderItems(state),

@@ -29,6 +29,7 @@
     "rotateClockwise": "Rotate Clockwise",
     "rotateCounterClockwise": "Rotate Counterclockwise",
     "save": "Save",
+    "post": "Post",
     "create": "Create",
     "showMoreResults": "Show more results",
     "sign": "Sign",
@@ -40,7 +41,8 @@
     "draw": "Draw",
     "type": "Type",
     "upload": "Upload",
-    "link": "Link"
+    "link": "Link",
+    "viewMode": "View mode"
   },
   "annotation": {
     "areaMeasurement": "Area measurement",
@@ -133,6 +135,7 @@
     "noAnnotations": "This document has no annotations.",
     "noOutlines": "This document has no outline.",
     "noResults": "No results found.",
+    "numResultsFound": "results found",
     "notSupported": "That file type is not supported.",
     "passwordRequired": "Password required",
     "preparingToPrint": "Preparing to print...",

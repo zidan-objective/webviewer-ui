@@ -38,7 +38,8 @@
     "draw": "Trek",
     "type": "Type",
     "upload": "Uploaden",
-    "link": "Koppeling"
+    "link": "Koppeling",
+    "post": "Post"
   },
   "annotation": {
     "areaMeasurement": "Oppervlaktemeting",
@@ -99,7 +100,9 @@
   "component": {
     "freehandToolsButton": "Vrije hand tools",
     "leftPanel": "Panel",
+    "toolsHeader": "Gereedschap",
     "searchOverlay": "Zoeken",
+    "searchPanel": "Zoeken",
     "menuOverlay": "Menu",
     "miscToolsButton": "Diverse tools",
     "notesPanel": "Notities",
@@ -110,6 +113,8 @@
     "layersPanel": "Lagen",
     "shapeToolsButton": "Vorm tools",
     "textToolsButton": "Tekst tools",
+    "freeTextToolsButton": "Hulpmiddelen voor vrije tekst",
+    "stickyToolsButton": "Tools voor opmerkingen",
     "thumbnailsPanel": "Miniatuurweergave",
     "toolsButton": "Tools",
     "redaction": "Redigeren",
@@ -136,12 +141,14 @@
     "printTotalPageCount_plural": "{{count}} pagina's",
     "processing": "Bezig...",
     "searching": "Zoeken...",
-    "searchPlaceholder": "Zoek opmerkingen...",
+    "searchCommentsPlaceholder": "Zoek opmerkingen",
+    "searchDocumentPlaceholder": "Document zoeken",
     "signHere": "Teken hier",
     "insertTextHere": "Vul hier tekst in",
     "imageSignatureAcceptedFileTypes": "Alleen {{AcceptFileTypes}} worden geaccepteerd",
     "enterMeasurement": "Voer de meting tussen de twee punten in",
-    "linkURLorPage": "Link-URL of een pagina"
+    "linkURLorPage": "Link-URL of een pagina",
+    "numResultsFound": "gevonden resultaten"
   },
   "option": {
     "annotationColor": {

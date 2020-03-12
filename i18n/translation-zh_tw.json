@@ -38,7 +38,8 @@
     "draw": "畫",
     "type": "類型",
     "upload": "上載",
-    "link": "鏈接"
+    "link": "鏈接",
+    "post": "發布"
   },
   "annotation": {
     "areaMeasurement": "測量面積",
@@ -99,7 +100,9 @@
   "component": {
     "freehandToolsButton": "手繪工具",
     "leftPanel": "面板",
+    "toolsHeader": "工具類",
     "searchOverlay": "搜尋",
+    "searchPanel": "搜索",
     "menuOverlay": "功能表",
     "miscToolsButton": "其他工具",
     "notesPanel": "備忘稿",
@@ -110,6 +113,8 @@
     "layersPanel": "圖層",
     "shapeToolsButton": "圖形工具",
     "textToolsButton": "文字工具",
+    "freeTextToolsButton": "自由文本工具",
+    "stickyToolsButton": "評論工具",
     "thumbnailsPanel": "縮圖",
     "toolsButton": "工具",
     "redaction": "修訂",
@@ -136,12 +141,14 @@
     "printTotalPageCount_plural": "{{count}} 頁",
     "processing": "正在處理...",
     "searching": "正在搜尋...",
-    "searchPlaceholder": "搜尋評論...",
+    "searchCommentsPlaceholder": "搜索評論",
+    "searchDocumentPlaceholder": "搜索文件",
     "signHere": "在這裡簽名",
     "insertTextHere": "在這裡插入文字",
     "imageSignatureAcceptedFileTypes": "僅接受{{acceptedFileTypes}}",
     "enterMeasurement": "在兩點之間輸入測量值",
-    "linkURLorPage": "鏈接網址或頁面"
+    "linkURLorPage": "鏈接網址或頁面",
+    "numResultsFound": "找到結果"
   },
   "option": {
     "annotationColor": {
@@ -223,8 +230,8 @@
       "scale": "比例"
     },
     "styleOption": {
-      "regular": "定期",
       "style": "樣式",
+      "regular": "定期",
       "cloudy": "多雲的"
     },
     "slider": {

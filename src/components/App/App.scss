@@ -1,111 +1,7 @@
 @import '../../constants/styles';
 @import '../../constants/font.scss';
-
-:root {
-
-  --blue-1: #E7EDF3;
-  --blue-2: #DDE6EE;
-  --blue-3: #CFD8E0;
-  --blue-4: #C7D2DD;
-  --blue-5: #3183C8;
-  --blue-6: #1A4971;
-
-  --gray-0: #FFFFFF;
-  --gray-1: #F8F9FA;
-  --gray-2: #F1F3F5;
-  --gray-3: #E7EBEE;
-  --gray-4: #DEE2E6;
-  --gray-5: #CFD4DA;
-  --gray-6: #ADB5BD;
-  --gray-7: #868E96;
-  --gray-8: #485056;
-  --gray-9: #343A40;
-  --gray-10: #21242A;
-  --gray-11: #101214;
-  --gray-12: #000000;
-
-  --text-color: var(--gray-8);
-  --faded-text: var(--gray-7);
-  --placeholder-text: var(--gray-6);
-
-  --top-bar-icon-color: var(--gray-6);
-  --icon-color: var(--gray-7);
-  --selected-icon-color: var(--gray-8);
-
-  --button-hover1: var(--blue-1);
-  --button-hover2: var(--blue-3);
-  --active-button1: var(--blue-2);
-  --active-button2: var(--blue-4);
-
-
-  // ---- swap ----
-  --tools-button-hover: var(--button-hover2);
-  --tools-button-active: var(--active-button2);
-
-  --tools-overlay-button-hover: var(--button-hover1);
-  --tools-overlay-button-active: var(--active-button1);
-  // ---- swap ----
-
-  --popup-button-hover: var(--button-hover1);
-
-  --primary-button: var(--blue-5); 
-  --primary-button-text: var(--gray-1); 
-  --primary-button-hover: var(--blue-6); 
-
-  --secondary-button: var(--blue-5); 
-  --secondary-button-text: var(--blue-5);
-  --secondary-button-hover: var(--blue-6); 
-
-  
-  --box-shadow: var(--gray-6);
-  --document-box-shadow: var(--gray-7);
-  
-  --panel-background: var(--gray-1);
-  
-  --divider: var(--gray-5);
-  --border: var(--gray-5);
-  --focus-border: var(--blue-5);
-  --color-palette-border: var(--gray-8);
-
-  --document-background-color: var(--gray-2);
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  --primary-color: #FFFFFF;
-  --secondary-color: #F5F5F5;
-  --border-color: #E0E0E0;
-  --left-panel-width: 219px;
-  --button-hover-color: #F6F6F6;
-  
-
-
-
-
-
-
-
-
-  
-  
-
-
-  --button-active-color: #F0F0F0;
-  
-  --header-border-color: #bdbdbd;
-  
-  --icon-active-color: #767e9a;
-}
+@import '../../constants/light.scss';
+// @import '../../constants/dark.scss';
 
 * {
   &::-webkit-scrollbar {
@@ -122,10 +18,12 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: var(--border);
+    background-color: var(--scrollbar-color);
     border-top: 2px solid transparent;
-    border-bottom: 2px solid transparent;
-    background-clip: padding-box;    
+
+    // breaks horizontal scroll
+    // border-bottom: 2px solid transparent;
+    // background-clip: padding-box;    
   }
 }
 
@@ -141,8 +39,7 @@ html, body , #app {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  font-family: 'Carlito', sans-serif;
-  color: #333;
+  font-family: 'Lato', sans-serif;
   color: var(--text-color);
 }
 
@@ -150,9 +47,11 @@ input, label, textarea, form, #app {
   font-size: 13px;
 }
 
-input {
+input, textarea, select {
   border: 1px solid var(--border);
   border-radius: 4px;
+  background: var(--component-background);
+  color: var(--text-color);
 
   &:focus {
     outline: none;
@@ -168,7 +67,6 @@ input {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: $gray4;
   background-color: var(--document-background-color);
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
@@ -198,7 +96,7 @@ input {
   }
 
   input[type=text] {
-    font-family: 'Carlito';
+    font-family: 'Lato';
     appearance: none;
     user-select: text !important;
   }

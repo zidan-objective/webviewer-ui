@@ -121,7 +121,11 @@ const InkSignature = ({
           property="StrokeColor"
           onStyleChange={(property, value) => {
             setToolStyles('AnnotationCreateSignature', property, value);
-            clearCanvas();
+            const signatureTool = core.getTool('AnnotationCreateSignature');
+            if (signatureTool.annot) {
+              signatureTool.annot.StrokeColor = value;
+              signatureTool.resizeCanvas();
+            }
           }}
           overridePalette2={['#E44234', '#4E7DE9', '#000000']}
         />

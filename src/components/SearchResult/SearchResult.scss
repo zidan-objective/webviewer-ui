@@ -10,16 +10,12 @@
   padding-right: 12px;
   margin-left: 2px;
   margin-bottom: 8px;
-  background: var(--gray-0);
   outline: none;
+  background: var(--component-background);
 
   &.selected {
     border: 1px solid var(--focus-border);
     box-shadow: none;
-
-    // .search-value {
-    //   background: #fbcd9f;
-    // }
   }
 
   .search-value {
