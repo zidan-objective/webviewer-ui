@@ -21,7 +21,6 @@ import onRubberStampAnnotationAdded from './onRubberStampAnnotationAdded';
 import onPageComplete from './onPageComplete';
 import onFileAttachmentDataAvailable from './onFileAttachmentDataAvailable';
 import onDigitalSignatureAvailable from './onDigitalSignatureAvailable';
-// import onTap from './onTap';
 
 export {
   onBeforeDocumentLoaded,
