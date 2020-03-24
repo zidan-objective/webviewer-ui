@@ -2,7 +2,7 @@
 @import '../../constants/panel';
 
 .SignaturePanel {
-  margin: 8px auto;
+  margin: 8px;
   display: flex;
 
   .certificate {
@@ -22,8 +22,6 @@
     }
 
     [data-element='certificateApplyButton'] {
-      position: absolute;
-      right: 0px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -33,6 +31,7 @@
       border: 1px solid $pdftron-blue;
       cursor: pointer;
       height: 30px;
+      padding: 0px 15px;
     }
   }
 }

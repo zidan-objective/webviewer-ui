@@ -240,6 +240,8 @@ export default initialState => (state = initialState, action) => {
       return { ...state, noteTransformFunction: payload.noteTransformFunction };
     case 'SET_CERTIFICATE_URL':
       return { ...state, certificateUrl: payload.url };
+    case 'SET_VERIFICATION_RESULT':
+      return { ...state, verificationResult: payload.result };
     default:
       return state;
   }

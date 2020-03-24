@@ -275,6 +275,11 @@ export const resetLoadingProgress = () => ({
   type: 'SET_LOADING_PROGRESS',
   payload: { progress: 0 },
 });
+export const setVerificationResult = result => ({
+  type: 'SET_VERIFICATION_RESULT',
+  payload: { result },
+});
+
 
 // user
 export const setUserName = userName => ({
@@ -355,4 +360,4 @@ export const setIsProgrammaticSearchFull = isProgrammaticSearchFull => ({
 export const setNoteTransformFunction = noteTransformFunction => ({
   type: 'SET_NOTE_TRANSFORM_FUNCTION',
   payload: { noteTransformFunction },
-})
+});

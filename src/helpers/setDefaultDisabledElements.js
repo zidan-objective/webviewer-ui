@@ -65,6 +65,10 @@ export default store => {
     dispatch(actions.disableElement('textSelectButton', PRIORITY_THREE));
   }
 
+  if (!core.isFullPDFEnabled()) {
+    dispatch(actions.disableElements(['signaturePanel', 'signaturePanelButton']), PRIORITY_THREE);
+  }
+
   dispatch(
     actions.disableElements(
       [

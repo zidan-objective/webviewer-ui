@@ -141,6 +141,8 @@ export const getCustomMeasurementOverlay = state => state.viewer.customMeasureme
 
 export const getCertificateUrl = state => state.viewer.certificateUrl;
 
+export const getVerificationResult = (state, fieldName) => state.viewer.verificationResult[fieldName] || {};
+
 // warning message
 export const getWarningMessage = state => state.viewer.warning?.message || '';
 

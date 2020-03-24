@@ -206,7 +206,8 @@ export default {
     isReplyDisabledFunc: null,
     customMeasurementOverlay: [],
     noteTransformFunction: null,
-    certificateUrl: '',
+    certificateUrl: 'https://pdftron.s3.amazonaws.com/downloads/pl/personal.cer',
+    verificationResult: {},
   },
   search: {
     listeners: [],
