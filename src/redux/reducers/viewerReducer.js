@@ -136,13 +136,10 @@ export default initialState => (state = initialState, action) => {
           ...state.toolButtonObjects,
           [toolName]: {
             ...state.toolButtonObjects[toolName],
-            dataElement:
-              buttonName || state.toolButtonObjects[toolName].dataElement,
+            dataElement: buttonName || state.toolButtonObjects[toolName].dataElement,
             title: tooltip || state.toolButtonObjects[toolName].title,
             group:
-              buttonGroup !== undefined
-                ? buttonGroup
-                : state.toolButtonObjects[toolName].group,
+              buttonGroup !== undefined ? buttonGroup : state.toolButtonObjects[toolName].group,
             img: buttonImage || state.toolButtonObjects[toolName].img,
           },
         },
@@ -172,8 +169,11 @@ export default initialState => (state = initialState, action) => {
     case 'SET_SELECTED_THUMBNAIL_PAGE_INDEXES':
       return { ...state, selectedThumbnailPageIndexes: payload.selectedThumbnailPageIndexes };
     case 'REMOVE_PAGE_INDEX':
-      return { ...state,
-        selectedThumbnailPageIndexes: state.selectedThumbnailPageIndexes.filter(p => p !== payload.pageIndexDeleted).map(p => (p < payload.pageIndexDeleted ? p : p - 1)),
+      return {
+        ...state,
+        selectedThumbnailPageIndexes: state.selectedThumbnailPageIndexes
+          .filter(p => p !== payload.pageIndexDeleted)
+          .map(p => (p < payload.pageIndexDeleted ? p : p - 1)),
       };
     case 'SET_COLOR_PALETTE': {
       const { colorMapKey, colorPalette } = payload;
@@ -229,9 +229,17 @@ export default initialState => (state = initialState, action) => {
     case 'SET_SELECTED_TAB':
       return { ...state, tab: { ...state.tab, [payload.id]: payload.dataElement } };
     case 'SET_CUSTOM_ELEMENT_OVERRIDES':
-      return { ...state, customElementOverrides: { ...state.customElementOverrides, [payload.dataElement]: payload.overrides } };
+      return {
+        ...state,
+        customElementOverrides: {
+          ...state.customElementOverrides,
+          [payload.dataElement]: payload.overrides,
+        },
+      };
     case 'SET_NOTE_TRANSFORM_FUNCTION':
-      return { ...state, noteTransformFunction: payload.noteTransformFunction }
+      return { ...state, noteTransformFunction: payload.noteTransformFunction };
+    case 'SET_CERTIFICATE_URL':
+      return { ...state, certificateUrl: payload.url };
     default:
       return state;
   }

@@ -9,6 +9,7 @@ import ThumbnailsPanel from 'components/ThumbnailsPanel';
 import OutlinesPanel from 'components/OutlinesPanel';
 import BookmarksPanel from 'components/BookmarksPanel';
 import LayersPanel from 'components/LayersPanel';
+import SignaturePanel from 'components/SignaturePanel';
 import CustomElement from 'components/CustomElement';
 import Icon from 'components/Icon';
 
@@ -71,6 +72,7 @@ const LeftPanel = () => {
       <OutlinesPanel display={getDisplay('outlinesPanel')} />
       <BookmarksPanel display={getDisplay('bookmarksPanel')} />
       <LayersPanel display={getDisplay('layersPanel')} />
+      <SignaturePanel display={getDisplay('signaturePanel')} />
 
       {customPanels.map(({ panel }, index) => (
         <CustomElement

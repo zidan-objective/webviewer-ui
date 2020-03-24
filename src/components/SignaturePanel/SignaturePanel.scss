@@ -1,0 +1,38 @@
+@import '../../constants/styles';
+@import '../../constants/panel';
+
+.SignaturePanel {
+  margin: 8px auto;
+  display: flex;
+
+  .certificate {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgb(199, 192, 192);
+
+    label {
+      margin-right: 4px;
+    }
+
+    #certificate-input {
+      @extend %text-input;
+    }
+
+    [data-element='certificateApplyButton'] {
+      position: absolute;
+      right: 0px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+      background: $pdftron-blue;
+      border-radius: 4px 4px 4px 4px;
+      border: 1px solid $pdftron-blue;
+      cursor: pointer;
+      height: 30px;
+    }
+  }
+}

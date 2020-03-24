@@ -206,6 +206,7 @@ export default {
     isReplyDisabledFunc: null,
     customMeasurementOverlay: [],
     noteTransformFunction: null,
+    certificateUrl: '',
   },
   search: {
     listeners: [],
