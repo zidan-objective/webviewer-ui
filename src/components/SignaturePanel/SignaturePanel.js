@@ -106,10 +106,6 @@ const SignaturePanel = ({ display }) => {
             }}
           />
         );
-        // const fieldName = widget.getField().name;
-        // console.log(object);
-
-        // return <div key={`${name}-${index}`}>{fieldName}</div>;
       })}
       <WidgetLocator rect={locatorRect} />
     </div>
@@ -118,9 +114,9 @@ const SignaturePanel = ({ display }) => {
 
 SignaturePanel.propTypes = propTypes;
 
-const WidgetInfo = ({ name, onClick }) => {
+export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
   const verificationResult = useSelector(state => selectors.getVerificationResult(state, name));
-  const [isExpanded, setIsExpended] = useState(false);
+  const [isExpanded, setIsExpended] = useState(!collapsible);
 
   const { VerificationResult, VerificationOptions } = window.PDFNet;
   const { TimeMode } = VerificationOptions;
@@ -157,15 +153,17 @@ const WidgetInfo = ({ name, onClick }) => {
 
     return (
       <div className="title">
-        <div
-          className={classNames({
-            arrow: true,
-            expanded: isExpanded,
-          })}
-          onClick={handleArrowClick}
-        >
-          <Icon glyph="ic_chevron_right_black_24px" />
-        </div>
+        {collapsible && (
+          <div
+            className={classNames({
+              arrow: true,
+              expanded: isExpanded,
+            })}
+            onClick={handleArrowClick}
+          >
+            <Icon glyph="ic_chevron_right_black_24px" />
+          </div>
+        )}
         <div className="signature-icons">
           <Icon glyph="digital_signature" />
           <Icon glyph={badgeIcon} className="badge" />

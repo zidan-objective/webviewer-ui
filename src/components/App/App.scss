@@ -60,4 +60,8 @@ html, body , #app {
     appearance: none;
     user-select: text !important;
   }
+
+  .signature_inner_element:hover {
+    border: 1px solid $pdftron-blue !important;
+  }
 }
