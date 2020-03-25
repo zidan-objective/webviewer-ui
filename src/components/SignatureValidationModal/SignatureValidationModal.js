@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import { WidgetInfo } from 'components/SignaturePanel';
+import Icon from 'components/Icon';
 
 import core from 'core';
 import useOnClickOutside from 'hooks/useOnClickOutside';
@@ -12,14 +13,15 @@ import selectors from 'selectors';
 import './SignatureValidationModal.scss';
 
 const SignatureValidationModal = () => {
-  const [isDisabled, isOpen] = useSelector(
+  const [widgetName, setWidgetName] = useState(null);
+  const [isDisabled, isOpen, verificationResult] = useSelector(
     state => [
       selectors.isElementDisabled(state, 'signatureValidationModal'),
       selectors.isElementOpen(state, 'signatureValidationModal'),
+      selectors.getVerificationResult(state, widgetName),
     ],
     shallowEqual
   );
-  const [widgetName, setWidgetName] = useState(null);
   const dispatch = useDispatch();
   const containerRef = useRef();
 
@@ -51,6 +53,31 @@ const SignatureValidationModal = () => {
     }
   }, [dispatch, isOpen]);
 
+  const renderHeader = () => {
+    const { digestStatus, verificationStatus } = verificationResult;
+    const { DigestStatus } = window.PDFNet.VerificationResult;
+
+    let badgeIcon;
+    let backgroundColor;
+    if (digestStatus === DigestStatus.e_digest_invalid) {
+      badgeIcon = 'digital_signature_error';
+      backgroundColor = 'rgb(255, 121, 121)';
+    } else if (verificationStatus) {
+      badgeIcon = 'digital_signature_valid';
+      backgroundColor = 'rgb(141, 216, 141)';
+    } else {
+      badgeIcon = 'digital_signature_warning';
+      backgroundColor = 'rgb(247, 177, 111)';
+    }
+
+    return (
+      <div className="validation-header" style={{ backgroundColor }}>
+        <Icon glyph={badgeIcon} />
+        <div className="title">Signature Validation Status</div>
+      </div>
+    );
+  };
+
   return isDisabled ? null : (
     <div
       className={classNames({
@@ -62,11 +89,10 @@ const SignatureValidationModal = () => {
       data-element="signatureValidationModal"
     >
       <div className="container" ref={containerRef}>
-        <div className="validation-header">
-          <div className="title">Signature Validation Status</div>
-        </div>
+        {renderHeader()}
+
         <div className="validation-body">
-          {widgetName && <WidgetInfo name={widgetName} />}
+          {widgetName && <WidgetInfo name={widgetName} collapsible={false} />}
         </div>
       </div>
     </div>
