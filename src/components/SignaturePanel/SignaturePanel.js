@@ -77,7 +77,6 @@ const SignaturePanel = ({ display }) => {
             key={index}
             name={name}
             collapsible
-            showBadge
             onClick={() => {
               jumpToWidget(widget);
             }}
@@ -91,7 +90,7 @@ const SignaturePanel = ({ display }) => {
 
 SignaturePanel.propTypes = propTypes;
 
-export const WidgetInfo = ({ name, collapsible, showBadge, onClick = () => {} }) => {
+export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
   const verificationResult = useSelector(state => selectors.getVerificationResult(state, name));
   const [isExpanded, setIsExpended] = useState(true);
 
@@ -143,7 +142,7 @@ export const WidgetInfo = ({ name, collapsible, showBadge, onClick = () => {} })
         )}
         <div className="signature-icons">
           <Icon glyph="digital_signature" />
-          {showBadge && <Icon glyph={badgeIcon} className="badge" />}
+          <Icon glyph={badgeIcon} className="badge" />
         </div>
         <p>
           Signed {signer && ` by ${signer}`} {signTime && ` on ${signTime}`}

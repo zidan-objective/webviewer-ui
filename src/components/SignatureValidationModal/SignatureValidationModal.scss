@@ -13,21 +13,11 @@
     box-shadow: 0 2px 16px 0 $signature-modal-shared-color; 
 
     .validation-header {
-      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       font-weight: bold;
       padding: 10px 0;
-      background-color: rgb(255, 121, 121);
-      // background-color: rgb(247, 177, 111);
-      // background-color: rgb(141, 216, 141);
-      // background-color: $signature-modal-shared-color;
-
-      .Icon {
-        position: absolute;
-        left: 70px;
-      }
     }
 
     .validation-body {
