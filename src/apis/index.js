@@ -130,6 +130,7 @@ import setCustomMeasurementOverlayInfo from './setCustomMeasurementOverlayInfo';
 import setNoteTransformFunction from './setNoteTransformFunction';
 import selectThumbnailPages from './selectThumbnailPages';
 import unselectThumbnailPages from './unselectThumbnailPages';
+import setCertificateUrl from './setCertificateUrl';
 
 export default store => {
   window.readerControl = {
@@ -206,6 +207,7 @@ export default store => {
     getSelectedThumbnailPageNumbers: getSelectedThumbnailPageNumbers(store),
     selectThumbnailPages: selectThumbnailPages(store),
     unselectThumbnailPages: unselectThumbnailPages(store),
+    setCertificateUrl: setCertificateUrl(store),
 
     // undocumented and deprecated, to be removed in 7.0
     closeElement: closeElement(store),

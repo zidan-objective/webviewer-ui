@@ -4,13 +4,10 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
-import ActionButton from 'components/ActionButton';
 import Icon from 'components/Icon';
 
 import core from 'core';
 import setVerificationResult from 'helpers/setVerificationResult';
-// import { PRIORITY_ONE } from 'constants/actionPriority';
-import actions from 'actions';
 import selectors from 'selectors';
 
 import './SignaturePanel.scss';
@@ -47,20 +44,8 @@ const SignaturePanel = ({ display }) => {
     if (certificateUrl && sigWidgets.length) {
       setVerificationResult(certificateUrl, sigWidgets, dispatch);
     }
-    // may want to hide the spinner here
   }, [certificateUrl, dispatch, sigWidgets]);
 
-  // useEffect(() => {
-  //   if (!sigWidgets.length) {
-  //     dispatch(actions.disableElements(['signaturePanel', 'signaturePanelButton']), PRIORITY_ONE);
-  //   } else {
-  //     dispatch(actions.enableElements(['signaturePanel', 'signaturePanelButton']), PRIORITY_ONE);
-  //   }
-  // }, [dispatch, sigWidgets]);
-
-  const handleInputChange = e => {
-    dispatch(actions.setCertificateUrl(e.target.value));
-  };
 
   const jumpToWidget = widget => {
     core.jumpToAnnotation(widget);
@@ -85,16 +70,6 @@ const SignaturePanel = ({ display }) => {
 
   return isDisabled ? null : (
     <div className="Panel SignaturePanel" data-element="signaturePanel" style={{ display }}>
-      <div className="certificate">
-        <label htmlFor="certificate-input">Certificate: </label>
-        <input
-          id="certificate-input"
-          type="text"
-          onChange={handleInputChange}
-          value={certificateUrl}
-        />
-        {/* <ActionButton dataElement="certificateApplyButton" label="Apply" /> */}
-      </div>
       {sigWidgets.map((widget, index) => {
         const name = widget.getField().name;
         return (
@@ -118,7 +93,7 @@ SignaturePanel.propTypes = propTypes;
 
 export const WidgetInfo = ({ name, collapsible, showBadge, onClick = () => {} }) => {
   const verificationResult = useSelector(state => selectors.getVerificationResult(state, name));
-  const [isExpanded, setIsExpended] = useState(!collapsible);
+  const [isExpanded, setIsExpended] = useState(true);
 
   const { VerificationResult, VerificationOptions } = window.PDFNet;
   const { TimeMode } = VerificationOptions;
