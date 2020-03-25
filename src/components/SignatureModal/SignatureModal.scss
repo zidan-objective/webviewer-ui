@@ -12,7 +12,7 @@
     flex-direction: column;
     justify-content: center;
     border-radius: 4px;
-    box-shadow: 0 2px 16px 0 $signature-modal-shared-color; 
+    box-shadow: 0 2px 16px 0 $signature-modal-shared-color;
 
     @include mobile {
       width: 100%;
@@ -23,7 +23,7 @@
         max-height: 100%;
       }
     }
-    
+
     .header {
       margin: 11px 24px 16px 24px;
       display: flex;
@@ -98,8 +98,8 @@
             background: #ffffff;
             width: 2px;
             height: 2px;
-            box-shadow: 2px 0 0 #ffffff, 4px 0 0 #ffffff, 4px -2px 0 #ffffff,
-              4px -4px 0 #ffffff, 4px -6px 0 #ffffff, 4px -8px 0 #ffffff;
+            box-shadow: 2px 0 0 #ffffff, 4px 0 0 #ffffff, 4px -2px 0 #ffffff, 4px -4px 0 #ffffff,
+              4px -6px 0 #ffffff, 4px -8px 0 #ffffff;
             transform: rotate(45deg);
           }
         }

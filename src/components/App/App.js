@@ -30,6 +30,7 @@ import WarningModal from 'components/WarningModal';
 import PasswordModal from 'components/PasswordModal';
 import ProgressModal from 'components/ProgressModal';
 import CalibrationModal from 'components/CalibrationModal';
+import CustomStampModal from 'components/CustomStampModal';
 import LinkModal from 'components/LinkModal';
 import FilePickerHandler from 'components/FilePickerHandler';
 import CopyTextHandler from 'components/CopyTextHandler';
@@ -54,7 +55,7 @@ const App = ({ removeEventHandlers }) => {
     fireEvent('viewerLoaded');
 
     return removeEventHandlers;
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -95,6 +96,7 @@ const App = ({ removeEventHandlers }) => {
         <ProgressModal />
         <CalibrationModal />
         <LinkModal />
+        <CustomStampModal />
       </div>
 
       <PrintHandler />
