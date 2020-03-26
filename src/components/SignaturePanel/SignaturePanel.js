@@ -134,7 +134,7 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
   const [isExpanded, setIsExpended] = useState(true);
   const { VerificationResult, VerificationOptions } = window.PDFNet;
   const { TimeMode } = VerificationOptions;
-  const { TrustStatus, DigestStatus, ModificationPermissionsStatus } = VerificationResult;
+  const { TrustStatus, DigestStatus, ModificationPermissionsStatus, DocumentStatus } = VerificationResult;
 
   const {
     signed,
@@ -150,6 +150,7 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
     trustVerificationResultString,
     timeOfTrustVerificationEnum,
     trustVerificationTime,
+    badgeIcon,
   } = verificationResult;
 
   const handleArrowClick = e => {
@@ -158,13 +159,6 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
   };
 
   const renderTitle = () => {
-    const badgeIcon =
-      digestStatus === DigestStatus.e_digest_invalid
-        ? 'digital_signature_error'
-        : verificationStatus
-          ? 'digital_signature_valid'
-          : 'digital_signature_warning';
-
     return (
       <div className="title">
         {collapsible && (
@@ -197,19 +191,19 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
     let content;
 
     switch (documentStatus) {
-      case VerificationResult.DocumentStatus.e_no_error:
+      case DocumentStatus.e_no_error:
         content = 'No general error to report.';
         break;
-      case VerificationResult.DocumentStatus.e_corrupt_file:
+      case DocumentStatus.e_corrupt_file:
         content = 'SignatureHandler reported file corruption.';
         break;
-      case VerificationResult.DocumentStatus.e_unsigned:
+      case DocumentStatus.e_unsigned:
         content = 'The signature has not yet been cryptographically signed.';
         break;
-      case VerificationResult.DocumentStatus.e_bad_byteranges:
+      case DocumentStatus.e_bad_byteranges:
         content = 'SignatureHandler reports corruption in the ByteRanges in the digital signature.';
         break;
-      case VerificationResult.DocumentStatus.e_corrupt_cryptographic_contents:
+      case DocumentStatus.e_corrupt_cryptographic_contents:
         content = 'SignatureHandler reports corruption in the Contents of the digital signature.';
         break;
     }
@@ -221,22 +215,22 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
     let content;
 
     switch (digestStatus) {
-      case VerificationResult.DigestStatus.e_digest_invalid:
+      case DigestStatus.e_digest_invalid:
         content = 'The digest is incorrect.';
         break;
-      case VerificationResult.DigestStatus.e_digest_verified:
+      case DigestStatus.e_digest_verified:
         content = 'The digest is correct.';
         break;
-      case VerificationResult.DigestStatus.e_digest_verification_disabled:
+      case DigestStatus.e_digest_verification_disabled:
         content = 'Digest verification has been disabled.';
         break;
-      case VerificationResult.DigestStatus.e_weak_digest_algorithm_but_digest_verifiable:
+      case DigestStatus.e_weak_digest_algorithm_but_digest_verifiable:
         content = 'The digest is correct, but the digest algorithm is weak and not secure.';
         break;
-      case VerificationResult.DigestStatus.e_no_digest_status:
+      case DigestStatus.e_no_digest_status:
         content = 'No digest status to report.';
         break;
-      case VerificationResult.DigestStatus.e_unsupported_encoding:
+      case DigestStatus.e_unsupported_encoding:
         content = 'No installed SignatureHandler was able to recognize the signature\'s encoding';
         break;
     }

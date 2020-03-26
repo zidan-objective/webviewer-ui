@@ -20,6 +20,14 @@ export default async(certificateUrl, sigWidgets, dispatch) => {
 
 const getVerificationResult = async(doc, sigWidgets, url) => {
   const { PDFNet } = window;
+  const { VerificationResult } = PDFNet;
+  // const { TimeMode } = VerificationOptions;
+  const {
+    TrustStatus,
+    DigestStatus,
+    ModificationPermissionsStatus,
+    DocumentStatus,
+  } = VerificationResult;
   const verificationResult = {};
 
   doc = await doc.getPDFDoc();
@@ -62,6 +70,7 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
           type: await change.getTypeAsString(),
         }))
       );
+      const validSignerIdentity = trustStatus === TrustStatus.e_trust_verified;
 
       let trustVerificationResultString;
       let timeOfTrustVerificationEnum;
@@ -79,6 +88,23 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
         }
       }
 
+      let badgeIcon;
+      if (verificationStatus) {
+        badgeIcon = 'digital_signature_valid';
+      } else if (
+        documentStatus === DocumentStatus.e_no_error &&
+        (digestStatus === DigestStatus.e_digest_verified ||
+          digestStatus === DigestStatus.e_digest_verification_disabled) &&
+        trustStatus === TrustStatus.e_no_trust_status &&
+        (permissionStatus === ModificationPermissionsStatus.e_unmodified ||
+          permissionStatus === ModificationPermissionsStatus.e_has_allowed_changes ||
+          permissionStatus === ModificationPermissionsStatus.e_permissions_verification_disabled)
+      ) {
+        badgeIcon = 'digital_signature_warning';
+      } else {
+        badgeIcon = 'digital_signature_error';
+      }
+
       verificationResult[fieldName] = {
         signed,
         signer,
@@ -93,6 +119,8 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
         timeOfTrustVerificationEnum,
         trustVerificationTime,
         id,
+        badgeIcon,
+        validSignerIdentity
       };
     } catch (e) {
       console.log(e);
