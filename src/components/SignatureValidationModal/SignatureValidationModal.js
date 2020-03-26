@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import classNames from 'classnames';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
+import ActionButton from 'components/ActionButton';
 import { WidgetInfo } from 'components/SignaturePanel';
 
 import core from 'core';
@@ -68,6 +69,12 @@ const SignatureValidationModal = () => {
     return (
       <div className="validation-header" style={{ backgroundColor }}>
         Signature Validation Status
+        <ActionButton
+          dataElement="signatureValidationModalCloseButton"
+          title="action.close"
+          img="ic_close_black_24px"
+          onClick={() => dispatch(actions.closeElements(['signatureValidationModal']))}
+        />
       </div>
     );
   };
@@ -86,7 +93,7 @@ const SignatureValidationModal = () => {
         {renderHeader()}
 
         <div className="validation-body">
-          {widgetName && <WidgetInfo name={widgetName} collapsible={false} />}
+          {verificationResult && <WidgetInfo name={widgetName} collapsible={false} />}
         </div>
       </div>
     </div>

@@ -8,10 +8,12 @@ import Icon from 'components/Icon';
 
 import core from 'core';
 import setVerificationResult from 'helpers/setVerificationResult';
+import actions from 'actions';
 import selectors from 'selectors';
 
 import './SignaturePanel.scss';
 import './WidgetInfo.scss';
+import './Spinner.scss';
 
 const propTypes = {
   display: PropTypes.string.isRequired,
@@ -24,10 +26,14 @@ const SignaturePanel = ({ display }) => {
   ]);
   const [sigWidgets, setSigWidgets] = useState([]);
   const [locatorRect, setLocatorRect] = useState(null);
+  const [showSpinner, setShowSpinner] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const onDocumentLoaded = async() => {
+      dispatch(actions.setVerificationResult({}));
+      setShowSpinner(true);
+
       await core.getAnnotationsLoadedPromise();
       const sigWidgets = core
         .getAnnotationsList()
@@ -38,14 +44,15 @@ const SignaturePanel = ({ display }) => {
 
     core.addEventListener('documentLoaded', onDocumentLoaded);
     return () => core.removeEventListener('documentLoaded', onDocumentLoaded);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (certificateUrl && sigWidgets.length) {
-      setVerificationResult(certificateUrl, sigWidgets, dispatch);
+      setVerificationResult(certificateUrl, sigWidgets, dispatch).then(() => {
+        setShowSpinner(false);
+      });
     }
   }, [certificateUrl, dispatch, sigWidgets]);
-
 
   const jumpToWidget = widget => {
     core.jumpToAnnotation(widget);
@@ -70,19 +77,25 @@ const SignaturePanel = ({ display }) => {
 
   return isDisabled ? null : (
     <div className="Panel SignaturePanel" data-element="signaturePanel" style={{ display }}>
-      {sigWidgets.map((widget, index) => {
-        const name = widget.getField().name;
-        return (
-          <WidgetInfo
-            key={index}
-            name={name}
-            collapsible
-            onClick={() => {
-              jumpToWidget(widget);
-            }}
-          />
-        );
-      })}
+      {showSpinner ? (
+        <div className="spinner-wrapper">
+          <Spinner />
+        </div>
+      ) : (
+        sigWidgets.map((widget, index) => {
+          const name = widget.getField().name;
+          return (
+            <WidgetInfo
+              key={index}
+              name={name}
+              collapsible
+              onClick={() => {
+                jumpToWidget(widget);
+              }}
+            />
+          );
+        })
+      )}
       <WidgetLocator rect={locatorRect} />
     </div>
   );
@@ -349,6 +362,12 @@ const WidgetLocator = ({ rect }) => {
       />,
       document.getElementById('app')
     )
+  );
+};
+
+const Spinner = () => {
+  return (
+    <div className="spinner" />
   );
 };
 

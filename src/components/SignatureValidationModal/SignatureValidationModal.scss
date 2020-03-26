@@ -13,11 +13,21 @@
     box-shadow: 0 2px 16px 0 $signature-modal-shared-color; 
 
     .validation-header {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       font-weight: bold;
       padding: 10px 0;
+
+      [data-element=signatureValidationModalCloseButton] {
+        position: absolute;
+        right: 0px;
+
+        &:hover {
+          background: none;
+        }
+      }
     }
 
     .validation-body {
@@ -26,6 +36,10 @@
 
     .signature-widget-info {
       margin-top: 0px;
+
+      .title {
+        cursor: default;
+      }
 
       .body {
         margin-left: 37px;

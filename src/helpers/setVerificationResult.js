@@ -1,25 +1,26 @@
-import debounce from 'lodash/debounce';
-
 import core from 'core';
 import actions from 'actions';
 
-export default debounce(async(certificateUrl, sigWidgets, dispatch) => {
-  // may want to show the spinner here
-  const doc = core.getDocument();
-  if (doc) {
-    const verificationResult = await getVerificationResult(doc, sigWidgets, certificateUrl);
-    dispatch(actions.setVerificationResult(verificationResult));
-  } else {
-    window.docViewer.one('documentLoaded', async() => {
-      const verificationResult = await getVerificationResult(
-        core.getDocument(),
-        sigWidgets,
-        certificateUrl
-      );
+export default (certificateUrl, sigWidgets, dispatch) => {
+  return new Promise(async resolve => {
+    const doc = core.getDocument();
+    if (doc) {
+      const verificationResult = await getVerificationResult(doc, sigWidgets, certificateUrl);
       dispatch(actions.setVerificationResult(verificationResult));
-    });
-  }
-}, 500);
+      resolve();
+    } else {
+      window.docViewer.one('documentLoaded', async() => {
+        const verificationResult = await getVerificationResult(
+          core.getDocument(),
+          sigWidgets,
+          certificateUrl
+        );
+        dispatch(actions.setVerificationResult(verificationResult));
+        resolve();
+      });
+    }
+  });
+};
 
 const getVerificationResult = async(doc, sigWidgets, url) => {
   const { PDFNet } = window;
