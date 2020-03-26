@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import ActionButton from 'components/ActionButton';
-import { WidgetInfo, SignatureIcon } from 'components/SignaturePanel';
+import { SignatureIcon } from 'components/SignaturePanel';
 
 import core from 'core';
 import useOnClickOutside from 'hooks/useOnClickOutside';
@@ -11,6 +11,7 @@ import actions from 'actions';
 import selectors from 'selectors';
 
 import './SignatureValidationModal.scss';
+// import '../SignaturePanel/SignatureIcon.scss';
 
 const SignatureValidationModal = () => {
   const [widgetName, setWidgetName] = useState(null);
@@ -24,6 +25,7 @@ const SignatureValidationModal = () => {
   );
   const dispatch = useDispatch();
   const containerRef = useRef();
+  const { badgeIcon } = verificationResult;
 
   useOnClickOutside(containerRef, () => {
     dispatch(actions.closeElements(['signatureValidationModal']));
@@ -54,8 +56,6 @@ const SignatureValidationModal = () => {
   }, [dispatch, isOpen]);
 
   const renderHeader = () => {
-    const { badgeIcon } = verificationResult;
-
     let backgroundColor;
     if (badgeIcon === 'digital_signature_error') {
       backgroundColor = 'rgb(255, 121, 121)';
@@ -92,7 +92,7 @@ const SignatureValidationModal = () => {
         {renderHeader()}
 
         <div className="validation-body">
-          {verificationResult && <WidgetInfo name={widgetName} collapsible={false} />}
+          <SignatureIcon badge={badgeIcon} />
         </div>
       </div>
     </div>

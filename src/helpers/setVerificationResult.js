@@ -95,7 +95,7 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
         documentStatus === DocumentStatus.e_no_error &&
         (digestStatus === DigestStatus.e_digest_verified ||
           digestStatus === DigestStatus.e_digest_verification_disabled) &&
-        trustStatus === TrustStatus.e_no_trust_status &&
+        trustStatus !== TrustStatus.e_no_trust_status &&
         (permissionStatus === ModificationPermissionsStatus.e_unmodified ||
           permissionStatus === ModificationPermissionsStatus.e_has_allowed_changes ||
           permissionStatus === ModificationPermissionsStatus.e_permissions_verification_disabled)

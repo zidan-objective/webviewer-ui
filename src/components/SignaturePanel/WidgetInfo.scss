@@ -8,10 +8,8 @@
     margin: 0px;
   }
 
-  .Icon {
+  .signature-icon {
     margin-right: 5px;
-    width: 30px;
-    height: 30px;
   }
 
   .title {
@@ -21,7 +19,6 @@
     cursor: pointer;
 
     .arrow {
-      margin-right: -3px;
       transition: transform 0.1s ease;
 
       &.expanded {

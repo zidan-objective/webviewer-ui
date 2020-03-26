@@ -1,6 +1,11 @@
 .signature-icon {
   position: relative;
 
+  .Icon {
+    width: 30px;
+    height: 30px;
+  }
+
   .badge {
     position: absolute;
     right: 0px;

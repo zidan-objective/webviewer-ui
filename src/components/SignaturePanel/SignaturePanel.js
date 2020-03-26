@@ -49,7 +49,7 @@ const SignaturePanel = ({ display }) => {
       const _sigWidgets = core
         .getAnnotationsList()
         .filter(annotation => annotation instanceof Annotations.SignatureWidgetAnnotation);
-      if (_sigWidgets.length) {
+      if (_sigWidgets.some(widget => !sigWidgets.includes(widget))) {
         setSigWidgets(_sigWidgets);
       }
     };
