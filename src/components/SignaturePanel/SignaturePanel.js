@@ -27,30 +27,51 @@ const SignaturePanel = ({ display }) => {
   const [sigWidgets, setSigWidgets] = useState([]);
   const [locatorRect, setLocatorRect] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [certificateErrorMessage, setCertificateErrorMessage] = useState('');
   const dispatch = useDispatch();
 
   useEffect(() => {
     const onDocumentLoaded = async() => {
-      dispatch(actions.setVerificationResult({}));
       setShowSpinner(true);
+    };
 
-      await core.getAnnotationsLoadedPromise();
-      const sigWidgets = core
-        .getAnnotationsList()
-        .filter(annotation => annotation instanceof Annotations.SignatureWidgetAnnotation);
+    const onDocumentUnloaded = () => {
+      setSigWidgets([]);
+      dispatch(actions.setVerificationResult({}));
+    };
 
-      setSigWidgets(sigWidgets);
+    const onAnnotationChanged = (annotations, action, { imported }) => {
+      if (action !== 'add' && !imported) {
+        return;
+      }
+
+      const _sigWidgets = annotations.filter(
+        annotation => annotation instanceof Annotations.SignatureWidgetAnnotation
+      );
+      if (_sigWidgets.length) {
+        setSigWidgets([...sigWidgets, ..._sigWidgets]);
+      }
     };
 
     core.addEventListener('documentLoaded', onDocumentLoaded);
+    core.addEventListener('documentUnloaded', onDocumentUnloaded);
+    core.addEventListener('annotationChanged', onAnnotationChanged);
     return () => core.removeEventListener('documentLoaded', onDocumentLoaded);
-  }, [dispatch]);
+  }, [dispatch, sigWidgets]);
 
   useEffect(() => {
     if (certificateUrl && sigWidgets.length) {
-      setVerificationResult(certificateUrl, sigWidgets, dispatch).then(() => {
-        setShowSpinner(false);
-      });
+      setVerificationResult(certificateUrl, sigWidgets, dispatch)
+        .then(() => {
+          setCertificateErrorMessage('');
+          return core.getAnnotationsLoadedPromise();
+        })
+        .then(() => {
+          setShowSpinner(false);
+        })
+        .catch(e => {
+          setCertificateErrorMessage(e.message);
+        });
     }
   }, [certificateUrl, dispatch, sigWidgets]);
 
@@ -78,8 +99,12 @@ const SignaturePanel = ({ display }) => {
   return isDisabled ? null : (
     <div className="Panel SignaturePanel" data-element="signaturePanel" style={{ display }}>
       {showSpinner ? (
-        <div className="spinner-wrapper">
+        <div className="center">
           <Spinner />
+        </div>
+      ) : certificateErrorMessage ? (
+        <div className="center">
+          There are some issues with downloading the certificate.
         </div>
       ) : (
         sigWidgets.map((widget, index) => {
@@ -103,10 +128,10 @@ const SignaturePanel = ({ display }) => {
 
 SignaturePanel.propTypes = propTypes;
 
+// eslint-disable-next-line react/prop-types
 export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
   const verificationResult = useSelector(state => selectors.getVerificationResult(state, name));
   const [isExpanded, setIsExpended] = useState(true);
-
   const { VerificationResult, VerificationOptions } = window.PDFNet;
   const { TimeMode } = VerificationOptions;
   const { TrustStatus, DigestStatus, ModificationPermissionsStatus } = VerificationResult;
@@ -366,9 +391,7 @@ const WidgetLocator = ({ rect }) => {
 };
 
 const Spinner = () => {
-  return (
-    <div className="spinner" />
-  );
+  return <div className="spinner" />;
 };
 
 export default SignaturePanel;

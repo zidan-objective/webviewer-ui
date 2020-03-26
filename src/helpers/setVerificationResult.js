@@ -1,41 +1,33 @@
 import core from 'core';
 import actions from 'actions';
 
-export default (certificateUrl, sigWidgets, dispatch) => {
-  return new Promise(async resolve => {
-    const doc = core.getDocument();
-    if (doc) {
-      const verificationResult = await getVerificationResult(doc, sigWidgets, certificateUrl);
+export default async(certificateUrl, sigWidgets, dispatch) => {
+  const doc = core.getDocument();
+  if (doc) {
+    const verificationResult = await getVerificationResult(doc, sigWidgets, certificateUrl);
+    dispatch(actions.setVerificationResult(verificationResult));
+  } else {
+    window.docViewer.one('documentLoaded', async() => {
+      const verificationResult = await getVerificationResult(
+        core.getDocument(),
+        sigWidgets,
+        certificateUrl
+      );
       dispatch(actions.setVerificationResult(verificationResult));
-      resolve();
-    } else {
-      window.docViewer.one('documentLoaded', async() => {
-        const verificationResult = await getVerificationResult(
-          core.getDocument(),
-          sigWidgets,
-          certificateUrl
-        );
-        dispatch(actions.setVerificationResult(verificationResult));
-        resolve();
-      });
-    }
-  });
+    });
+  }
 };
 
 const getVerificationResult = async(doc, sigWidgets, url) => {
   const { PDFNet } = window;
   const verificationResult = {};
 
-  await PDFNet.initialize(undefined, 'ems');
-
   doc = await doc.getPDFDoc();
   const opts = await PDFNet.VerificationOptions.create(
     PDFNet.VerificationOptions.SecurityLevel.e_compatibility_and_archiving
   );
-  // may throw errors
-  try {
-    await opts.addTrustedCertificateFromURL(url);
-  } catch (e) {}
+
+  await opts.addTrustedCertificateFromURL(url);
 
   for (const widget of sigWidgets) {
     try {

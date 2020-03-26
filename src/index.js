@@ -65,7 +65,9 @@ if (window.CanvasRenderingContext2D) {
 
   if (state.advanced.fullAPI) {
     window.CoreControls.enableFullPDF(true);
-    fullAPIReady = loadScript('../core/pdf/PDFNet.js');
+    fullAPIReady = loadScript('../core/pdf/PDFNet.js').then(() => {
+      window.PDFNet.initialize(undefined, 'ems');
+    });
   }
 
   if (getHashParams('disableLogs', false)) {
