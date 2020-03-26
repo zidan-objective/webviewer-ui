@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import ActionButton from 'components/ActionButton';
-import { WidgetInfo } from 'components/SignaturePanel';
+import { WidgetInfo, SignatureIcon } from 'components/SignaturePanel';
 
 import core from 'core';
 import useOnClickOutside from 'hooks/useOnClickOutside';
@@ -54,15 +54,14 @@ const SignatureValidationModal = () => {
   }, [dispatch, isOpen]);
 
   const renderHeader = () => {
-    const { digestStatus, verificationStatus } = verificationResult;
-    const { DigestStatus } = window.PDFNet.VerificationResult;
+    const { badgeIcon } = verificationResult;
 
     let backgroundColor;
-    if (digestStatus === DigestStatus.e_digest_invalid) {
+    if (badgeIcon === 'digital_signature_error') {
       backgroundColor = 'rgb(255, 121, 121)';
-    } else if (verificationStatus) {
+    } else if (badgeIcon === 'digital_signature_valid') {
       backgroundColor = 'rgb(141, 216, 141)';
-    } else {
+    } else if (badgeIcon === 'digital_signature_warning') {
       backgroundColor = 'rgb(247, 177, 111)';
     }
 

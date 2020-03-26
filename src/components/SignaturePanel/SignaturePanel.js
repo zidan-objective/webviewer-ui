@@ -14,6 +14,7 @@ import selectors from 'selectors';
 import './SignaturePanel.scss';
 import './WidgetInfo.scss';
 import './Spinner.scss';
+import './SignatureIcon.scss';
 
 const propTypes = {
   display: PropTypes.string.isRequired,
@@ -45,9 +46,9 @@ const SignaturePanel = ({ display }) => {
         return;
       }
 
-      const _sigWidgets = core.getAnnotationsList().filter(
-        annotation => annotation instanceof Annotations.SignatureWidgetAnnotation
-      );
+      const _sigWidgets = core
+        .getAnnotationsList()
+        .filter(annotation => annotation instanceof Annotations.SignatureWidgetAnnotation);
       if (_sigWidgets.length) {
         setSigWidgets(_sigWidgets);
       }
@@ -103,9 +104,7 @@ const SignaturePanel = ({ display }) => {
           <Spinner />
         </div>
       ) : certificateErrorMessage ? (
-        <div className="center">
-          There are some issues with downloading the certificate.
-        </div>
+        <div className="center">There are some issues with downloading the certificate.</div>
       ) : (
         sigWidgets.map((widget, index) => {
           const name = widget.getField().name;
@@ -134,7 +133,12 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
   const [isExpanded, setIsExpended] = useState(true);
   const { VerificationResult, VerificationOptions } = window.PDFNet;
   const { TimeMode } = VerificationOptions;
-  const { TrustStatus, DigestStatus, ModificationPermissionsStatus, DocumentStatus } = VerificationResult;
+  const {
+    TrustStatus,
+    DigestStatus,
+    ModificationPermissionsStatus,
+    DocumentStatus,
+  } = VerificationResult;
 
   const {
     signed,
@@ -172,10 +176,7 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
             <Icon glyph="ic_chevron_right_black_24px" />
           </div>
         )}
-        <div className="signature-icons">
-          <Icon glyph="digital_signature" />
-          <Icon glyph={badgeIcon} className="badge" />
-        </div>
+        <SignatureIcon badge={badgeIcon} />
         <p>
           Signed {signer && ` by ${signer}`} {signTime && ` on ${signTime}`}
         </p>
@@ -330,7 +331,7 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
       ) : (
         <React.Fragment>
           <div className="title">
-            <Icon glyph="digital_signature" />
+            <SignatureIcon />
             <p>Unsigned signature field with object number {id}</p>
           </div>
         </React.Fragment>
@@ -384,8 +385,13 @@ const WidgetLocator = ({ rect }) => {
   );
 };
 
-const Spinner = () => {
-  return <div className="spinner" />;
-};
+const Spinner = () => <div className="spinner" />;
+
+export const SignatureIcon = ({ badge }) => (
+  <div className="signature-icon">
+    <Icon glyph="digital_signature" />
+    {badge && <Icon glyph={badge} className="badge" />}
+  </div>
+);
 
 export default SignaturePanel;

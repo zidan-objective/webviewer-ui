@@ -1,6 +1,7 @@
-import SignaturePanel, { WidgetInfo } from './SignaturePanel';
+import SignaturePanel, { WidgetInfo, SignatureIcon } from './SignaturePanel';
 
 export default SignaturePanel;
 export {
-  WidgetInfo
+  WidgetInfo,
+  SignatureIcon
 };
