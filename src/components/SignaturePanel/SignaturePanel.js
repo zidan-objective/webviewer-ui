@@ -45,11 +45,11 @@ const SignaturePanel = ({ display }) => {
         return;
       }
 
-      const _sigWidgets = annotations.filter(
+      const _sigWidgets = core.getAnnotationsList().filter(
         annotation => annotation instanceof Annotations.SignatureWidgetAnnotation
       );
       if (_sigWidgets.length) {
-        setSigWidgets([...sigWidgets, ..._sigWidgets]);
+        setSigWidgets(_sigWidgets);
       }
     };
 
