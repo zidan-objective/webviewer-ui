@@ -11,7 +11,7 @@
     justify-content: space-around;
     border-radius: 4px;
     box-shadow: 0 2px 16px 0 $signature-modal-shared-color;
-    min-width: 300px;
+    min-width: 350px;
 
     .validation-header {
       position: relative;
@@ -30,6 +30,13 @@
           background: none;
         }
       }
+    }
+
+    .center {
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .validation-body {

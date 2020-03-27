@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import ActionButton from 'components/ActionButton';
-import { SignatureIcon } from 'components/SignaturePanel';
+import { SignatureIcon, Spinner } from 'components/SignaturePanel';
 // import SignaturePropertyModal from 'components/SignaturePropertyModal';
 
 import core from 'core';
@@ -85,6 +85,8 @@ const SignatureValidationModal = () => {
       backgroundColor = 'rgb(141, 216, 141)';
     } else if (badgeIcon === 'digital_signature_warning') {
       backgroundColor = 'rgb(247, 177, 111)';
+    } else {
+      backgroundColor = '#ddd';
     }
 
     return (
@@ -229,6 +231,8 @@ const SignatureValidationModal = () => {
     );
   };
 
+  const waitingForVerification = typeof signer === 'undefined';
+
   return isDisabled ? null : (
     <div
       className={classNames({
@@ -242,22 +246,30 @@ const SignatureValidationModal = () => {
       <div className="container" ref={containerRef}>
         {renderHeader()}
 
-        <div className="validation-body">
-          <SignatureIcon badge={badgeIcon} />
-          <div className="inner">
-            {showProperty ? renderProperties() : renderValidationStatus()}
+        {waitingForVerification ? (
+          <div className="center">
+            <Spinner />
           </div>
-        </div>
+        ) : (
+          <React.Fragment>
+            <div className="validation-body">
+              <SignatureIcon badge={badgeIcon} />
+              <div className="inner">
+                {showProperty ? renderProperties() : renderValidationStatus()}
+              </div>
+            </div>
 
-        <div className="validation-footer">
-          <ActionButton
-            label={showProperty ? 'Validation status' : 'Signature properties'}
-            dataElement="signaturePropertiesButton"
-            onClick={() => {
-              setShowProperty(!showProperty);
-            }}
-          />
-        </div>
+            <div className="validation-footer">
+              <ActionButton
+                label={showProperty ? 'Validation status' : 'Signature properties'}
+                dataElement="signaturePropertiesButton"
+                onClick={() => {
+                  setShowProperty(!showProperty);
+                }}
+              />
+            </div>
+          </React.Fragment>
+        )}
       </div>
     </div>
   );

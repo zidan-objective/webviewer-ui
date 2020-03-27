@@ -380,7 +380,7 @@ const WidgetLocator = ({ rect }) => {
   );
 };
 
-const Spinner = () => <div className="spinner" />;
+export const Spinner = () => <div className="spinner" />;
 
 export const SignatureIcon = ({ badge }) => (
   <div className="signature-icon">
