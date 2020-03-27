@@ -8,7 +8,7 @@
     @extend %modal-shared-container-style;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     border-radius: 4px;
     box-shadow: 0 2px 16px 0 $signature-modal-shared-color;
     min-width: 300px;
@@ -33,14 +33,16 @@
     }
 
     .validation-body {
+      margin-top: 10px;
+
       p {
         margin: 0;
       }
 
       position: relative;
-      padding: 10px;
+      padding: 10px 20px;
+      min-height: 100px;
       display: flex;
-      justify-content: center;
       font-size: 0.9em;
 
       .signature-icon {
@@ -49,36 +51,36 @@
         top: 10px;
       }
 
-      .status {
+      .inner {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        margin-left: 50px;
+        margin-left: 35px;
 
         & > * {
-          margin-bottom: 5px;
+          margin-bottom: 8px;
         }
       }
     }
 
-    // .signature-widget-info {
-    //   margin-top: 0px;
+    .validation-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
 
-    //   .title {
-    //     cursor: default;
-    //   }
+      [data-element='signaturePropertiesButton'] {
+        margin-right: 10px;
+        font-size: 0.9em;
+        border: 1px solid #ddd;
+        border-radius: 4px;
 
-    //   .body {
-    //     margin-left: 37px;
+        p {
+          margin: 0;
+        }
 
-    //     & > * {
-    //       margin-top: 10px;
-
-    //       & > * {
-    //         margin-top: 10px;
-    //       }
-    //     }
-    //   }
-    // }
+        &:hover {
+          background: none;
+        }
+      }
+    }
   }
 }

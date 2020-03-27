@@ -4,6 +4,7 @@ import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import ActionButton from 'components/ActionButton';
 import { SignatureIcon } from 'components/SignaturePanel';
+// import SignaturePropertyModal from 'components/SignaturePropertyModal';
 
 import core from 'core';
 import useOnClickOutside from 'hooks/useOnClickOutside';
@@ -11,7 +12,6 @@ import actions from 'actions';
 import selectors from 'selectors';
 
 import './SignatureValidationModal.scss';
-// import '../SignaturePanel/SignatureIcon.scss';
 
 const SignatureValidationModal = () => {
   const [widgetName, setWidgetName] = useState(null);
@@ -24,12 +24,18 @@ const SignatureValidationModal = () => {
     shallowEqual
   );
   const dispatch = useDispatch();
+  const [showProperty, setShowProperty] = useState(false);
   const containerRef = useRef();
   const {
     badgeIcon,
     verificationStatus,
     permissionStatus,
     validSignerIdentity,
+    signer,
+    signTime,
+    trustVerificationResultString,
+    timeOfTrustVerificationEnum,
+    trustVerificationTime,
   } = verificationResult;
   const { VerificationResult, VerificationOptions } = window.PDFNet;
   const {
@@ -38,6 +44,7 @@ const SignatureValidationModal = () => {
     ModificationPermissionsStatus,
     DocumentStatus,
   } = VerificationResult;
+  const { TimeMode } = VerificationOptions;
 
   useOnClickOutside(containerRef, () => {
     dispatch(actions.closeElements(['signatureValidationModal']));
@@ -64,6 +71,8 @@ const SignatureValidationModal = () => {
           'passwordModal',
         ])
       );
+    } else {
+      setShowProperty(false);
     }
   }, [dispatch, isOpen]);
 
@@ -79,7 +88,7 @@ const SignatureValidationModal = () => {
 
     return (
       <div className="validation-header" style={{ backgroundColor }}>
-        Signature Validation Status
+        {showProperty ? 'Signature Properties' : 'Signature Validation Status'}
         <ActionButton
           dataElement="signatureValidationModalCloseButton"
           title="action.close"
@@ -90,28 +99,105 @@ const SignatureValidationModal = () => {
     );
   };
 
-  const renderPermissionStatus = () => {
-    let content;
+  const renderValidationStatus = () => {
+    const renderPermissionStatus = () => {
+      let content;
 
-    switch (permissionStatus) {
-      case ModificationPermissionsStatus.e_invalidated_by_disallowed_changes:
-        content = `- The document has changes that are disallowed by the signature's permissions settings.`;
-        break;
-      case ModificationPermissionsStatus.e_has_allowed_changes:
-        content = `- The document has changes that are allowed by the signature's permissions settings.`;
-        break;
-      case ModificationPermissionsStatus.e_unmodified:
-        content = '- The document has not been modified since it was signed.';
-        break;
-      case ModificationPermissionsStatus.e_permissions_verification_disabled:
-        content = '- Permissions verification has been disabled.';
-        break;
-      case ModificationPermissionsStatus.e_no_permissions_status:
-        content = '- No permissions status to report.';
-        break;
-    }
+      switch (permissionStatus) {
+        case ModificationPermissionsStatus.e_invalidated_by_disallowed_changes:
+          content = `- The document has changes that are disallowed by the signature's permissions settings.`;
+          break;
+        case ModificationPermissionsStatus.e_has_allowed_changes:
+          content = `- The document has changes that are allowed by the signature's permissions settings.`;
+          break;
+        case ModificationPermissionsStatus.e_unmodified:
+          content = '- The document has not been modified since it was signed.';
+          break;
+        case ModificationPermissionsStatus.e_permissions_verification_disabled:
+          content = '- Permissions verification has been disabled.';
+          break;
+        case ModificationPermissionsStatus.e_no_permissions_status:
+          content = '- No permissions status to report.';
+          break;
+      }
 
-    return <p>{content}</p>;
+      return <p>{content}</p>;
+    };
+
+    return (
+      <React.Fragment>
+        <p style={{ fontSize: '1.1em' }}>
+          {verificationStatus ? 'Signature is valid.' : 'Signature validity is unknown.'}
+        </p>
+        {renderPermissionStatus()}
+        <p>
+          {validSignerIdentity
+            ? `- The signer's identity is valid.`
+            : `- The signer's identity is unknown.`}
+        </p>
+      </React.Fragment>
+    );
+  };
+
+  const renderProperties = () => {
+    const renderPermissionStatus = () => {
+      let content;
+
+      switch (permissionStatus) {
+        case ModificationPermissionsStatus.e_invalidated_by_disallowed_changes:
+          content = `The document has changes that are disallowed by the signature's permissions settings.`;
+          break;
+        case ModificationPermissionsStatus.e_has_allowed_changes:
+          content = `The document has changes that are allowed by the signature's permissions settings.`;
+          break;
+        case ModificationPermissionsStatus.e_unmodified:
+          content = 'The document has not been modified since it was signed.';
+          break;
+        case ModificationPermissionsStatus.e_permissions_verification_disabled:
+          content = 'Permissions verification has been disabled.';
+          break;
+        case ModificationPermissionsStatus.e_no_permissions_status:
+          content = 'No permissions status to report.';
+          break;
+      }
+
+      return <p>{content}</p>;
+    };
+
+    const renderTrustVerification = () => {
+      return trustVerificationResultString ? (
+        <p>
+          {timeOfTrustVerificationEnum === TimeMode.e_current
+            ? 'Trust verification attempted with respect to current time.'
+            : timeOfTrustVerificationEnum === TimeMode.e_signing
+              ? `Trust verification attempted with respect to signing time: ${trustVerificationTime}`
+              : `Trust verification attempted with respect to secure embedded timestamp: ${trustVerificationTime}`}
+        </p>
+      ) : (
+        <p>No detailed trust verification result available.</p>
+      );
+    };
+
+    let verificationContent = verificationStatus
+      ? `Signature is valid`
+      : 'Signature validity is unknown';
+    verificationContent = signer
+      ? `${verificationContent}, signed by ${signer}.`
+      : `${verificationContent}.`;
+
+    return (
+      <React.Fragment>
+        <p style={{ fontSize: '1.1em' }}>{verificationContent}</p>
+        {signTime && <p>Signing Time: {signTime}</p>}
+        {renderPermissionStatus()}
+        <p>
+          {validSignerIdentity
+            ? `The signer's identity is valid.`
+            : `The signer's identity is unknown.`}
+        </p>
+        {renderTrustVerification()}
+      </React.Fragment>
+    );
   };
 
   return isDisabled ? null : (
@@ -129,17 +215,19 @@ const SignatureValidationModal = () => {
 
         <div className="validation-body">
           <SignatureIcon badge={badgeIcon} />
-          <div className="status">
-            <p style={{ fontSize: '1.1em' }}>
-              {verificationStatus ? 'Signature is valid.' : 'Signature validity is unknown.'}
-            </p>
-            {renderPermissionStatus()}
-            <p>
-              {validSignerIdentity
-                ? `- The signer's identity is valid.`
-                : `- The signer's identity is unknown.`}
-            </p>
+          <div className="inner">
+            {showProperty ? renderProperties() : renderValidationStatus()}
           </div>
+        </div>
+
+        <div className="validation-footer">
+          <ActionButton
+            label={showProperty ? 'Validation status' : 'Signature properties'}
+            dataElement="signaturePropertiesButton"
+            onClick={() => {
+              setShowProperty(!showProperty);
+            }}
+          />
         </div>
       </div>
     </div>
