@@ -34,6 +34,13 @@ const SignaturePanel = ({ display }) => {
   useEffect(() => {
     const onDocumentLoaded = async() => {
       setShowSpinner(true);
+
+      await core.getAnnotationsLoadedPromise();
+
+      const _sigWidgets = core
+        .getAnnotationsList()
+        .filter(annotation => annotation instanceof Annotations.SignatureWidgetAnnotation);
+      setSigWidgets(_sigWidgets);
     };
 
     const onDocumentUnloaded = () => {
@@ -41,23 +48,12 @@ const SignaturePanel = ({ display }) => {
       dispatch(actions.setVerificationResult({}));
     };
 
-    const onAnnotationChanged = (annotations, action, { imported }) => {
-      if (action !== 'add' && !imported) {
-        return;
-      }
-
-      const _sigWidgets = core
-        .getAnnotationsList()
-        .filter(annotation => annotation instanceof Annotations.SignatureWidgetAnnotation);
-      if (_sigWidgets.some(widget => !sigWidgets.includes(widget))) {
-        setSigWidgets(_sigWidgets);
-      }
-    };
-
     core.addEventListener('documentLoaded', onDocumentLoaded);
     core.addEventListener('documentUnloaded', onDocumentUnloaded);
-    core.addEventListener('annotationChanged', onAnnotationChanged);
-    return () => core.removeEventListener('documentLoaded', onDocumentLoaded);
+    return () => {
+      core.removeEventListener('documentLoaded', onDocumentLoaded);
+      core.removeEventListener('documentUnloaded', onDocumentUnloaded);
+    };
   }, [dispatch, sigWidgets]);
 
   useEffect(() => {
@@ -65,7 +61,6 @@ const SignaturePanel = ({ display }) => {
       setVerificationResult(certificateUrl, sigWidgets, dispatch)
         .then(() => {
           setCertificateErrorMessage('');
-          return core.getAnnotationsLoadedPromise();
         })
         .then(() => {
           setShowSpinner(false);
