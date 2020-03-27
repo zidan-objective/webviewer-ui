@@ -36,6 +36,7 @@ const SignatureValidationModal = () => {
     trustVerificationResultString,
     timeOfTrustVerificationEnum,
     trustVerificationTime,
+    digestAlgorithm,
   } = verificationResult;
   const { VerificationResult, VerificationOptions } = window.PDFNet;
   const {
@@ -196,6 +197,7 @@ const SignatureValidationModal = () => {
             : `The signer's identity is unknown.`}
         </p>
         {renderTrustVerification()}
+        {digestAlgorithm}
       </React.Fragment>
     );
   };

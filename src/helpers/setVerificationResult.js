@@ -64,6 +64,7 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
       const digestStatus = await result.getDigestStatus();
       const trustStatus = await result.getTrustStatus();
       const permissionStatus = await result.getPermissionsStatus();
+      const digestAlgorithm = await result.getSignersDigestAlgorithm();
       const disallowedChanges = await Promise.all(
         (await result.getDisallowedChanges()).map(async change => ({
           objnum: await change.getObjNum(),
@@ -120,7 +121,8 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
         trustVerificationTime,
         id,
         badgeIcon,
-        validSignerIdentity
+        validSignerIdentity,
+        digestAlgorithm,
       };
     } catch (e) {
       console.log(e);
