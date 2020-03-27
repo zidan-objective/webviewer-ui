@@ -231,7 +231,7 @@ const SignatureValidationModal = () => {
     );
   };
 
-  const waitingForVerification = typeof signer === 'undefined';
+  const waitingForVerification = typeof verificationStatus === 'undefined';
 
   return isDisabled ? null : (
     <div
