@@ -3,6 +3,10 @@ import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
+import { Tabs, Tab, TabPanel } from 'components/Tabs';
+import ActionButton from 'components/ActionButton';
+import Button from 'components/Button';
+
 import useOnClickOutside from 'hooks/useOnClickOutside';
 import actions from 'actions';
 import selectors from 'selectors';
@@ -15,10 +19,10 @@ const CustomStampModal = () => {
     selectors.isElementOpen(state, 'customStampModal'),
   ]);
   const dispatch = useDispatch();
+  const [t] = useTranslation();
   const containerRef = useRef();
 
   useOnClickOutside(containerRef, () => {
-    console.log('here');
     dispatch(actions.closeElements(['customStampModal']));
   });
 
@@ -47,7 +51,31 @@ const CustomStampModal = () => {
       data-element="customStampModal"
     >
       <div className="container" ref={containerRef}>
-        Hello!
+        <Tabs id="customStampModal">
+          <div className="header">
+            <div className="tab-list">
+              <Tab dataElement="customStampFilePanelButton">
+                <Button label={t('action.upload')} />
+              </Tab>
+              <Tab dataElement="customStampUrlPanelButton">
+                <Button label={t('link.url')} />
+              </Tab>
+            </div>
+            <ActionButton
+              dataElement="customStampModalCloseButton"
+              title="action.close"
+              img="ic_close_black_24px"
+              onClick={() => dispatch(actions.closeElements(['customStampModal']))}
+            />
+          </div>
+
+          <TabPanel dataElement="customStampFilePanel">
+            Hello
+          </TabPanel>
+          <TabPanel dataElement="customStampUrlPanel">
+            Hello again
+          </TabPanel>
+        </Tabs>
       </div>
     </div>
   );
