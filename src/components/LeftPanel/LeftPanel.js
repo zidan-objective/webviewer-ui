@@ -14,6 +14,7 @@ import CustomElement from 'components/CustomElement';
 import Icon from 'components/Icon';
 
 import { isTabletOrMobile, isIE, isIE11 } from 'helpers/device';
+import core from 'core';
 import actions from 'actions';
 import selectors from 'selectors';
 
@@ -28,7 +29,7 @@ const LeftPanel = () => {
       selectors.getCustomPanels(state),
       selectors.getLeftPanelWidth(state),
     ],
-    shallowEqual,
+    shallowEqual
   );
   const dispatch = useDispatch();
 
@@ -50,7 +51,7 @@ const LeftPanel = () => {
 
   const getDisplay = panel => (panel === activePanel ? 'flex' : 'none');
   // IE11 will use javascript for controlling width, other broswers will use CSS variables
-  const style = isIE11 && leftPanelWidth ? { width: leftPanelWidth } : { };
+  const style = isIE11 && leftPanelWidth ? { width: leftPanelWidth } : {};
 
   return isDisabled ? null : (
     <div
@@ -84,7 +85,7 @@ const LeftPanel = () => {
       <OutlinesPanel display={getDisplay('outlinesPanel')} />
       <BookmarksPanel display={getDisplay('bookmarksPanel')} />
       <LayersPanel display={getDisplay('layersPanel')} />
-      <SignaturePanel display={getDisplay('signaturePanel')} />
+      {core.isFullPDFEnabled() && <SignaturePanel display={getDisplay('signaturePanel')} />}
 
       {customPanels.map(({ panel }, index) => (
         <CustomElement
@@ -145,7 +146,7 @@ const ResizeBar = () => {
 class ErrorBoundary extends React.Component {
   static propTypes = {
     children: PropTypes.element,
-  }
+  };
 
   static getDerivedStateFromError(error) {
     console.error(error);

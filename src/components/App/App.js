@@ -38,6 +38,7 @@ import PrintHandler from 'components/PrintHandler';
 import FontHandler from 'components/FontHandler';
 import ZoomOverlay from 'components/ZoomOverlay';
 
+import core from 'core';
 import defineReaderControlAPIs from 'src/apis';
 import fireEvent from 'helpers/fireEvent';
 
@@ -96,7 +97,7 @@ const App = ({ removeEventHandlers }) => {
         <ProgressModal />
         <CalibrationModal />
         <LinkModal />
-        <SignatureValidationModal />
+        {core.isFullPDFEnabled() && <SignatureValidationModal />}
       </div>
 
       <PrintHandler />
