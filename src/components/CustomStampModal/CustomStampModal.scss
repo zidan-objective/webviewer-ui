@@ -22,30 +22,12 @@
         display: flex;
 
         .Button {
-          padding: 0px 12px;
-          border-bottom: 3px solid transparent;
-
-          &.selected {
-            border-bottom: 3px solid $pdftron-blue;
-          }
-
-          &:hover {
-            color: $pdftron-blue;
-            background: transparent;
-          }
+          @extend %tab-button-common-style;
         }
       }
 
       .ActionButton {
-        margin-right: -13px;
-
-        &:hover {
-          background: transparent;
-
-          svg {
-            color: $pdftron-blue;
-          }
-        }
+        @extend %modal-close-button-style;
       }
     }
 

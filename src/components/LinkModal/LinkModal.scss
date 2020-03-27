@@ -33,30 +33,12 @@
         display: flex;
 
         .Button {
-          padding: 0px 12px;
-          border-bottom: 3px solid transparent;
-
-          &.selected {
-            border-bottom: 3px solid $pdftron-blue;
-          }
-
-          &:hover {
-            color: $pdftron-blue;
-            background: transparent;
-          }
+          @extend %tab-button-common-style;
         }
       }
 
       .ActionButton {
-        margin-right: -13px;
-
-        &:hover {
-          background: transparent;
-
-          svg {
-            color: $pdftron-blue;
-          }
-        }
+        @extend %modal-close-button-style;
       }
     }
 
@@ -87,24 +69,7 @@
       }
 
       .Button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #ffffff;
-        font-weight: 600;
-        padding: 6px 18px;
-        margin: 16px 0 16px;
-        width: fit-content;
-        background: $pdftron-blue;
-        border-radius: 4px 4px 4px 4px;
-        border: 1px solid $pdftron-blue;
-        height: 32px;
-        cursor: pointer;
-
-        &:hover {
-          background: #17324c;
-          border: 1px solid #17324c;
-        }
+        @extend modal-confirm-button-style;
       }
     }
   }

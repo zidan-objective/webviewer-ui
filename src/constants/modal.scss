@@ -23,3 +23,49 @@ $modal-z-index: 100;
   box-shadow: 1px 1px 5px black;
   border-radius: 5px;
 }
+
+%modal-confirm-button-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 6px 18px;
+  margin-right: 8px;
+  background: $pdftron-blue;
+  border-radius: 4px 4px 4px 4px;
+  border: 1px solid $pdftron-blue;
+  height: 32px;
+  cursor: pointer;
+
+  &:hover {
+    background: #17324c;
+    border: 1px solid #17324c;
+  }
+}
+
+%tab-button-common-style {
+  padding: 0px 12px;
+  border-bottom: 3px solid transparent;
+
+  &.selected {
+    border-bottom: 3px solid $pdftron-blue;
+  }
+
+  &:hover {
+    color: $pdftron-blue;
+    background: transparent;
+  }
+}
+
+%modal-close-button-style {
+  margin-right: -13px;
+
+  &:hover {
+    background: transparent;
+
+    svg {
+      color: $pdftron-blue;
+    }
+  }
+}
