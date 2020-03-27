@@ -47,6 +47,7 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
       const signed = await digitalSigField.hasCryptographicSignature();
       let signer;
       let signTime;
+      let documentPermission;
       if (signed) {
         signer =
           (await digitalSigField.getSignatureName()) || (await digitalSigField.getContactInfo());
@@ -57,6 +58,8 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
         } else {
           signTime = null;
         }
+
+        documentPermission = await digitalSigField.getDocumentPermissions();
       }
 
       const verificationStatus = await result.getVerificationStatus();
@@ -123,6 +126,7 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
         badgeIcon,
         validSignerIdentity,
         digestAlgorithm,
+        documentPermission,
       };
     } catch (e) {
       console.log(e);

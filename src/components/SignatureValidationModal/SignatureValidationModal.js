@@ -37,8 +37,9 @@ const SignatureValidationModal = () => {
     timeOfTrustVerificationEnum,
     trustVerificationTime,
     digestAlgorithm,
+    documentPermission,
   } = verificationResult;
-  const { VerificationResult, VerificationOptions, DigestAlgorithm } = window.PDFNet;
+  const { VerificationResult, VerificationOptions, DigestAlgorithm, DigitalSignatureField } = window.PDFNet;
   const {
     TrustStatus,
     DigestStatus,
@@ -167,6 +168,31 @@ const SignatureValidationModal = () => {
       return <p>{content}</p>;
     };
 
+    const renderDocumentPermission = () => {
+      if (!documentPermission) {
+        return;
+      }
+
+      let content;
+
+      switch (documentPermission) {
+        case DigitalSignatureField.DocumentPermissions.e_no_changes_allowed:
+          content = `The certifier has specified that no changes are allowed for this document.`;
+          break;
+        case DigitalSignatureField.DocumentPermissions.e_formfilling_signing_allowed:
+          content = `The certifier has specified that Form Fill-in and Signing are allowed for this document. No other changes are permitted.`;
+          break;
+        case DigitalSignatureField.DocumentPermissions.e_annotating_formfilling_signing_allowed:
+          content = 'The certifier has specified that Form Fill-in, Signing and Commenting are allowed for this document. No other changes are permitted.';
+          break;
+        case DigitalSignatureField.DocumentPermissions.e_unrestricted:
+          content = 'The certifier has specified that there are no restrictions for this document.';
+          break;
+      }
+
+      return <p>{content}</p>;
+    };
+
     const renderTrustVerification = () => {
       return trustVerificationResultString ? (
         <p>
@@ -220,6 +246,7 @@ const SignatureValidationModal = () => {
         <p style={{ fontSize: '1.1em' }}>{verificationContent}</p>
         {signTime && <p>Signing Time: {signTime}</p>}
         {renderPermissionStatus()}
+        {renderDocumentPermission()}
         <p>
           {validSignerIdentity
             ? `The signer's identity is valid.`
