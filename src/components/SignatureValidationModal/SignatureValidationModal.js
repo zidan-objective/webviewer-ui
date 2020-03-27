@@ -38,7 +38,7 @@ const SignatureValidationModal = () => {
     trustVerificationTime,
     digestAlgorithm,
   } = verificationResult;
-  const { VerificationResult, VerificationOptions } = window.PDFNet;
+  const { VerificationResult, VerificationOptions, DigestAlgorithm } = window.PDFNet;
   const {
     TrustStatus,
     DigestStatus,
@@ -179,6 +179,33 @@ const SignatureValidationModal = () => {
       );
     };
 
+    const renderDigestAlgorithm = () => {
+      let content;
+
+      switch (digestAlgorithm) {
+        case DigestAlgorithm.Type.e_SHA1:
+          content = `The digest algorithm that is used to sign the signature: SHA1.`;
+          break;
+        case DigestAlgorithm.Type.e_SHA256:
+          content = `The digest algorithm that is used to sign the signature: SHA256.`;
+          break;
+        case DigestAlgorithm.Type.e_SHA384:
+          content = 'The digest algorithm that is used to sign the signature: SHA384.';
+          break;
+        case DigestAlgorithm.Type.e_SHA512:
+          content = 'The digest algorithm that is used to sign the signature: SHA512.';
+          break;
+        case DigestAlgorithm.Type.e_RIPEMD160:
+          content = 'The digest algorithm that is used to sign the signature: RIPEMD160.';
+          break;
+        case DigestAlgorithm.Type.e_unknown_digest_algorithm:
+          content = 'The digest algorithm that is used to sign the signature is unknown.';
+          break;
+      }
+
+      return <p>{content}</p>;
+    };
+
     let verificationContent = verificationStatus
       ? `Signature is valid`
       : 'Signature validity is unknown';
@@ -197,7 +224,7 @@ const SignatureValidationModal = () => {
             : `The signer's identity is unknown.`}
         </p>
         {renderTrustVerification()}
-        {digestAlgorithm}
+        {renderDigestAlgorithm()}
       </React.Fragment>
     );
   };
