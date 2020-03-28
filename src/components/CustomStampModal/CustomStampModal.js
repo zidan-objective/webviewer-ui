@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Tabs, Tab, TabPanel } from 'components/Tabs';
 import ActionButton from 'components/ActionButton';
 import Button from 'components/Button';
+import ImageUploader from 'components/ImageUploader';
 
 import useOnClickOutside from 'hooks/useOnClickOutside';
 import actions from 'actions';
@@ -70,11 +71,9 @@ const CustomStampModal = () => {
           </div>
 
           <TabPanel dataElement="customStampFilePanel">
-            Hello
+            <ImageUploader />
           </TabPanel>
-          <TabPanel dataElement="customStampUrlPanel">
-            Hello again
-          </TabPanel>
+          <TabPanel dataElement="customStampUrlPanel">Hello again</TabPanel>
         </Tabs>
       </div>
     </div>
