@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { oneOf } from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 import core from 'core';
@@ -13,18 +13,8 @@ const propTypes = {
   isTabPanelSelected: PropTypes.bool,
 };
 
-const acceptedFileTypes = ['png', 'jpg', 'jpeg'];
-
-const ImageSignature = ({
-  isModalOpen,
-  _setSaveSignature,
-  isTabPanelSelected,
-}) => {
+const ImageSignature = ({ isModalOpen, _setSaveSignature, isTabPanelSelected }) => {
   const [imageSrc, setImageSrc] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const fileInputRef = useRef();
-  const [t] = useTranslation();
 
   useEffect(() => {
     const signatureTool = core.getTool('AnnotationCreateSignature');
@@ -35,9 +25,41 @@ const ImageSignature = ({
     }
   }, [imageSrc, isTabPanelSelected, _setSaveSignature, isModalOpen]);
 
-  const handleFileChange = e => {
-    readFile(e.target.files[0]);
+  const handleImageAdded = file => {
+    const fileReader = new FileReader();
+
+    fileReader.onload = e => {
+      const imageSrc = e.target.result;
+      setImageSrc(imageSrc);
+    };
+
+    fileReader.readAsDataURL(file);
   };
+
+  return (
+    <div className="image-signature">
+      {imageSrc ? (
+        <div className="image-signature-image-container">
+          <img src={imageSrc} />
+          <ActionButton
+            dataElement="imageSignatureDeleteButton"
+            img="ic_delete_black_24px"
+            onClick={() => setImageSrc(null)}
+          />
+        </div>
+      ) : (
+        <ImageUploader className="image-signature" onAdd={handleImageAdded} />
+      )}
+    </div>
+  );
+};
+
+const ImageUploader = ({ className = 'image-uploader', onAdd, onError }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const fileInputRef = useRef();
+  const [t] = useTranslation();
+  const acceptedFileTypes = ['png', 'jpg', 'jpeg'];
 
   const handleDragEnter = e => {
     e.preventDefault();
@@ -67,78 +89,52 @@ const ImageSignature = ({
     const { files } = e.dataTransfer;
 
     if (files.length) {
-      readFile(files[0]);
-    }
-  };
+      const file = files[0];
+      const isValid = acceptedFileTypes.some(type => file.type === `image/${type}`);
 
-  const readFile = file => {
-    const fileReader = new FileReader();
-
-    fileReader.onload = e => {
-      const imageSrc = e.target.result;
-      const validType = acceptedFileTypes.some(
-        type => imageSrc.indexOf(`image/${type}`) !== -1,
-      );
-
-      if (validType) {
-        setErrorMessage('');
-        setImageSrc(imageSrc);
+      if (isValid) {
+        onAdd(file);
       } else {
         setErrorMessage(
           t('message.imageSignatureAcceptedFileTypes', {
             acceptedFileTypes: acceptedFileTypes.join(', '),
           }),
         );
-      }
-    };
 
-    fileReader.readAsDataURL(file);
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 2000);
+      }
+
+      onAdd(files[0]);
+    }
   };
 
   return (
-    <div className="image-signature">
-      {imageSrc ? (
-        <div className="image-signature-image-container">
-          <img src={imageSrc} />
-          <ActionButton
-            dataElement="imageSignatureDeleteButton"
-            img="ic_delete_black_24px"
-            onClick={() => setImageSrc(null)}
-          />
-        </div>
-      ) : (
-        <div
-          className="image-signature-upload-container"
-          onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}
-          onDragOver={handleDragOver}
-          onDrop={handleFileDrop}
-          onDragExit={handleDragExit}
-        >
-          <div className="image-signature-dnd">
-            {t('option.signatureModal.dragAndDrop')}
-          </div>
-          <div className="image-signature-separator">
-            {t('option.signatureModal.or')}
-          </div>
-          <div className="image-signature-upload">
-            <input
-              ref={fileInputRef}
-              id="upload"
-              type="file"
-              accept={acceptedFileTypes.map(type => `.${type}`).join(',')}
-              onChange={handleFileChange}
-            />
-            <button onClick={() => fileInputRef.current.click()}>
-              {t('option.signatureModal.pickImage')}
-            </button>
-          </div>
-          {isDragging && <div className="image-signature-background" />}
-          {errorMessage && (
-            <div className="image-signature-error">{errorMessage}</div>
-          )}
-        </div>
-      )}
+    <div
+      className={`${className}-upload-container`}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleFileDrop}
+      onDragExit={handleDragExit}
+    >
+      <div className={`${className}-dnd`}>{t('option.signatureModal.dragAndDrop')}</div>
+      <div className={`${className}-separator`}>{t('option.signatureModal.or')}</div>
+      <div className={`${className}-upload`}>
+        <input
+          ref={fileInputRef}
+          id="upload"
+          type="file"
+          accept={acceptedFileTypes.map(type => `.${type}`).join(',')}
+          onChange={e => onAdd(e.target.files[0])}
+        />
+        <button onClick={() => fileInputRef.current.click()}>
+          {t('option.signatureModal.pickImage')}
+        </button>
+      </div>
+      {isDragging && <div className={`${className}-background`} />}
+      {errorMessage && <div className={`${className}-error`}>{errorMessage}</div>}
     </div>
   );
 };

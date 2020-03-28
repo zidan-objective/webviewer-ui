@@ -69,7 +69,7 @@
       }
 
       .Button {
-        @extend modal-confirm-button-style;
+        @extend %modal-confirm-button-style;
       }
     }
   }
