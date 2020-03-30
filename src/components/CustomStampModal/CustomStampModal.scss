@@ -47,7 +47,7 @@
           font-size: 0.9em;
         }
 
-        input[type='text'] {
+        input[type='number'] {
           font-size: 0.9em;
           @extend %text-input-style;
           height: 20px;

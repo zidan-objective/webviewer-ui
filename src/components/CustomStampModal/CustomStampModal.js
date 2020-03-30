@@ -18,9 +18,13 @@ const CustomStampModal = () => {
     selectors.isElementDisabled(state, 'customStampModal'),
     selectors.isElementOpen(state, 'customStampModal'),
   ]);
+  const [imageSrc, setImageSrc] = useState(null);
+  const [imageSize, setImageSize] = useState({ width: '', height: '' });
+  const [maintainRatio, setMaintainRatio] = useState(true);
+  const containerRef = useRef();
+  const aspectRatioRef = useRef(null);
   const dispatch = useDispatch();
   const [t] = useTranslation();
-  const containerRef = useRef();
 
   useOnClickOutside(containerRef, () => {
     dispatch(actions.closeElements(['customStampModal']));
@@ -39,6 +43,45 @@ const CustomStampModal = () => {
       );
     }
   }, [dispatch, isOpen]);
+
+  useEffect(() => {
+    if (imageSrc) {
+      const image = document.createElement('img');
+
+      image.addEventListener('load', () => {
+        setImageSize({
+          width: image.width,
+          height: image.height,
+        });
+      });
+
+      image.src = imageSrc;
+      aspectRatioRef.current = image.width / image.height;
+    } else {
+      setImageSize({ width: '', height: '' });
+    }
+  }, [imageSrc]);
+
+  const handleInputChange = e => {
+    const newSize = { ...imageSize };
+    const value = e.target.value;
+
+    if (e.target.id === 'custom-stamp-width') {
+      newSize.width = value;
+
+      if (maintainRatio) {
+        newSize.height = newSize.width * aspectRatioRef.current;
+      }
+    } else if (e.target.id === 'custom-stamp-height') {
+      newSize.height = value;
+
+      if (maintainRatio) {
+        newSize.width = newSize.height / aspectRatioRef.current;
+      }
+    }
+
+    setImageSize(newSize);
+  };
 
   return isDisabled ? null : (
     <div
@@ -61,18 +104,31 @@ const CustomStampModal = () => {
           />
         </div>
         <div className="custom-stamp-body">
-          <ImageUploader className="custom-stamp" />
+          <ImageUploader className="custom-stamp" onChange={setImageSrc} />
           <div className="custom-stamp-size">
             <label htmlFor="custom-stamp-width">Width:</label>
-            <input id="custom-stamp-width" type="text" />
+            <input
+              id="custom-stamp-width"
+              type="number"
+              value={imageSize.width}
+              onChange={handleInputChange}
+              disabled={!imageSrc}
+            />
             <label htmlFor="custom-stamp-height">Height:</label>
-            <input id="custom-stamp-width" type="text" />
+            <input
+              id="custom-stamp-width"
+              type="number"
+              value={imageSize.height}
+              onChange={handleInputChange}
+              disabled={!imageSrc}
+            />
           </div>
           <Input
             id="custom-stamp-aspect-ratio"
             type="checkbox"
             label="Maintain aspect ratio"
-            defaultChecked
+            checked={maintainRatio}
+            onChange={e => setMaintainRatio(e.target.checked)}
           />
         </div>
         <div className="custom-stamp-footer">
