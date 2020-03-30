@@ -6,54 +6,74 @@
 
   .container {
     @extend %modal-shared-container-style;
-    width: 600px;
+    width: 550px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     border-radius: 4px;
     box-shadow: 0 2px 16px 0 $signature-modal-shared-color;
 
-    .header {
-      margin: 11px 24px 16px 24px;
+    .custom-stamp-header {
       display: flex;
       justify-content: space-between;
-
-      .tab-list {
-        display: flex;
-
-        .Button {
-          @extend %tab-button-common-style;
-        }
-      }
+      align-items: center;
+      margin: 0px 25px;
 
       .ActionButton {
         @extend %modal-close-button-style;
       }
+
+      span {
+        font-weight: bold;
+      }
     }
 
-    .tab-panel {
-      margin: 11px 24px 11px 24px;
+    .custom-stamp-body {
+      margin: 5px 24px;
       display: flex;
+      flex-direction: column;
 
-      .Button {
+      .custom-stamp-uploader-wrapper {
+        height: 200px;
+        border: 1px solid $signature-modal-shared-color;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .custom-stamp-size {
         display: flex;
-        justify-content: center;
         align-items: center;
-        color: #ffffff;
-        font-weight: 600;
-        padding: 6px 18px;
-        margin: 16px 0 16px;
-        width: fit-content;
-        background: $pdftron-blue;
-        border-radius: 4px 4px 4px 4px;
-        border: 1px solid $pdftron-blue;
-        height: 32px;
-        cursor: pointer;
+        margin-top: 20px;
 
-        &:hover {
-          background: #17324c;
-          border: 1px solid #17324c;
+        label {
+          margin-right: 10px;
+          font-size: 0.9em;
         }
+
+        input[type='text'] {
+          font-size: 0.9em;
+          @extend %text-input-style;
+          height: 20px;
+          width: 60px;
+          margin-right: 15px;
+        }
+      }
+
+      label[for='custom-stamp-aspect-ratio'] {
+        flex-grow: 0;
+        margin: 10px 0px 0px 18px;
+        font-size: 0.9em;
+      }
+    }
+
+    .custom-stamp-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+
+      .custom-stamp-create {
+        @extend %modal-confirm-button-style;
+        margin-right: 22px;
       }
     }
   }

@@ -3,9 +3,8 @@ import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { Tabs, Tab, TabPanel } from 'components/Tabs';
 import ActionButton from 'components/ActionButton';
-import Button from 'components/Button';
+import Input from 'components/Input';
 import ImageUploader from 'components/ImageUploader';
 
 import useOnClickOutside from 'hooks/useOnClickOutside';
@@ -52,29 +51,35 @@ const CustomStampModal = () => {
       data-element="customStampModal"
     >
       <div className="container" ref={containerRef}>
-        <Tabs id="customStampModal">
-          <div className="header">
-            <div className="tab-list">
-              <Tab dataElement="customStampFilePanelButton">
-                <Button label={t('action.upload')} />
-              </Tab>
-              <Tab dataElement="customStampUrlPanelButton">
-                <Button label={t('link.url')} />
-              </Tab>
-            </div>
-            <ActionButton
-              dataElement="customStampModalCloseButton"
-              title="action.close"
-              img="ic_close_black_24px"
-              onClick={() => dispatch(actions.closeElements(['customStampModal']))}
-            />
-          </div>
-
-          <TabPanel dataElement="customStampFilePanel">
+        <div className="custom-stamp-header">
+          <span>Create Custom Stamp</span>
+          <ActionButton
+            dataElement="customStampModalCloseButton"
+            title="action.close"
+            img="ic_close_black_24px"
+            onClick={() => dispatch(actions.closeElements(['customStampModal']))}
+          />
+        </div>
+        <div className="custom-stamp-body">
+          <div className="custom-stamp-uploader-wrapper">
             <ImageUploader />
-          </TabPanel>
-          <TabPanel dataElement="customStampUrlPanel">Hello again</TabPanel>
-        </Tabs>
+          </div>
+          <div className="custom-stamp-size">
+            <label htmlFor="custom-stamp-width">Width:</label>
+            <input id="custom-stamp-width" type="text" />
+            <label htmlFor="custom-stamp-height">Height:</label>
+            <input id="custom-stamp-width" type="text" />
+          </div>
+          <Input
+            id="custom-stamp-aspect-ratio"
+            type="checkbox"
+            label="Maintain aspect ratio"
+            defaultChecked
+          />
+        </div>
+        <div className="custom-stamp-footer">
+          <div className="custom-stamp-create">{t('action.create')}</div>
+        </div>
       </div>
     </div>
   );

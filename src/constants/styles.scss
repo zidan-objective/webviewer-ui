@@ -26,20 +26,21 @@ $gray12: #e0e0e0;
 $gray10: #e6e6e6;
 $gray4: #f5f5f5;
 $white: #fff;
-$pdftron-blue: #00A5E4; //confirm that this is what we want
+$pdftron-blue: #00a5e4; //confirm that this is what we want
 
 // Light theme
 $line-color: $gray10;
 $document-bg-color: $white;
 
 // Shadows
-$md-shadow1: 0 0 2px 0 rgba(0,0,0,0.14), 0 2px 2px 0 rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.12);
+$md-shadow1: 0 0 2px 0 rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.12),
+  0 1px 3px 0 rgba(0, 0, 0, 0.12);
 
 // Screens
 $tablet-width: 900px;
 $mobile-width: 640px;
 
-$signature-modal-shared-color: #E1E1E3;
+$signature-modal-shared-color: #e1e1e3;
 
 %open {
   &.open {
@@ -56,13 +57,13 @@ $signature-modal-shared-color: #E1E1E3;
 .text-input {
   border: 1px solid grey;
   &::placeholder {
-    color:$gray12;
+    color: $gray12;
   }
   &::-webkit-input-placeholder {
-    color:$gray12;
+    color: $gray12;
   }
   &:-ms-input-placeholder {
-    color:$gray12;
+    color: $gray12;
   }
 }
 
@@ -123,6 +124,20 @@ $signature-modal-shared-color: #E1E1E3;
   @include mobile {
     height: 30px;
     width: 13.5%;
+  }
+}
+
+%text-input-style {
+  width: 100%;
+  height: 30px;
+  padding: 0 5px;
+  border: 1px solid $gray12;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 1em;
+
+  &:focus {
+    outline: none;
   }
 }
 
