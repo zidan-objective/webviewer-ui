@@ -61,9 +61,7 @@ const CustomStampModal = () => {
           />
         </div>
         <div className="custom-stamp-body">
-          <div className="custom-stamp-uploader-wrapper">
-            <ImageUploader />
-          </div>
+          <ImageUploader className="custom-stamp" />
           <div className="custom-stamp-size">
             <label htmlFor="custom-stamp-width">Width:</label>
             <input id="custom-stamp-width" type="text" />

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import core from 'core';
-import ActionButton from 'components/ActionButton';
 import ImageUploader from 'components/ImageUploader';
 
 import './ImageSignature.scss';
@@ -25,33 +24,7 @@ const ImageSignature = ({ isModalOpen, _setSaveSignature, isTabPanelSelected }) 
     }
   }, [imageSrc, isTabPanelSelected, _setSaveSignature, isModalOpen]);
 
-  const handleImageAdded = file => {
-    const fileReader = new FileReader();
-
-    fileReader.onload = e => {
-      const imageSrc = e.target.result;
-      setImageSrc(imageSrc);
-    };
-
-    fileReader.readAsDataURL(file);
-  };
-
-  return (
-    <div className="image-signature">
-      {imageSrc ? (
-        <div className="image-signature-image-container">
-          <img src={imageSrc} />
-          <ActionButton
-            dataElement="imageSignatureDeleteButton"
-            img="ic_delete_black_24px"
-            onClick={() => setImageSrc(null)}
-          />
-        </div>
-      ) : (
-        <ImageUploader className="image-signature" onAdd={handleImageAdded} />
-      )}
-    </div>
-  );
+  return <ImageUploader className="image-signature" onChange={setImageSrc} />;
 };
 
 ImageSignature.propTypes = propTypes;

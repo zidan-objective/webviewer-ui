@@ -1,56 +1,86 @@
 @import '../../constants/styles';
 
-[class$="-upload-container"] {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 17px;  
-  width: 100%;
-  height: 100%;
+[class$='uploader-root-container'] {
+  margin: 0px 24px;
+  height: 200px;
+  border: 1px solid $signature-modal-shared-color;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
 
-  [class$="-upload"] {
-    input[type="file"] {
-      display: none;
-    }
-  
-    button {
-      font-family: inherit;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 6px 12px;
-      border-radius: 4px;
-      border: 1px solid $pdftron-blue;
-      color: $pdftron-blue;
-      background: white;
-      font-size: inherit;
-      cursor: pointer;
-  
-      &:hover {
-        color: white;
-        background: $pdftron-blue;
-      }
-    }
-  }
-  
-  [class$="separator"] {
-    margin: 10px;
-  }
-  
-  [class$="background"] {
-    position: absolute;
-    background: #00a4e4;
-    opacity: 0.7;
+  [class$='-image-container'] {
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      max-height: 100%;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+    }
+
+    .Button {
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+    }
   }
-  
-  [class$="error"] {
-    position: absolute;
-    color: red;
-    bottom: 0px;
-    right: 0px;
-    margin: 0px 5px 5px 0px;
+
+  [class$='-upload-container'] {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    width: 100%;
+    height: 100%;
+
+    [class$='-upload'] {
+      input[type='file'] {
+        display: none;
+      }
+
+      button {
+        font-family: inherit;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: 1px solid $pdftron-blue;
+        color: $pdftron-blue;
+        background: white;
+        font-size: inherit;
+        cursor: pointer;
+
+        &:hover {
+          color: white;
+          background: $pdftron-blue;
+        }
+      }
+    }
+
+    [class$='separator'] {
+      margin: 10px;
+    }
+
+    [class$='background'] {
+      position: absolute;
+      background: #00a4e4;
+      opacity: 0.7;
+      width: 100%;
+      height: 100%;
+    }
+
+    [class$='error'] {
+      position: absolute;
+      color: red;
+      bottom: 0px;
+      right: 0px;
+      margin: 0px 5px 5px 0px;
+    }
   }
 }
