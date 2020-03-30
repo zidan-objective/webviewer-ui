@@ -64,19 +64,19 @@ const CustomStampModal = () => {
 
   const handleInputChange = e => {
     const newSize = { ...imageSize };
-    const value = e.target.value;
+    const value = parseFloat(e.target.value);
 
     if (e.target.id === 'custom-stamp-width') {
       newSize.width = value;
 
       if (maintainRatio) {
-        newSize.height = newSize.width * aspectRatioRef.current;
+        newSize.height = (newSize.width / aspectRatioRef.current).toFixed(2);
       }
     } else if (e.target.id === 'custom-stamp-height') {
       newSize.height = value;
 
       if (maintainRatio) {
-        newSize.width = newSize.height / aspectRatioRef.current;
+        newSize.width = (newSize.height * aspectRatioRef.current).toFixed(2);
       }
     }
 
@@ -116,7 +116,7 @@ const CustomStampModal = () => {
             />
             <label htmlFor="custom-stamp-height">Height:</label>
             <input
-              id="custom-stamp-width"
+              id="custom-stamp-height"
               type="number"
               value={imageSize.height}
               onChange={handleInputChange}
