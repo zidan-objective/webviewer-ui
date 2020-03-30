@@ -212,22 +212,22 @@ const SignatureValidationModal = () => {
 
       switch (digestAlgorithm) {
         case DigestAlgorithm.Type.e_SHA1:
-          content = `The digest algorithm that is used to sign the signature: SHA1.`;
+          content = `The digest algorithm that was used to sign the signature: SHA1.`;
           break;
         case DigestAlgorithm.Type.e_SHA256:
-          content = `The digest algorithm that is used to sign the signature: SHA256.`;
+          content = `The digest algorithm that was used to sign the signature: SHA256.`;
           break;
         case DigestAlgorithm.Type.e_SHA384:
-          content = 'The digest algorithm that is used to sign the signature: SHA384.';
+          content = 'The digest algorithm that was used to sign the signature: SHA384.';
           break;
         case DigestAlgorithm.Type.e_SHA512:
-          content = 'The digest algorithm that is used to sign the signature: SHA512.';
+          content = 'The digest algorithm that was used to sign the signature: SHA512.';
           break;
         case DigestAlgorithm.Type.e_RIPEMD160:
-          content = 'The digest algorithm that is used to sign the signature: RIPEMD160.';
+          content = 'The digest algorithm that was used to sign the signature: RIPEMD160.';
           break;
         case DigestAlgorithm.Type.e_unknown_digest_algorithm:
-          content = 'The digest algorithm that is used to sign the signature is unknown.';
+          content = 'The digest algorithm that was used to sign the signature is unknown.';
           break;
       }
 
