@@ -88,7 +88,9 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
 
         trustVerificationTime = await trustVerificationResult.getTimeOfTrustVerification();
         if (trustVerificationTime) {
-          trustVerificationTime = formatDate(trustVerificationTime);
+          const date = new Date(0);
+          date.setUTCSeconds(trustVerificationTime);
+          trustVerificationTime = formatDate(date);
         }
       }
 
@@ -136,16 +138,27 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
   return verificationResult;
 };
 
-const formatPDFNetDate = date => {
-  const { year, month, day, hour, minute, second } = date;
+const formatPDFNetDate = pdfnetDate => {
+  const twoDigits = number => `0${number}`.slice(-2);
 
-  return `${year}-${month}-${day}, ${hour}:${minute}:${second}`;
+  const { year, month, day, hour, minute, second, UT, UT_hour, UT_minutes } = pdfnetDate;
+  let dateString = `${year}-${twoDigits(month)}-${twoDigits(day)}T${twoDigits(hour)}:${twoDigits(minute)}:${twoDigits(second)}.000`;
+  if (!UT || UT === 90) {
+    // UT === Z
+    dateString += 'Z';
+  } else if (UT === 45) {
+    dateString += `-${twoDigits(UT_hour)}:${twoDigits(UT_minutes)}`;
+  } else if (UT === 43) {
+    dateString += `+${twoDigits(UT_hour)}:${twoDigits(UT_minutes)}`;
+  }
+  const time = Date.parse(dateString);
+  const date = new Date();
+  date.setTime(time);
+
+  return formatDate(date);
 };
 
-const formatDate = epochTime => {
-  const date = new Date(0);
-  date.setUTCSeconds(epochTime);
-
+const formatDate = date => {
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -153,5 +166,6 @@ const formatDate = epochTime => {
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
+    second: 'numeric',
   });
 };
