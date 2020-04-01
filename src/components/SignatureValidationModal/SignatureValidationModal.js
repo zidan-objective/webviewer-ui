@@ -38,8 +38,14 @@ const SignatureValidationModal = () => {
     trustVerificationTime,
     digestAlgorithm,
     documentPermission,
+    isCertification,
   } = verificationResult;
-  const { VerificationResult, VerificationOptions, DigestAlgorithm, DigitalSignatureField } = window.PDFNet;
+  const {
+    VerificationResult,
+    VerificationOptions,
+    DigestAlgorithm,
+    DigitalSignatureField,
+  } = window.PDFNet;
   const {
     TrustStatus,
     DigestStatus,
@@ -177,16 +183,24 @@ const SignatureValidationModal = () => {
 
       switch (documentPermission) {
         case DigitalSignatureField.DocumentPermissions.e_no_changes_allowed:
-          content = `The certifier has specified that no changes are allowed for this document.`;
+          content = `The ${
+            isCertification ? 'certifier' : 'signer'
+          } has specified that no changes are allowed for this document.`;
           break;
         case DigitalSignatureField.DocumentPermissions.e_formfilling_signing_allowed:
-          content = `The certifier has specified that Form Fill-in and Signing are allowed for this document. No other changes are permitted.`;
+          content = `The ${
+            isCertification ? 'certifier' : 'signer'
+          } has specified that Form Fill-in and Signing are allowed for this document. No other changes are permitted.`;
           break;
         case DigitalSignatureField.DocumentPermissions.e_annotating_formfilling_signing_allowed:
-          content = 'The certifier has specified that Form Fill-in, Signing and Commenting are allowed for this document. No other changes are permitted.';
+          content = `The ${
+            isCertification ? 'certifier' : 'signer'
+          } has specified that Form Fill-in, Signing and Commenting are allowed for this document. No other changes are permitted.`;
           break;
         case DigitalSignatureField.DocumentPermissions.e_unrestricted:
-          content = 'The certifier has specified that there are no restrictions for this document.';
+          content = `The ${
+            isCertification ? 'certifier' : 'signer'
+          } has specified that there are no restrictions for this document.`;
           break;
       }
 
@@ -199,8 +213,8 @@ const SignatureValidationModal = () => {
           {timeOfTrustVerificationEnum === TimeMode.e_current
             ? 'Trust verification attempted with respect to current time.'
             : timeOfTrustVerificationEnum === TimeMode.e_signing
-              ? `Trust verification attempted with respect to signing time: ${trustVerificationTime}`
-              : `Trust verification attempted with respect to secure embedded timestamp: ${trustVerificationTime}`}
+            ? `Trust verification attempted with respect to signing time: ${trustVerificationTime}`
+            : `Trust verification attempted with respect to secure embedded timestamp: ${trustVerificationTime}`}
         </p>
       ) : (
         <p>No detailed trust verification result available.</p>

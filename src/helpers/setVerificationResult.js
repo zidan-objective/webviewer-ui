@@ -48,6 +48,7 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
       let signer;
       let signTime;
       let documentPermission;
+      let isCertification;
       if (signed) {
         signer =
           (await digitalSigField.getSignatureName()) || (await digitalSigField.getContactInfo());
@@ -60,6 +61,7 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
         }
 
         documentPermission = await digitalSigField.getDocumentPermissions();
+        isCertification = await digitalSigField.isCertification();
       }
 
       const verificationStatus = await result.getVerificationStatus();
@@ -129,6 +131,7 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
         validSignerIdentity,
         digestAlgorithm,
         documentPermission,
+        isCertification,
       };
     } catch (e) {
       console.log(e);
@@ -142,7 +145,9 @@ const formatPDFNetDate = pdfnetDate => {
   const twoDigits = number => `0${number}`.slice(-2);
 
   const { year, month, day, hour, minute, second, UT, UT_hour, UT_minutes } = pdfnetDate;
-  let dateString = `${year}-${twoDigits(month)}-${twoDigits(day)}T${twoDigits(hour)}:${twoDigits(minute)}:${twoDigits(second)}.000`;
+  let dateString = `${year}-${twoDigits(month)}-${twoDigits(day)}T${twoDigits(hour)}:${twoDigits(
+    minute
+  )}:${twoDigits(second)}.000`;
   if (!UT || UT === 90) {
     // UT === Z
     dateString += 'Z';
