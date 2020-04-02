@@ -150,6 +150,7 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
     timeOfTrustVerificationEnum,
     trustVerificationTime,
     badgeIcon,
+    isCertification,
   } = verificationResult;
 
   const handleArrowClick = e => {
@@ -173,7 +174,7 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
         )}
         <SignatureIcon badge={badgeIcon} />
         <p>
-          Signed {signer && ` by ${signer}`} {signTime && ` on ${signTime}`}
+          {isCertification ? 'Certified' : 'Signed'} {signer && ` by ${signer}`} {signTime && ` on ${signTime}`}
         </p>
       </div>
     );
@@ -239,7 +240,7 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
 
     switch (trustStatus) {
       case TrustStatus.e_trust_verified:
-        content = 'Established trust in signer successfully.';
+        content = `Established trust in ${isCertification ? 'certifier' : 'signer'} successfully.`;
         break;
       case TrustStatus.e_untrusted:
         content = 'Trust could not be established.';
@@ -268,7 +269,7 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
           'The document has changes that are allowed by the signature\'s permissions settings.';
         break;
       case ModificationPermissionsStatus.e_unmodified:
-        content = 'The document has not been modified since it was signed.';
+        content = `The document has not been modified since it was ${isCertification ? 'certified' : 'signed'}.`;
         break;
       case ModificationPermissionsStatus.e_permissions_verification_disabled:
         content = 'Permissions verification has been disabled.';

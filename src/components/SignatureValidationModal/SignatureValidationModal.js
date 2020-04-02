@@ -121,7 +121,7 @@ const SignatureValidationModal = () => {
           content = `- The document has changes that are allowed by the signature's permissions settings.`;
           break;
         case ModificationPermissionsStatus.e_unmodified:
-          content = '- The document has not been modified since it was signed.';
+          content = `- The document has not been modified since it was ${isCertification ? 'certifier' : 'signed'}.`;
           break;
         case ModificationPermissionsStatus.e_permissions_verification_disabled:
           content = '- Permissions verification has been disabled.';
@@ -213,8 +213,8 @@ const SignatureValidationModal = () => {
           {timeOfTrustVerificationEnum === TimeMode.e_current
             ? 'Trust verification attempted with respect to current time.'
             : timeOfTrustVerificationEnum === TimeMode.e_signing
-            ? `Trust verification attempted with respect to signing time: ${trustVerificationTime}`
-            : `Trust verification attempted with respect to secure embedded timestamp: ${trustVerificationTime}`}
+              ? `Trust verification attempted with respect to signing time: ${trustVerificationTime}`
+              : `Trust verification attempted with respect to secure embedded timestamp: ${trustVerificationTime}`}
         </p>
       ) : (
         <p>No detailed trust verification result available.</p>
