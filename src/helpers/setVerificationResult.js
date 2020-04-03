@@ -1,24 +1,24 @@
 import core from 'core';
 import actions from 'actions';
 
-export default async(certificateUrl, sigWidgets, dispatch) => {
+export default async(certificate, sigWidgets, dispatch) => {
   const doc = core.getDocument();
   if (doc) {
-    const verificationResult = await getVerificationResult(doc, sigWidgets, certificateUrl);
+    const verificationResult = await getVerificationResult(doc, sigWidgets, certificate);
     dispatch(actions.setVerificationResult(verificationResult));
   } else {
     window.docViewer.one('documentLoaded', async() => {
       const verificationResult = await getVerificationResult(
         core.getDocument(),
         sigWidgets,
-        certificateUrl
+        certificate
       );
       dispatch(actions.setVerificationResult(verificationResult));
     });
   }
 };
 
-const getVerificationResult = async(doc, sigWidgets, url) => {
+const getVerificationResult = async(doc, sigWidgets, certificate) => {
   const { PDFNet } = window;
   const { VerificationResult } = PDFNet;
   // const { TimeMode } = VerificationOptions;
@@ -35,7 +35,26 @@ const getVerificationResult = async(doc, sigWidgets, url) => {
     PDFNet.VerificationOptions.SecurityLevel.e_compatibility_and_archiving
   );
 
-  await opts.addTrustedCertificateFromURL(url);
+  if (typeof certificate === 'string') {
+    await opts.addTrustedCertificateFromURL(certificate);
+  } else if (
+    certificate instanceof File ||
+    Object.prototype.toString.call(certificate) === '[object File]'
+  ) {
+    const fileReader = new FileReader();
+    const arrayBufferPromise = new Promise((resolve, reject) => {
+      fileReader.addEventListener('load', async e => {
+        resolve(new Uint8Array(e.target.result));
+      });
+      fileReader.addEventListener('error', () => {
+        reject('Error reading the local certificate');
+      });
+
+      fileReader.readAsArrayBuffer(certificate);
+    });
+
+    await opts.addTrustedCertificate(await arrayBufferPromise);
+  }
 
   for (const widget of sigWidgets) {
     try {

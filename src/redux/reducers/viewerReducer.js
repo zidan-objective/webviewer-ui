@@ -233,8 +233,8 @@ export default initialState => (state = initialState, action) => {
       };
     case 'SET_NOTE_TRANSFORM_FUNCTION':
       return { ...state, noteTransformFunction: payload.noteTransformFunction };
-    case 'SET_CERTIFICATE_URL':
-      return { ...state, certificateUrl: payload.url };
+    case 'SET_CERTIFICATE':
+      return { ...state, certificate: payload.certificate };
     case 'SET_VERIFICATION_RESULT':
       return { ...state, verificationResult: payload.result };
     default:

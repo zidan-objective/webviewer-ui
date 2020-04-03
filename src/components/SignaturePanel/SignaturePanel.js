@@ -21,9 +21,9 @@ const propTypes = {
 };
 
 const SignaturePanel = ({ display }) => {
-  const [isDisabled, certificateUrl] = useSelector(state => [
+  const [isDisabled, certificate] = useSelector(state => [
     selectors.isElementDisabled(state, 'signaturePanel'),
-    selectors.getCertificateUrl(state),
+    selectors.getCertificate(state),
   ]);
   const [sigWidgets, setSigWidgets] = useState([]);
   const [locatorRect, setLocatorRect] = useState(null);
@@ -57,8 +57,8 @@ const SignaturePanel = ({ display }) => {
   }, [dispatch, sigWidgets]);
 
   useEffect(() => {
-    if (certificateUrl && sigWidgets.length) {
-      setVerificationResult(certificateUrl, sigWidgets, dispatch)
+    if (certificate && sigWidgets.length) {
+      setVerificationResult(certificate, sigWidgets, dispatch)
         .then(() => {
           setCertificateErrorMessage('');
         })
@@ -69,7 +69,7 @@ const SignaturePanel = ({ display }) => {
           setCertificateErrorMessage(e.message);
         });
     }
-  }, [certificateUrl, dispatch, sigWidgets]);
+  }, [certificate, dispatch, sigWidgets]);
 
   const jumpToWidget = widget => {
     core.jumpToAnnotation(widget);
@@ -98,7 +98,9 @@ const SignaturePanel = ({ display }) => {
         <div className="center">
           <Spinner />
         </div>
-      ) : certificateErrorMessage ? (
+      ) : certificateErrorMessage === 'Error reading the local certificate' ? (
+        <div className="center">There are some issues with reading the local certificate.</div>
+      ) : certificateErrorMessage === 'Download Failed' ? (
         <div className="center">There are some issues with downloading the certificate.</div>
       ) : (
         sigWidgets.map((widget, index) => {
@@ -174,7 +176,8 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
         )}
         <SignatureIcon badge={badgeIcon} />
         <p>
-          {isCertification ? 'Certified' : 'Signed'} {signer && ` by ${signer}`} {signTime && ` on ${signTime}`}
+          {isCertification ? 'Certified' : 'Signed'} {signer && ` by ${signer}`}{' '}
+          {signTime && ` on ${signTime}`}
         </p>
       </div>
     );
@@ -269,7 +272,9 @@ export const WidgetInfo = ({ name, collapsible, onClick = () => {} }) => {
           'The document has changes that are allowed by the signature\'s permissions settings.';
         break;
       case ModificationPermissionsStatus.e_unmodified:
-        content = `The document has not been modified since it was ${isCertification ? 'certified' : 'signed'}.`;
+        content = `The document has not been modified since it was ${
+          isCertification ? 'certified' : 'signed'
+        }.`;
         break;
       case ModificationPermissionsStatus.e_permissions_verification_disabled:
         content = 'Permissions verification has been disabled.';

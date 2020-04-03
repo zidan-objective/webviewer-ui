@@ -141,7 +141,7 @@ export const getAllowPageNavigation = state => state.viewer.allowPageNavigation;
 
 export const getCustomMeasurementOverlay = state => state.viewer.customMeasurementOverlay;
 
-export const getCertificateUrl = state => state.viewer.certificateUrl;
+export const getCertificate = state => state.viewer.certificate;
 
 export const getVerificationResult = (state, fieldName) => state.viewer.verificationResult[fieldName] || {};
 

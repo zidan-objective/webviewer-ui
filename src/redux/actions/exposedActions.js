@@ -234,7 +234,7 @@ export const setCustomElementOverrides = (dataElement, overrides) => ({
   type: 'SET_CUSTOM_ELEMENT_OVERRIDES',
   payload: { dataElement, overrides },
 });
-export const setCertificateUrl = url => ({
-  type: 'SET_CERTIFICATE_URL',
-  payload: { url },
+export const setCertificate = certificate => ({
+  type: 'SET_CERTIFICATE',
+  payload: { certificate },
 });

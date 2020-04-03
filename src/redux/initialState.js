@@ -208,7 +208,7 @@ export default {
     userData: [],
     customMeasurementOverlay: [],
     noteTransformFunction: null,
-    certificateUrl: 'https://pdftron.s3.amazonaws.com/downloads/pl/personal.cer',
+    certificate: '',
     verificationResult: {},
   },
   search: {
