@@ -58,8 +58,6 @@ const SignaturePanel = ({ display }) => {
 
   useEffect(() => {
     if (sigWidgets.length) {
-      console.log('should not see this!');
-
       setVerificationResult(certificate, sigWidgets, dispatch)
         .then(() => {
           setCertificateErrorMessage('');
@@ -70,6 +68,8 @@ const SignaturePanel = ({ display }) => {
         .catch(e => {
           setCertificateErrorMessage(e.message);
         });
+    } else {
+      setShowSpinner(false);
     }
   }, [certificate, dispatch, sigWidgets]);
 
@@ -96,7 +96,9 @@ const SignaturePanel = ({ display }) => {
 
   return isDisabled ? null : (
     <div className="Panel SignaturePanel" data-element="signaturePanel" style={{ display }}>
-      {showSpinner ? (
+      {sigWidgets.length === 0 ? (
+        <div className="center">This document has no signature fields.</div>
+      ) : showSpinner ? (
         <div className="center">
           <Spinner />
         </div>
