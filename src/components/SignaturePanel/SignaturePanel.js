@@ -57,7 +57,9 @@ const SignaturePanel = ({ display }) => {
   }, [dispatch, sigWidgets]);
 
   useEffect(() => {
-    if (certificate && sigWidgets.length) {
+    if (sigWidgets.length) {
+      console.log('should not see this!');
+
       setVerificationResult(certificate, sigWidgets, dispatch)
         .then(() => {
           setCertificateErrorMessage('');

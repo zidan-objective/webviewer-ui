@@ -15,11 +15,12 @@ import './SignatureValidationModal.scss';
 
 const SignatureValidationModal = () => {
   const [widgetName, setWidgetName] = useState(null);
-  const [isDisabled, isOpen, verificationResult] = useSelector(
+  const [isDisabled, isOpen, verificationResult, certificate] = useSelector(
     state => [
       selectors.isElementDisabled(state, 'signatureValidationModal'),
       selectors.isElementOpen(state, 'signatureValidationModal'),
       selectors.getVerificationResult(state, widgetName),
+      selectors.getCertificate(state),
     ],
     shallowEqual
   );
@@ -46,12 +47,7 @@ const SignatureValidationModal = () => {
     DigestAlgorithm,
     DigitalSignatureField,
   } = window.PDFNet;
-  const {
-    TrustStatus,
-    DigestStatus,
-    ModificationPermissionsStatus,
-    DocumentStatus,
-  } = VerificationResult;
+  const { ModificationPermissionsStatus } = VerificationResult;
   const { TimeMode } = VerificationOptions;
 
   useOnClickOutside(containerRef, () => {
@@ -121,7 +117,9 @@ const SignatureValidationModal = () => {
           content = `- The document has changes that are allowed by the signature's permissions settings.`;
           break;
         case ModificationPermissionsStatus.e_unmodified:
-          content = `- The document has not been modified since it was ${isCertification ? 'certifier' : 'signed'}.`;
+          content = `- The document has not been modified since it was ${
+            isCertification ? 'certifier' : 'signed'
+          }.`;
           break;
         case ModificationPermissionsStatus.e_permissions_verification_disabled:
           content = '- Permissions verification has been disabled.';
