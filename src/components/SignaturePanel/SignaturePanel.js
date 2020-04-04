@@ -44,7 +44,7 @@ const SignaturePanel = ({ display }) => {
     };
 
     const onDocumentUnloaded = () => {
-      setSigWidgets([]);
+      setShowSpinner(true);
       dispatch(actions.setVerificationResult({}));
     };
 
@@ -96,12 +96,12 @@ const SignaturePanel = ({ display }) => {
 
   return isDisabled ? null : (
     <div className="Panel SignaturePanel" data-element="signaturePanel" style={{ display }}>
-      {sigWidgets.length === 0 ? (
-        <div className="center">This document has no signature fields.</div>
-      ) : showSpinner ? (
+      {showSpinner ? (
         <div className="center">
           <Spinner />
         </div>
+      ) : sigWidgets.length === 0 ? (
+        <div className="center">This document has no signature fields.</div>
       ) : certificateErrorMessage === 'Error reading the local certificate' ? (
         <div className="center">There are some issues with reading the local certificate.</div>
       ) : certificateErrorMessage === 'Download Failed' ? (
