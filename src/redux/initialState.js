@@ -15,6 +15,7 @@ export default {
     disabledElements: {},
     openElements: {
       header: true,
+      customStampModal: true
     },
     headers: {
       default: [
@@ -165,6 +166,7 @@ export default {
     tab: {
       signatureModal: 'inkSignaturePanelButton',
       linkModal: 'URLPanelButton',
+      rubberStampTab: 'defaultRubberStampButton',
     },
     customElementOverrides: {},
     activeHeaderGroup: 'default',

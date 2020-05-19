@@ -9,8 +9,10 @@ import actions from 'actions';
 import selectors from 'selectors';
 import core from 'core';
 import defaultTool from 'constants/defaultTool';
-
+import { Tabs, Tab, TabPanel } from 'components/Tabs';
+import Button from 'components/Button';
 import './StampOverlay.scss';
+import ActionButton from 'components/ActionButton';
 
 const TOOL_NAME = 'AnnotationCreateRubberStamp';
 const canvasWidth = 160;
@@ -43,6 +45,7 @@ class StampOverlay extends React.Component {
       defaultAnnotations: [],
       language: props.i18n.language,
       isStampSelected: false,
+      customAnnotations: [],
     };
     this.stampTool = core.getTool(TOOL_NAME);
   }
@@ -56,8 +59,10 @@ class StampOverlay extends React.Component {
       this.props.openElement('stampOverlay');
       this.setOverlayPosition();
       this.getDefaultRubberStamps(isLanChanged);
+      this.getCustomRubberStamps(isLanChanged);
     } else if (this.props.isOpen && isLanChanged) {
       this.getDefaultRubberStamps(isLanChanged);
+      this.getCustomRubberStamps(isLanChanged);
     }
   }
 
@@ -108,6 +113,32 @@ class StampOverlay extends React.Component {
     this.setState({ isStampSelected: true });
   }
 
+  getCustomRubberStamps = async isLanChanged => {
+    if (!this.state.defaultAnnotations.length || isLanChanged) {
+      const annotations = await this.stampTool.getCustomStampAnnotations();
+      const previews = await Promise.all(
+        annotations.map(annotation => {
+          const text = this.props.t(`rubberStamp.${annotation['Icon']}`);
+
+          const options = {
+            canvasWidth,
+            canvasHeight,
+            text,
+          };
+
+          return this.stampTool.getPreview(annotation, options);
+        }),
+      );
+
+      const customAnnotations = annotations.map((annotation, i) => ({
+        annotation,
+        imgSrc: previews[i],annotation,
+        // imgSrc: annotation.ImageData,//previews[i],
+      }));
+
+      this.setState({ customAnnotations });
+    }
+  }
   getDefaultRubberStamps = async isLanChanged => {
     if (!this.state.defaultAnnotations.length || isLanChanged) {
       const annotations = this.stampTool.getDefaultStampAnnotations();
@@ -133,17 +164,35 @@ class StampOverlay extends React.Component {
       this.setState({ defaultAnnotations, language: this.props.i18n.language });
     }
   }
+  openCustomSampModal = () => {
+    const { defaultSignatures } = this.state;
+    const { openElement, closeElement } = this.props;
 
+    // if (defaultSignatures.length < maxSignaturesCount) {
+    openElement('customStampModal');
+    //   closeElement('signatureOverlay');
+    // }
+  }
   render() {
-    const { left, top, defaultAnnotations } = this.state;
+    const { left, top, defaultAnnotations, customAnnotations } = this.state;
     const { isDisabled, isOpen } = this.props;
     if (isDisabled) {
       return null;
     }
 
     let imgs = null;
+    let customImgs = null;
     if (isOpen) {
       imgs = defaultAnnotations.map(({ imgSrc, annotation }, index) =>
+        <div key={index}
+          className="rubber-stamp"
+          onClick={() => this.setRubberStamp(annotation)}
+        >
+          <img src={imgSrc} />
+        </div>,
+      );
+
+      customImgs = customAnnotations.map(({ imgSrc, annotation }, index) =>
         <div key={index}
           className="rubber-stamp"
           onClick={() => this.setRubberStamp(annotation)}
@@ -166,11 +215,42 @@ class StampOverlay extends React.Component {
         style={{ left, top }}
         data-element="stampOverlay"
       >
-        <div className="default-stamp-container">
-          <div className="modal-body">
-            { imgs }
+
+        <Tabs id="rubberStampTab">
+          <div className="header">
+            <div className="tab-list">
+              <Tab dataElement="defaultRubberStampButton">
+                <Button label={'Default'} />
+              </Tab>
+              <Tab dataElement="customRubberStampButton">
+                <Button label={'Custom'} />
+              </Tab>
+            </div>
           </div>
-        </div>
+
+          <TabPanel dataElement="defaultRubberStamp">
+            <div className="default-stamp-container">
+              <div className="modal-body">
+                { imgs }
+              </div>
+            </div>
+          </TabPanel>
+          <TabPanel dataElement="customRubberStamp">
+            <div className="default-stamp-container">
+              <div className="modal-body">
+                { customImgs }
+              </div>
+              <div
+                className={`add-custom-stamp enabled`}
+                onClick={this.openCustomSampModal}
+              >
+                Add custom stamp
+              </div>
+            </div>
+          </TabPanel>
+        </Tabs>
+
+
       </div>
     );
   }

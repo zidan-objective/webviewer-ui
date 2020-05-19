@@ -24,6 +24,7 @@ import ContextMenuPopup from 'components/ContextMenuPopup';
 import ToolStylePopup from 'components/ToolStylePopup';
 import RichTextPopup from 'components/RichTextPopup';
 import SignatureModal from 'components/SignatureModal';
+import CustomStampModal from 'components/CustomStampModal';
 import PrintModal from 'components/PrintModal';
 import LoadingModal from 'components/LoadingModal';
 import ErrorModal from 'components/ErrorModal';
@@ -91,6 +92,7 @@ const App = ({ removeEventHandlers }) => {
         <RichTextPopup />
 
         <SignatureModal />
+        <CustomStampModal />
         <PrintModal />
         <LoadingModal />
         <ErrorModal />
