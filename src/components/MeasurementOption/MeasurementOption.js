@@ -5,7 +5,9 @@ import { withTranslation } from 'react-i18next';
 import { isFirefox } from 'helpers/device';
 import i18next from 'i18next';
 
+import core from 'core';
 import selectors from 'selectors';
+import { MEASUREMENT_TOOL_NAMES } from 'helpers/setToolStyles';
 
 import './MeasurementOption.scss';
 
@@ -84,6 +86,16 @@ class MeasurementOption extends React.Component {
       ]);
     });
   };
+
+  onSnappingChange = event => {
+    const enableSnapping = event.target.checked;
+    const mode = enableSnapping ? window.docViewer.SnapMode.e_DefaultSnapMode : null;
+    const measurementTools = MEASUREMENT_TOOL_NAMES.map(core.getTool);
+
+    measurementTools.forEach(tool => {
+      tool.setSnapMode(mode);
+    });
+  }
 
   getLanguage = () => {
     let lang = 'en';
@@ -221,6 +233,18 @@ class MeasurementOption extends React.Component {
             </div>
           </div>
         }
+        <div
+          className="SnapMode"
+          style={{ margin: '10px 0px 10px 16px', display: 'flex', alignItems: 'center' }}
+        >
+          <input
+            id="snap-checkbox"
+            type="checkbox"
+            onChange={this.onSnappingChange}
+            style={{ marginLeft: 0, marginRight: 5 }}
+          />
+          <label htmlFor="snap-checkbox">Enable Snap Mode</label>
+        </div>
       </div>
     );
   }
