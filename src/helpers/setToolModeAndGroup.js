@@ -5,8 +5,7 @@ import selectors from 'selectors';
 
 export default (store, toolName) => {
   const { dispatch, getState } = store;
-  const toolGroup =
-    selectors.getToolButtonObject(getState(), toolName)?.group || '';
+  const toolGroup = selectors.getToolButtonObject(getState(), toolName)?.group || '';
 
   if (toolGroup) {
     dispatch(actions.openElement('toolsOverlay'));

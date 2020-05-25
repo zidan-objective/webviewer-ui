@@ -9,6 +9,11 @@ const TouchEventManager = {
     this.document = document;
     this.container = container;
     this.allowSwipe = true;
+    // a boolean variable that controls if swiping should still be allowed even when the activate tool is an annotation tool
+    // in the stylus mode when we scroll the document using one finger, the tool mode will be set back to the previous tool once we let the finger go
+    // this causes an issue where we won't start momemtum scorlling because the current tool is an annotation tool
+    // however it's more natrual to let the swiping continue, and we use this boolean to do that
+    this.allowStylusSwipe = false;
     this.allowHorizontalSwipe = true;
     this.allowVerticalSwipe = false;
     this.verticalMomentum = 0;
@@ -33,16 +38,19 @@ const TouchEventManager = {
     this.handleTouchMove = this.handleTouchMove.bind(this);
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.handleTouchCancel = this.handleTouchCancel.bind(this);
+    this.handleToolModeUpdated = this.handleToolModeUpdated.bind(this);
     this.container.addEventListener('touchstart', this.handleTouchStart, { passive: false });
     this.container.addEventListener('touchmove', this.handleTouchMove, { passive: false });
     this.container.addEventListener('touchend', this.handleTouchEnd, { passive: false });
     this.container.addEventListener('touchcancel', this.handleTouchCancel, { passive: false });
+    core.addEventListener('toolModeUpdated', this.handleToolModeUpdated);
   },
   terminate() {
     this.container.removeEventListener('touchstart', this.handleTouchStart);
     this.container.removeEventListener('touchmove', this.handleTouchMove);
     this.container.removeEventListener('touchend', this.handleTouchEnd);
     this.container.removeEventListener('touchcancel', this.handleTouchCancel);
+    core.removeEventListener('toolModeUpdated', this.handleToolModeUpdated);
   },
   handleTouchStart(e) {
     switch (e.touches.length) {
@@ -191,13 +199,13 @@ const TouchEventManager = {
       case 'swipe': {
         if (
           !this.allowSwipe ||
-          this.isUsingAnnotationTools() ||
+          (this.isUsingAnnotationTools() && !this.allowStylusSwipe) ||
           core.getSelectedText().length ||
           core.getSelectedAnnotations().length
         ) {
           return;
         }
-
+        // alert('hello');
         const { reachedLeft, reachedTop, reachedRight, reachedBottom } = this.reachedBoundary();
         const threshold = 0.35 * this.container.clientWidth;
         const swipedToBottom = reachedBottom && this.touch.verticalDistance > threshold;
@@ -277,9 +285,19 @@ const TouchEventManager = {
     // Want to use momentum values during 'TouchMove' event, so clear values in 'touchEnd' instead of 'touchStart'
     this.verticalMomentum = 0;
     this.horziontalMomentum = 0;
+    this.allowStylusSwipe = false;
   },
   handleTouchCancel(e) {
     this.handleTouchEnd(e);
+  },
+  handleToolModeUpdated(newTool, oldTool) {
+    if (
+      core.isStylusModeEnabled() &&
+      oldTool.name === 'Pan' &&
+      oldTool.previousStylusTool === newTool
+    ) {
+      this.allowStylusSwipe = true;
+    }
   },
   startMomentumScroll(touchDuration) {
     let currentIteration = 1;
