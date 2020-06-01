@@ -327,10 +327,6 @@ export const setActiveResult = activeResult => ({
   type: 'SET_ACTIVE_RESULT',
   payload: { activeResult },
 });
-export const setActiveResultIndex = index => ({
-  type: 'SET_ACTIVE_RESULT_INDEX',
-  payload: { index },
-});
 export const addResult = result => ({
   type: 'ADD_RESULT',
   payload: { result },

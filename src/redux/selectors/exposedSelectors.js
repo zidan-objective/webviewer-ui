@@ -190,8 +190,6 @@ export const getSearchValue = state => state.search.value;
 
 export const getActiveResult = state => state.search.activeResult;
 
-export const getActiveResultIndex = state => state.search.activeResultIndex;
-
 export const getResults = state => state.search.results;
 
 export const isCaseSensitive = state => state.search.isCaseSensitive;

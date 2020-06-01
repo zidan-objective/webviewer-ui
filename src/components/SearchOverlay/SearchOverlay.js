@@ -33,7 +33,6 @@ class SearchOverlay extends React.PureComponent {
     isRegex: PropTypes.bool,
     results: PropTypes.arrayOf(PropTypes.object),
     activeResult: PropTypes.object,
-    activeResultIndex: PropTypes.number,
     isProgrammaticSearch: PropTypes.bool,
     isProgrammaticSearchFull: PropTypes.bool,
     searchListeners: PropTypes.arrayOf(PropTypes.func),
@@ -43,7 +42,6 @@ class SearchOverlay extends React.PureComponent {
     closeElements: PropTypes.func.isRequired,
     setSearchValue: PropTypes.func.isRequired,
     setActiveResult: PropTypes.func.isRequired,
-    setActiveResultIndex: PropTypes.func.isRequired,
     setIsSearching: PropTypes.func.isRequired,
     resetSearch: PropTypes.func.isRequired,
     addResult: PropTypes.func.isRequired,
@@ -70,6 +68,10 @@ class SearchOverlay extends React.PureComponent {
     this.state = {
       noResultSingleSearch: false,
     };
+  }
+
+  componentDidMount() {
+    core.addEventListener('activeSearchResultChanged', this.onActiveSearchResultChanged);
   }
 
   componentDidUpdate(prevProps) {
@@ -113,6 +115,14 @@ class SearchOverlay extends React.PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    core.removeEventListener('activeSearchResultChanged', this.onActiveSearchResultChanged);
+  }
+
+  onActiveSearchResultChanged = (result) => {
+    this.props.setActiveResult(result);
+  };
+
   handleSearchError = error => {
     const { setIsSearching, setSearchError } = this.props;
     setIsSearching(false);
@@ -141,7 +151,6 @@ class SearchOverlay extends React.PureComponent {
       addResult,
       setIsSearching,
       setNoResult,
-      setActiveResultIndex,
     } = this.props;
     const isFullSearch = true;
     const searchMode = this.getSearchMode(isFullSearch);
@@ -159,7 +168,6 @@ class SearchOverlay extends React.PureComponent {
         core.displayAdditionalSearchResult(result);
         if (noActiveResultIndex && this.isActiveResult(result)) {
           noActiveResultIndex = false;
-          setActiveResultIndex(resultIndex);
           core.setActiveSearchResult(result);
         }
       }
@@ -241,7 +249,7 @@ class SearchOverlay extends React.PureComponent {
   };
 
   executeSingleSearch = (isSearchUp = false) => {
-    const { searchValue, setActiveResult, setIsSearching, addResult, resetSearch } = this.props;
+    const { searchValue, setIsSearching, addResult, resetSearch } = this.props;
     const searchMode = isSearchUp
       ? this.getSearchMode() | core.getSearchMode().e_search_up
       : this.getSearchMode();
@@ -263,7 +271,6 @@ class SearchOverlay extends React.PureComponent {
         this.foundSingleSearchResult = true;
         addResult(result);
         core.displaySearchResult(result);
-        setActiveResult(result);
         this.runSearchListeners();
       }
 
@@ -359,14 +366,13 @@ class SearchOverlay extends React.PureComponent {
 
   onClickNext = e => {
     e.preventDefault();
-    const { isSearchPanelOpen, activeResultIndex, results, setActiveResultIndex } = this.props;
+    const { isSearchPanelOpen, activeResultIndex, results } = this.props;
 
     if (isSearchPanelOpen) {
       if (results.length === 0) {
         return;
       }
       const nextResultIndex = activeResultIndex === results.length - 1 ? 0 : activeResultIndex + 1;
-      setActiveResultIndex(nextResultIndex);
       core.setActiveSearchResult(results[nextResultIndex]);
     } else {
       this.executeSingleSearch();
@@ -375,14 +381,13 @@ class SearchOverlay extends React.PureComponent {
 
   onClickPrevious = e => {
     e.preventDefault();
-    const { isSearchPanelOpen, activeResultIndex, results, setActiveResultIndex } = this.props;
+    const { isSearchPanelOpen, activeResultIndex, results } = this.props;
 
     if (isSearchPanelOpen) {
       if (results.length === 0) {
         return;
       }
       const prevResultIndex = activeResultIndex <= 0 ? results.length - 1 : activeResultIndex - 1;
-      setActiveResultIndex(prevResultIndex);
       core.setActiveSearchResult(results[prevResultIndex]);
     } else {
       const isSearchUp = true;
@@ -391,11 +396,10 @@ class SearchOverlay extends React.PureComponent {
   };
 
   onClickOverflow = () => {
-    const { activeResult, openElement, setActiveResult } = this.props;
+    const { openElement } = this.props;
 
     openElement('searchPanel');
     this.clearSearchResults();
-    setActiveResult(activeResult);
     this.executeFullSearch();
   };
 
@@ -529,7 +533,6 @@ const mapStateToProps = state => ({
   isRegex: selectors.isRegex(state),
   results: selectors.getResults(state),
   activeResult: selectors.getActiveResult(state),
-  activeResultIndex: selectors.getActiveResultIndex(state),
   isProgrammaticSearch: selectors.isProgrammaticSearch(state),
   isProgrammaticSearchFull: selectors.isProgrammaticSearchFull(state),
   searchListeners: selectors.getSearchListeners(state),
@@ -544,7 +547,6 @@ const mapDispatchToProps = {
   closeElements: actions.closeElements,
   setSearchValue: actions.setSearchValue,
   setActiveResult: actions.setActiveResult,
-  setActiveResultIndex: actions.setActiveResultIndex,
   setIsSearching: actions.setIsSearching,
   resetSearch: actions.resetSearch,
   addResult: actions.addResult,
