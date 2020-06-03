@@ -3,8 +3,9 @@
 
 $border-radius: 4px;
 
-.text-signature {
+.text-customstamp {
   @extend %signature-modal-container-shared-style;
+  height: unset;
 
   display: flex;
   flex-direction: column;
@@ -16,6 +17,10 @@ $border-radius: 4px;
     border: 1px solid $signature-modal-shared-color;
     box-shadow: none;
     padding: 5px;
+
+  }
+  .txt-uppercase {
+    text-transform: uppercase;
   }
 
   &-container {
@@ -66,7 +71,6 @@ $border-radius: 4px;
 
   .canvas-container {
     position: relative;
-    position: relative;
     overflow: hidden;
     border-radius: 3px;
     border: 1px solid #0088e7;// #a8bff8;
@@ -74,19 +78,19 @@ $border-radius: 4px;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    padding: 1em;
+    padding: 15px;
+    // margin-left: -1em;
+    // margin-right: -1em;
 
     .canvas-holder {
       background-color: transparent;
-      width: 252.787px;
-      height: 96px;
-
-      background: aqua;
+      // width: 252.787px;
+      // height: 96px;
 
       .custom-stamp-canvas {
 
-        width: 252.787px;
-        height: 96px;
+        // width: 252.787px;
+        // height: 96px;
         box-sizing: border-box;
         // max-width: 100%;
 

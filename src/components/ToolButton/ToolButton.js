@@ -65,6 +65,9 @@ const ToolButton = ({ toolName, ...restProps }) => {
         dispatch(actions.toggleElement('toolStylePopup'));
       }
     } else {
+      console.log('toolName', toolName);
+      console.log('group', group);
+
       core.setToolMode(toolName);
       dispatch(actions.setActiveToolGroup(group));
       dispatch(actions.closeElement('toolStylePopup'));

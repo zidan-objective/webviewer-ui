@@ -76,7 +76,7 @@ const App = ({ removeEventHandlers }) => {
         <SearchOverlay />
         <ViewControlsOverlay />
         <RedactionOverlay />
-        <StampOverlay />
+
         <MenuOverlay />
         <SignatureOverlay />
         <PageNavOverlay />
@@ -84,15 +84,16 @@ const App = ({ removeEventHandlers }) => {
         <MeasurementOverlay />
         <AnnotationContentOverlay />
         <ToolsOverlay />
-
         <AnnotationPopup />
         <TextPopup />
         <ContextMenuPopup />
         <ToolStylePopup />
         <RichTextPopup />
-
         <SignatureModal />
+
         <CustomStampModal />
+        <StampOverlay />
+
         <PrintModal />
         <LoadingModal />
         <ErrorModal />

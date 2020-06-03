@@ -2,6 +2,7 @@ import React from 'react';
 
 import ToggleZoomOverlay from 'components/ToggleZoomOverlay';
 import SignatureToolButton from 'components/SignatureToolButton';
+import RubberStampToolButton from 'components/RubberStampToolButton';
 
 import core from 'core';
 import getHashParams from 'helpers/getHashParams';
@@ -50,6 +51,11 @@ export default {
         { type: 'toggleElementButton', className: 'redactHeader', dataElement: 'redactionButton', element: 'redactionOverlay', img: 'ic_annotation_add_redact_black_24px', title: 'component.redaction', hidden: ['tablet', 'mobile'] },
         { type: 'toolButton', toolName: 'AnnotationCreateFreeText', hidden: ['tablet', 'mobile'] },
         { type: 'toolButton', toolName: 'AnnotationCreateSticky', hidden: ['tablet', 'mobile'] },
+        {
+          type: 'customElement',
+          render: () => <RubberStampToolButton />,
+          dataElement: 'rubberStampToolButton',
+        },
         { type: 'toolGroupButton', toolGroup: 'miscTools', img: 'ic_more_black_24px', dataElement: 'miscToolGroupButton', title: 'component.miscToolsButton', hidden: ['tablet', 'mobile'], showColor: 'never' },
         {
           type: 'actionButton',
@@ -75,6 +81,11 @@ export default {
           type: 'customElement',
           render: () => <SignatureToolButton />,
           dataElement: 'signatureToolButton',
+        },
+        {
+          type: 'customElement',
+          render: () => <RubberStampToolButton />,
+          dataElement: 'rubberStampToolButton',
         },
         { type: 'toolGroupButton', toolGroup: 'measurementTools', dataElement: 'measurementToolGroupButton', title: 'component.measurementToolsButton', showColor: 'active' },
         { type: 'toggleElementButton', toolName: 'AnnotationCreateRedaction', className: 'redactHeader', dataElement: 'redactionButton', element: 'redactionOverlay', img: 'ic_annotation_add_redact_black_24px', title: 'component.redaction' },

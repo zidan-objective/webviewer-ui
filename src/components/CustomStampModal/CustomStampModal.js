@@ -12,7 +12,11 @@ import Button from 'components/Button';
 import ActionButton from 'components/ActionButton';
 import StampInput from './StampInput';
 
+const TOOL_NAME = 'AnnotationCreateRubberStamp';
+
 const CustomStampModal = () => {
+  const [state, setState] = useState({});
+  const stampTool = core.getTool(TOOL_NAME);
   // const isOpen = true;
 
   const [isOpen] = useSelector(state => [
@@ -24,9 +28,13 @@ const CustomStampModal = () => {
   const closeModal = () => {
     dispatch(actions.closeElement('customStampModal'));
   };
-  const createCustomStamp =() => {
 
-  }
+  const createCustomStamp = () => {
+    console.log('create stamp', state);
+
+    stampTool.addCustomStamp(state);
+  };
+
   const modalClass = classNames({
     Modal: true,
     CustomStampModal: true,
@@ -51,7 +59,7 @@ const CustomStampModal = () => {
           />
 
         </div>
-        <StampInput isModalOpen={isOpen}/>
+        <StampInput isModalOpen={isOpen} state={state} setState={setState}/>
         <div
           className="footer"
 

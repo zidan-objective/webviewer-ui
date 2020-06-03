@@ -50,6 +50,7 @@ export default store => {
       core.getTool('AnnotationCreateSignature').on('annotationAdded', onSignatureAnnotationAdded);
       core.getTool('AnnotationCreateRubberStamp').on('annotationAdded', onRubberStampAnnotationAdded);
       core.getTool('AnnotationCreateFileAttachment').on('annotationAdded', onFileAttachmentAnnotationAdded);
+      // core.getTool('AnnotationCreateRubberStamp').on('annotationAdded', onCustomRubberAnnotationAdded);
       hotkeysManager.initialize(store);
       document.addEventListener('fullscreenchange', onFullScreenChange);
       document.addEventListener('mozfullscreenchange', onFullScreenChange);
@@ -77,6 +78,7 @@ export default store => {
       core.getTool('AnnotationCreateSignature').off('locationSelected', onLocationSelected);
       core.getTool('AnnotationCreateRubberStamp').off('annotationAdded', onRubberStampAnnotationAdded);
       core.getTool('AnnotationCreateFileAttachment').off('annotationAdded', onFileAttachmentAnnotationAdded);
+      // core.getTool('AnnotationCreateRubberStamp').off('annotationAdded', onCustomRubberAnnotationAdded);
       hotkeysManager.off();
       document.removeEventListener('fullscreenchange', onFullScreenChange);
       document.removeEventListener('mozfullscreenchange', onFullScreenChange);

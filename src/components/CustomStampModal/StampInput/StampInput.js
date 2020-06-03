@@ -9,35 +9,62 @@ import { isIOS } from 'helpers/device';
 import selectors from 'selectors';
 import './StampInput.scss';
 
+const TOOL_NAME = 'AnnotationCreateRubberStamp';
 
-const StampInput = () => {
+
+
+const StampInput = ({ state, setState }) => {
   const [currentUser] = useState(core.getCurrentUser());
-  const [stampTextInputValue, setStampText] = useState('Draft');
+  const [stampTextInputValue, setStampText] = useState('DRAFT');
   const [dateCheckbox, setDateCheckbox] = useState(true);
   const [timeCheckbox, setTimeCheckbox] = useState(true);
-  const [timeMode, setTimeMode] = useState(false);
+  const [timeMode, setTimeMode] = useState(true);
 
   const [formatInput, setFormatInout] = useState(false);
+  const stampTool = core.getTool(TOOL_NAME);
+  const [timestampFormat, setTimestampFormat] = useState('DD/MM/YYYY, h:mm a');
 
-  const [timestampFormat, setTimestampFormat] = useState('lime');
-
+  const timestampOptions = [
+    { id: '1', value: 'DD/MM/YYYY, h:mm a' },
+    { id: '2', value: '[By $currentUser at] h:mm a, MMMM D, YYYY' },
+    { id: '3', value: '[By $currentUser on] MMMM Do, YYYY' },
+    { id: '4', value: 'MMMM D, YYYY, h:mm a' },
+    { id: '5', value: 'other' },
+  ];
 
   const canvasRef = useRef();
+  const canvasContainerRef = useRef();
   const inputRef = useRef();
   const customFormatInputRef = useRef();
 
+  const updateCanvas = (title, subtitle) => {
 
-  const handleInputChange = e => {
-    const value = e.target.value;
-    setStampText(value);
-    // updateCanvas(value);
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');//.scale(multiplier, multiplier);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = '30px Arial';
-    ctx.fillText(value, 10, 50);
+    var parameters = {
+      canvas: canvasRef.current,
+      title,
+      subtitle: stampTool.formatMoment(subtitle.replace('$currentUser', currentUser)),
+      defaultWidth: 300,
+      defaultHeight: 100,
+      container: canvasContainerRef.current,
+    };
+    const width = stampTool.drawDynamicStamp(parameters);
+    var dataURL = canvasRef.current.toDataURL();
+    setState({
+      ...state,
+      width,
+      title,
+      subtitle,
+      height: parameters.defaultHeight,
+      dataURL,
+    });
   };
 
+  const handleInputChange = e => {
+    let value = e.target.value || '';
+    value = value.toUpperCase();
+    setStampText(value);
+    updateCanvas(value, timestampFormat);
+  };
 
   const handleDateInputChange = () => {
     setDateCheckbox(!dateCheckbox);
@@ -45,6 +72,11 @@ const StampInput = () => {
 
   const handleTimeInputChange = () => {
     setTimeCheckbox(!timeCheckbox);
+  };
+
+  const handleCustomTimeFormat = e => {
+    setTimestampFormat(e.target.value);
+    updateCanvas(stampTextInputValue, e.target.value);
   };
 
   const changeTimeMode = () => {
@@ -61,8 +93,9 @@ const StampInput = () => {
       setFormatInout(true);
     } else {
       setFormatInout(false);
+      setTimestampFormat(value);
+      updateCanvas(stampTextInputValue, value);
     }
-    setTimestampFormat(value);
   };
 
   const isEnabled = (timeMode && formatInput);
@@ -73,27 +106,8 @@ const StampInput = () => {
   }, [isEnabled]);
 
   useEffect(() => {
-    // const signatureTool = core.getTool('AnnotationCreateSignature');
-    const canvas = canvasRef.current;
-
-    // signatureTool.setSignatureCanvas(canvas);
-    // const multiplier = window.utils.getCanvasMultiplier();
-    const ctx = canvas.getContext('2d');//.scale(multiplier, multiplier);
-    ctx.font = '30px Arial';
-    ctx.fillText(stampTextInputValue, 10, 50);
-
+    updateCanvas(stampTextInputValue, timestampFormat);
   }, []);
-
-  const updateCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
-
-    // signatureTool.setSignatureCanvas(canvas);
-    // const multiplier = window.utils.getCanvasMultiplier();
-    const ctx = canvas.getContext('2d');//.scale(multiplier, multiplier);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.font = '30px Arial';
-    ctx.fillText(stampTextInputValue, 10, 50);
-  });
 
   const btnLabel = (!timeMode) ? 'Custom' : 'Cancel';
   let dateCheckboxElement = null;
@@ -130,11 +144,9 @@ const StampInput = () => {
         onChange={changeFormat}
         style={{ textTransform: 'none', width: '100%' }}
       >
-        <option value="DD/MM/YYYY, h:mm a">DD/MM/YYYY, h:mm a</option>
-        <option value="[By $currentUser at] h:mm a, MMMM D, YYYY">[By {currentUser} at] h:mm a, MMMM D, YYYY</option>
-        <option value="[By $currentUser on] MMMM Do, YYYY">[By {currentUser} on] MMMM Do, YYYY</option>
-        <option value="MMMM D, YYYY, h:mm a">MMMM D, YYYY, h:mm a</option>
-        <option value="other">other</option>
+        {timestampOptions.map(item => {
+          return (<option key={item.id} value={item.value}>{item.value}</option>);
+        })}
       </select>
     </div>;
   }
@@ -142,16 +154,18 @@ const StampInput = () => {
   if (timeMode && formatInput) {
     formatInputElement = <div style={{ width: '60%', alignSelf: 'center' }}>
       <input style={{ width: '100%' }}
-        className="text-signature-input"
+        className="text-customstamp-input"
         ref={customFormatInputRef}
         type="text"
+        value={timestampFormat}
+        onChange={handleCustomTimeFormat}
       />
     </div>;
   }
 
   return (
-    <div className="text-signature">
-      <div className="canvas-container">
+    <div className="text-customstamp">
+      <div className="canvas-container" ref={canvasContainerRef}>
         <div className="canvas-holder">
           <canvas
             className="custom-stamp-canvas"
@@ -162,7 +176,7 @@ const StampInput = () => {
       <div style={{ marginTop: 10, display: 'flex' }}>
         <div style={{ width: '20%', alignSelf: 'center' }}> Stamp text: </div>
         <input style={{ width: '80%' }}
-          className="text-signature-input"
+          className="text-customstamp-input txt-uppercase"
           ref={inputRef}
           type="text"
           value={stampTextInputValue}
@@ -180,7 +194,7 @@ const StampInput = () => {
           <button onClick={() => changeTimeMode()} style={{ margin:0 }}>{btnLabel}</button>
         </div>
         {/* <input style={{ width: '80%' }}
-          className="text-signature-input"
+          className="text-customstamp-input"
           ref={timestampInputRef}
           type="text"
           value={timestampTextInputValue}
