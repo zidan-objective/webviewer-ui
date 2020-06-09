@@ -42,12 +42,12 @@ const StampInput = ({ state, setState }) => {
     var parameters = {
       canvas: canvasRef.current,
       title,
-      subtitle: stampTool.formatMoment(subtitle.replace('$currentUser', currentUser)),
+      // subtitle: stampTool.formatMoment(subtitle.replace('$currentUser', currentUser)),
       defaultWidth: 300,
       defaultHeight: 100,
       container: canvasContainerRef.current,
     };
-    const width = stampTool.drawDynamicStamp(parameters);
+    const width = 0;//stampTool.drawDynamicStamp(parameters);
     var dataURL = canvasRef.current.toDataURL();
     setState({
       ...state,
@@ -82,7 +82,7 @@ const StampInput = ({ state, setState }) => {
   const changeTimeMode = () => {
     if (timeMode === false) {
       setFormatInout(false);
-      setTimestampFormat('DD/MM/YYYY, h:mm a');
+      setTimestampFormat(timestampOptions[0].value);
     }
     setTimeMode(!timeMode);
   };

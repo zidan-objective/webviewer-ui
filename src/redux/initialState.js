@@ -16,7 +16,7 @@ export default {
     disabledElements: {},
     openElements: {
       header: true,
-      customStampModal: true
+      // customStampModal: true
     },
     headers: {
       default: [

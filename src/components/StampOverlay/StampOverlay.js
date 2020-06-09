@@ -124,7 +124,6 @@ class StampOverlay extends React.Component {
   }
 
   setRubberStamp(annotation) {
-    console.log(annotation);
     core.setToolMode(TOOL_NAME);
     this.props.closeElement('stampOverlay');
     const text = this.props.t(`rubberStamp.${annotation['Icon']}`);
@@ -151,10 +150,9 @@ class StampOverlay extends React.Component {
         }),
       );
 
-      const customAnnotations = annotations.map((annotation, i) => ({
+      const customAnnotations = annotations.map(annotation => ({
         annotation,
-        imgSrc: previews[i],annotation,
-        // imgSrc: annotation.ImageData,//previews[i],
+        imgSrc: annotation['ImageData'],
       }));
 
       this.setState({ customAnnotations });
@@ -241,10 +239,10 @@ class StampOverlay extends React.Component {
           <div className="header">
             <div className="tab-list">
               <Tab dataElement="defaultRubberStampButton">
-                <Button label={'Default'} />
+                <Button label={'Standard Business'} />
               </Tab>
               <Tab dataElement="customRubberStampButton">
-                <Button label={'Custom'} />
+                <Button label={'Custom Stamps'} />
               </Tab>
             </div>
           </div>
@@ -258,12 +256,12 @@ class StampOverlay extends React.Component {
           </TabPanel>
           <TabPanel dataElement="customRubberStamp">
             <div className="custom-stamp-container">
-              <div
+              {/* <div
                 className={`add-custom-stamp enabled`}
                 onClick={this.openCustomSampModal}
               >
                 Add custom stamp
-              </div>
+              </div> */}
               <div className="modal-body">
                 { customImgs }
               </div>
