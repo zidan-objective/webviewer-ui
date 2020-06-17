@@ -34,7 +34,7 @@ const AnnotationContentOverlay = () => {
         const ungroupedAnnots = groupedAnnots.filter(annot => !annot.isGrouped());
         annotation = ungroupedAnnots.length > 0 ? ungroupedAnnots[0] : annotation;
 
-        if (!(annotation instanceof Annotations.FreeTextAnnotation)) {
+        if (!(annotation instanceof Annotations.FreeTextAnnotation) && !(annotation instanceof Annotations.TextHighlightAnnotation)) {
           setAnnotation(annotation);
           setOverlayPosition({
             left: e.clientX + 20,
